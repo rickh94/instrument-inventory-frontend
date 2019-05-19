@@ -55,7 +55,8 @@ class Profile extends Component {
       changePassword: false,
       oldPassword: '',
       newPassword1: '',
-      newPassword2: ''
+      newPassword2: '',
+      errors: {}
     })
   }
 

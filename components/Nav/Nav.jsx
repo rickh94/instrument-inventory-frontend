@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, withRouter } from 'react-router-dom'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import PersonIcon from '@material-ui/icons/Person'
+import HomeIcon from '@material-ui/icons/Home'
 import {
   IconButton,
   Toolbar,
@@ -38,6 +39,7 @@ const styles = {
 export function Nav(props) {
   const { classes } = props
   const [drawerIsOpen, setDrawerOpen] = useState(false)
+  const navRequiredProps = { setDrawerOpen, history: props.history }
   return (
     <React.Fragment>
       <div className={classes.root}>
@@ -73,18 +75,19 @@ export function Nav(props) {
         onOpen={() => setDrawerOpen(false)}
       >
         <List>
-          <ListItem button>
-            <ListItemText>
-              <RouterLink to="/" className={classes.cleanLink}>Home</RouterLink>
-            </ListItemText>
-          </ListItem>
-          <Divider></Divider>
-          <ListItem button>
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText>
-              <RouterLink to="/profile" className={classes.cleanLink}>Profile</RouterLink>
-            </ListItemText>
-          </ListItem>
+          <NavItem
+            to="/"
+            icon={<HomeIcon />}
+            text="Home"
+            {...navRequiredProps}
+          />
+          <Divider />
+          <NavItem
+            to="/profile"
+            icon={<PersonIcon />}
+            text="Profile"
+            {...navRequiredProps}
+          />
         </List>
       </SwipeableDrawer>
     </React.Fragment>
@@ -97,4 +100,27 @@ Nav.propTypes = {
   handleLogout: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(Nav)
+function NavItem(props) {
+  return (
+    <ListItem
+      button
+      onClick={() => {
+        props.setDrawerOpen(false)
+        props.history.push(props.to)
+      }}
+    >
+      {props.icon && <ListItemIcon>{props.icon}</ListItemIcon>}
+      <ListItemText>{props.text}</ListItemText>
+    </ListItem>
+  )
+}
+
+NavItem.propTypes = {
+  to: PropTypes.string.isRequired,
+  setDrawerOpen: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  icon: PropTypes.object,
+  text: PropTypes.string.isRequired
+}
+
+export default withStyles(styles)(withRouter(Nav))
