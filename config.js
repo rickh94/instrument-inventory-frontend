@@ -12,6 +12,20 @@ const dev = {
   }
 }
 
-const config = dev
+const prod = {
+  stage: 'prod',
+  apiGateway: {
+    REGION: 'us-east-1',
+    URL: ''
+  },
+  cognito: {
+    REGION: 'us-east-1',
+    USER_POOL_ID: '',
+    APP_CLIENT_ID: '',
+    IDENTITY_POOL_ID: ''
+  }
+}
+
+const config = process.env.REACT_APP_STAGE === 'prod' ? prod : dev
 
 export default config

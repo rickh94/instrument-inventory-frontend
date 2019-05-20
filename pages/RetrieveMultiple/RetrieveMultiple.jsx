@@ -19,34 +19,28 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  DialogTitle
+  DialogTitle,
+  FormHelperText
 } from '@material-ui/core'
-
-import Scanner from '../../components/Scanner'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
+import Scanner from '../../components/Scanner'
+import { root, lastButton, centerStuff } from '../../globalStyles'
+import LoadingHeader from '../../components/LoadingHeader'
+import { red } from '@material-ui/core/colors'
+
 const styles = {
-  root: {
-    padding: '1rem',
-    margin: '1rem auto',
-    maxWidth: 700
-  },
-  lastButton: {
-    marginLeft: 'auto'
-  },
+  root,
+  lastButton,
   buttons: {
     width: '100%',
     display: 'flex'
   },
-  centerButtons: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-around'
-  }
+  centerButtons: centerStuff
 }
 
 class RetrieveMultiple extends Component {
@@ -58,7 +52,8 @@ class RetrieveMultiple extends Component {
       scanning: false,
       error: null,
       instrumentNumber: '',
-      message: null
+      message: { new: false, successList: [], failureList: [] },
+      isLoading: false
     }
   }
 
@@ -90,18 +85,33 @@ class RetrieveMultiple extends Component {
     this.setState({ instrumentList: instrumentListCopy })
   }
 
+  dismissMessage = () => {
+    this.setState({ message: { new: false, successList: [], failureList: [] } })
+  }
+
   handleSubmit = async e => {
     e.preventDefault()
-    this.setState({ error: 'Please provide an instrument' })
+    if (this.state.instrumentList.length < 1) {
+      this.setState({ error: 'Please provide an instrument' })
+      return
+    }
+
+    this.setState({ isLoading: true })
 
     try {
       const res = await API.post('instrument-inventory', 'retrieve-multiple', {
         body: { instrumentNumbers: this.state.instrumentList }
       })
-      console.log(res)
+      const successList = res.instrumentsUpdated.join(', ')
+      const failureList = []
+      res.instrumentsFailed.forEach(item => {
+        failureList.push(`${item.number}: ${item.error}`)
+      })
+      this.setState({ message: { successList, failureList, new: true } })
     } catch (err) {
       console.error(err)
     }
+    this.setState({ isLoading: false, instrumentList: [] })
   }
 
   render() {
@@ -109,7 +119,10 @@ class RetrieveMultiple extends Component {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="h5">Retrieve Multiple Instruments</Typography>
+          <LoadingHeader
+            isLoading={this.state.isLoading}
+            title="Retrieve Multiple Instruments"
+          />
           {this.state.scanning ? (
             <div>
               <Scanner onDetected={this.onDetected} />{' '}
@@ -119,12 +132,11 @@ class RetrieveMultiple extends Component {
             </div>
           ) : (
             <form onSubmit={this.addToListFromForm} style={{ width: '100%' }}>
-              <FormControl fullWidth error={this.state.error ? true : false}>
+              <FormControl fullWidth>
                 <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
                 <Input
                   id="instrument-number"
                   onChange={e => this.setState({ instrumentNumber: e.target.value })}
-                  aria-describedby="instrument-number-error"
                   type="text"
                   value={this.state.instrumentNumber}
                   endAdornment={
@@ -139,11 +151,6 @@ class RetrieveMultiple extends Component {
                     </InputAdornment>
                   }
                 />
-                {this.state.error && (
-                  <FormHelperText id="instrument-number-error">
-                    {this.state.error}
-                  </FormHelperText>
-                )}
               </FormControl>
               <div className={classes.buttons}>
                 <Button onClick={this.addToListFromForm} className={classes.lastButton}>
@@ -191,13 +198,36 @@ class RetrieveMultiple extends Component {
           </DialogContent>
         </Dialog>
         <Dialog
-          open={this.state.message ? true : false}
-          onClose={() => this.setState({ message: null })}
+          open={this.state.message.new ? true : false}
+          onClose={this.dismissMessage}
         >
-          <DialogTitle>Success</DialogTitle>
           <DialogContent>
-            <DialogContentText>{this.state.message}</DialogContentText>
+            <DialogContentText>
+              {this.state.message.successList.length > 0 && (
+                <React.Fragment>
+                  <strong>Instruments Succeeded:</strong>{' '}
+                  {this.state.message.successList}
+                </React.Fragment>
+              )}
+              {this.state.message.failureList.length > 0 && (
+                <React.Fragment>
+                  <br />
+                  <strong>Instruments Failed</strong>
+                  {this.state.message.failureList.map((item, idx) => (
+                    <React.Fragment key={idx}>
+                      <br />
+                      {item}
+                    </React.Fragment>
+                  ))}
+                </React.Fragment>
+              )}
+            </DialogContentText>
           </DialogContent>
+          <DialogActions>
+            <Button onClick={this.dismissMessage} color="primary">
+              OK
+            </Button>
+          </DialogActions>
         </Dialog>
       </React.Fragment>
     )

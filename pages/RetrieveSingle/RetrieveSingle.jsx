@@ -24,19 +24,13 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
 import Scanner from '../../components/Scanner'
+import LoadingHeader from '../../components/LoadingHeader'
+import { root, lastButton, fullWidth } from '../../globalStyles'
 
 const styles = {
-  root: {
-    padding: '1rem',
-    margin: '1rem auto',
-    maxWidth: 700
-  },
-  lastButton: {
-    marginLeft: 'auto'
-  },
-  buttons: {
-    width: '100%'
-  }
+  root,
+  lastButton,
+  buttons: fullWidth
 }
 
 class RetrieveSingle extends Component {
@@ -47,7 +41,8 @@ class RetrieveSingle extends Component {
       instrumentNumber: '',
       error: '',
       ask: false,
-      scanning: false
+      scanning: false,
+      isLoading: false
     }
   }
 
@@ -58,6 +53,13 @@ class RetrieveSingle extends Component {
   handleSubmit = async e => {
     e.preventDefault()
 
+    if (!this.state.instrumentNumber) {
+      this.setState({ error: 'Please Provide an instrument number' })
+      return
+    }
+
+    this.setState({ isLoading: true })
+
     try {
       await API.post('instrument-inventory', 'retrieve-single', {
         body: { instrumentNumber: this.state.instrumentNumber.toUpperCase() }
@@ -67,6 +69,7 @@ class RetrieveSingle extends Component {
       this.setState({ error: err.response.data })
       console.error(err)
     }
+    this.setState({ isLoading: false })
   }
 
   onDetected = result => {
@@ -80,7 +83,10 @@ class RetrieveSingle extends Component {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="h5">Retrieve an Instrument</Typography>
+          <LoadingHeader
+            isLoading={this.state.isLoading}
+            title="Retrieve an Instrument"
+          />
           <form onSubmit={this.handleSubmit}>
             <FormControl fullWidth error={this.state.error ? true : false}>
               <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>

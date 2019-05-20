@@ -4,29 +4,31 @@ import Loadable from 'react-loadable'
 import UnauthenticatedRoute from './components/UnauthenticatedRoute'
 import AuthenticatedRoute from './components/AuthenticatedRoute'
 
+import LoadingScreen from './components/LoadingScreen'
+
 const Home = Loadable({
   loader: () => import('./pages/Home'),
-  loading: () => <div>Loading</div>
+  loading: () => <LoadingScreen />
 })
 
 const Login = Loadable({
   loader: () => import('./pages/Login'),
-  loading: () => <div>Loading...</div>
+  loading: () => <LoadingScreen />
 })
 
 const Profile = Loadable({
   loader: () => import('./pages/Profile'),
-  loading: () => <div>Loading...</div>
+  loading: () => <LoadingScreen />
 })
 
 const RetrieveSingle = Loadable({
   loader: () => import('./pages/RetrieveSingle'),
-  loading: () => <div>Loading...</div>
+  loading: () => <LoadingScreen />
 })
 
 const RetrieveMultiple = Loadable({
   loader: () => import('./pages/RetrieveMultiple'),
-  loading: () => <div>Loading...</div>
+  loading: () => <LoadingScreen />
 })
 
 export default function Routes({ childProps }) {

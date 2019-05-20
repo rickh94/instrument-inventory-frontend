@@ -23,11 +23,11 @@ import {
 
 import EmailIcon from '@material-ui/icons/Email'
 
+import { root } from '../../globalStyles'
+import LoadingHeader from '../../components/LoadingHeader';
+
 const style = {
-  root: {
-    padding: '1rem',
-    margin: '1rem'
-  }
+  root
 }
 
 class Profile extends Component {
@@ -39,15 +39,20 @@ class Profile extends Component {
       newPassword1: '',
       newPassword2: '',
       changePassword: false,
-      errors: {}
+      errors: {},
+      isLoading: false,
+      isLoadingNewPassword: false
     }
   }
+
   async componentDidMount() {
+    this.setState({ isLoading: true })
     try {
       this.setState({ user: await Auth.currentAuthenticatedUser() })
     } catch (e) {
       console.error(e)
     }
+    this.setState({ isLoading: false })
   }
 
   cancelChangePassword = () => {
@@ -75,6 +80,7 @@ class Profile extends Component {
       return
     }
 
+    this.setState({isLoadingNewPassword: true })
     try {
       await Auth.changePassword(
         this.state.user,
@@ -91,6 +97,7 @@ class Profile extends Component {
         console.error(e)
       }
     }
+    this.setState({isLoadingNewPassword: false })
   }
 
   render() {
@@ -98,7 +105,7 @@ class Profile extends Component {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="h4">User Profile</Typography>
+        <LoadingHeader title="User Profile" isLoading={this.state.isLoading} />
           {this.state.user && (
             <List>
               <ListItem>
@@ -119,7 +126,9 @@ class Profile extends Component {
           )}
         </Paper>
         <Dialog open={this.state.changePassword} onClose={this.cancelChangePassword}>
-          <DialogTitle>Change Password</DialogTitle>
+          <DialogTitle>
+            <LoadingHeader isLoading={this.state.isLoadingNewPassword} title="Change Password" />
+            </DialogTitle>
           <DialogContent>
             <form onSubmit={this.changePassword}>
               <FormControl

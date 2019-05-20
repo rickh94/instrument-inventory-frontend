@@ -17,24 +17,21 @@ import {
   TextField,
   DialogActions,
   DialogContent,
-  Paper
+  Paper,
+  Grid,
+  CircularProgress
 } from '@material-ui/core'
 
 import { Auth } from 'aws-amplify'
 
+import { root, lastButton, fullWidth } from '../../globalStyles'
+
+import LoadingHeader from '../../components/LoadingHeader'
+
 const styles = {
-  root: {
-    padding: '1rem',
-    margin: '1rem auto',
-    maxWidth: 500,
-  },
-  lastButton: {
-    marginLeft: 'auto'
-  },
-  buttons: {
-    // display: 'flex',
-    width: '100%'
-  }
+  root,
+  lastButton,
+  buttons: fullWidth
 }
 
 class Login extends Component {
@@ -50,7 +47,8 @@ class Login extends Component {
       completeNewPassword: false,
       newPassword1: '',
       newPassword2: '',
-      loginError: null
+      loginError: null,
+      isLoadingNewPassword: false
     }
   }
 
@@ -106,6 +104,8 @@ class Login extends Component {
       return
     }
 
+    this.setState({ isLoadingNewPassword: true })
+
     try {
       await Auth.completeNewPassword(this.state.user, this.state.newPassword1)
       this.props.userHasAuthenticated(true)
@@ -114,6 +114,7 @@ class Login extends Component {
         this.setState({ errors: { newPassword1: e.message } })
         console.error(e)
       }
+      this.setState({ isLoadingNewPassword: false })
     }
   }
 
@@ -122,9 +123,7 @@ class Login extends Component {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="h5" color="inherit">
-            Login
-          </Typography>
+          <LoadingHeader isLoading={this.state.isLoading} title="Login" />
           <form onSubmit={this.handleSubmit}>
             <List>
               <ListItem>
@@ -145,7 +144,10 @@ class Login extends Component {
                 </FormControl>
               </ListItem>
               <ListItem>
-                <FormControl fullWidth error={this.state.errors.password ? true : false}>
+                <FormControl
+                  fullWidth
+                  error={this.state.errors.password ? true : false}
+                >
                   <InputLabel htmlFor="password">Password</InputLabel>
                   <Input
                     id="password"
@@ -181,14 +183,20 @@ class Login extends Component {
           aria-labelledby="complete-new-password-title"
         >
           <DialogTitle id="complete-new-password-title">
-            New Password Required
+            <LoadingHeader
+              isLoading={this.state.isLoadingNewPassword}
+              title="New Password Required"
+            />
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To complete Sign in, please select a new password.
+              To complete Sign In, please select a new password.
             </DialogContentText>
             <form onSubmit={this.completeNewPassword}>
-              <FormControl fullWidth error={this.state.errors.newPassword1 ? true : false}>
+              <FormControl
+                fullWidth
+                error={this.state.errors.newPassword1 ? true : false}
+              >
                 <InputLabel htmlFor="password1">New Password</InputLabel>
                 <Input
                   id="password1"
@@ -212,7 +220,10 @@ class Login extends Component {
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl fullWidth error={this.state.errors.newPassword2 ? true : false}>
+              <FormControl
+                fullWidth
+                error={this.state.errors.newPassword2 ? true : false}
+              >
                 <InputLabel htmlFor="password2">Confirm New Password</InputLabel>
                 <Input
                   id="password2"

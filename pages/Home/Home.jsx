@@ -14,12 +14,10 @@ import ArchiveIcon from '@material-ui/icons/Archive'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import purple from '@material-ui/core/colors/purple'
 
+import { root } from '../../globalStyles'
+
 const styles = theme => ({
-  root: {
-    maxWidth: 500,
-    padding: '1rem',
-    margin: '1rem auto'
-  },
+  root,
   footer: {
     position: 'absolute',
     bottom: 0,
