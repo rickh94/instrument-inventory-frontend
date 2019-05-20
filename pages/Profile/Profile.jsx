@@ -128,6 +128,7 @@ class Profile extends Component {
               >
                 <InputLabel htmlFor="oldpassword">Current Password</InputLabel>
                 <Input
+                  value={this.state.oldPassword}
                   id="oldpassword"
                   onChange={e => this.setState({ oldPassword: e.target.value })}
                   aria-describedby="old-password-error-text"
@@ -156,6 +157,7 @@ class Profile extends Component {
               >
                 <InputLabel htmlFor="password1">New Password</InputLabel>
                 <Input
+                  value={this.state.newPassword1}
                   id="password1"
                   onChange={e => this.setState({ newPassword1: e.target.value })}
                   aria-describedby="password-error-text1"
@@ -182,6 +184,7 @@ class Profile extends Component {
               >
                 <InputLabel htmlFor="password2">Confirm New Password</InputLabel>
                 <Input
+                  value={this.state.newPassword2}
                   id="password2"
                   onChange={e => this.setState({ newPassword2: e.target.value })}
                   aria-describedby="password-error-text2"

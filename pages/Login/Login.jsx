@@ -135,6 +135,7 @@ class Login extends Component {
                     onChange={e => this.setState({ email: e.target.value })}
                     aria-describedby="email-error-text"
                     type="email"
+                    value={this.state.email}
                   />
                   {this.state.errors.email && (
                     <FormHelperText id="email-error-text">
@@ -151,6 +152,7 @@ class Login extends Component {
                     onChange={e => this.setState({ password: e.target.value })}
                     aria-describedby="password-error-text"
                     type="password"
+                    value={this.state.password}
                   />
                   {this.state.errors.password && (
                     <FormHelperText id="password-error-text">
@@ -202,6 +204,7 @@ class Login extends Component {
                       this.setState({ errors: { newPassword1: null } })
                     }
                   }}
+                  value={this.state.newPassword1}
                 />
                 {this.state.errors.newPassword1 && (
                   <FormHelperText id="password-error-text1">
@@ -225,6 +228,7 @@ class Login extends Component {
                       this.setState({ errors: { newPassword2: null } })
                     }
                   }}
+                  value={this.state.newPassword2}
                 />
                 {this.state.errors.newPassword2 && (
                   <FormHelperText id="password-error-text2">

@@ -24,7 +24,7 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: 'notes',
+        name: 'instrument-inventory',
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION
       }

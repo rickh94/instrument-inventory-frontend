@@ -1,11 +1,24 @@
 import React from 'react'
-import { Typography, List, ListItem, withStyles, Paper, Link } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import {
+  Typography,
+  List,
+  ListItem,
+  withStyles,
+  Paper,
+  Link,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core'
+import ArchiveIcon from '@material-ui/icons/Archive'
+import ListIcon from '@material-ui/icons/FormatListBulleted'
 import purple from '@material-ui/core/colors/purple'
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    padding: '0.5rem'
+    maxWidth: 500,
+    padding: '1rem',
+    margin: '1rem auto'
   },
   footer: {
     position: 'absolute',
@@ -25,25 +38,42 @@ function Home(props) {
   const { classes } = props
   return (
     <React.Fragment>
-      <div className={classes.root}>
-        <Typography variant="h3" color="inherit">
+      <Paper className={classes.root}>
+        <Typography variant="h4" color="inherit">
           Functions
         </Typography>
         <List>
-          <ListItem button>Retrieve An Instrument</ListItem>
-          <ListItem button>Retrieve Multiple Instruments</ListItem>
+          <ListItem button onClick={() => props.history.push('/retrieve-single')}>
+            <ListItemIcon>
+              <ArchiveIcon />
+            </ListItemIcon>
+            <ListItemText>Retrieve An Instrument</ListItemText>
+          </ListItem>
+          <ListItem button onClick={() => props.history.push('/retrieve-multiple')}>
+            <ListItemIcon>
+              <ListIcon />
+            </ListItemIcon>
+            <ListItemText>Retrieve Multiple Instruments</ListItemText>
+          </ListItem>
         </List>
-      </div>
+      </Paper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit">
           &copy; Rick Henry 2019
         </Typography>
         <Link target="_blank" href="http://chittagongit.com/icon/violin-icon-27.html">
-          <Typography variant="body2" color="inherit">Icon Credit</Typography>
+          <Typography variant="body2" color="inherit">
+            Icon Credit
+          </Typography>
         </Link>
       </div>
     </React.Fragment>
   )
+}
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Home)

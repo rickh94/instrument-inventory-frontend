@@ -6,6 +6,8 @@ import { Link as RouterLink, withRouter } from 'react-router-dom'
 import MenuIcon from '@material-ui/icons/Menu'
 import PersonIcon from '@material-ui/icons/Person'
 import HomeIcon from '@material-ui/icons/Home'
+import ArchiveIcon from '@material-ui/icons/Archive'
+import ListIcon from '@material-ui/icons/FormatListBulleted'
 import {
   IconButton,
   Toolbar,
@@ -75,10 +77,17 @@ export function Nav(props) {
         onOpen={() => setDrawerOpen(false)}
       >
         <List>
+          <NavItem to="/" icon={<HomeIcon />} text="Home" {...navRequiredProps} />
           <NavItem
-            to="/"
-            icon={<HomeIcon />}
-            text="Home"
+            to="/retrieve-single"
+            text="Retrieve Instrument"
+            icon={<ArchiveIcon />}
+            {...navRequiredProps}
+          />
+          <NavItem
+            to="/retrieve-multiple"
+            text="Retrieve Multiple Instruments"
+            icon={<ListIcon />}
             {...navRequiredProps}
           />
           <Divider />

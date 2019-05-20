@@ -19,12 +19,39 @@ const Profile = Loadable({
   loading: () => <div>Loading...</div>
 })
 
+const RetrieveSingle = Loadable({
+  loader: () => import('./pages/RetrieveSingle'),
+  loading: () => <div>Loading...</div>
+})
+
+const RetrieveMultiple = Loadable({
+  loader: () => import('./pages/RetrieveMultiple'),
+  loading: () => <div>Loading...</div>
+})
+
 export default function Routes({ childProps }) {
   return (
     <Switch>
       <Route exact path="/" component={Home} props={childProps} />
       <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
-      <AuthenticatedRoute exact path="/profile" component={Profile} props={childProps} />
+      <AuthenticatedRoute
+        exact
+        path="/profile"
+        component={Profile}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/retrieve-single"
+        component={RetrieveSingle}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/retrieve-multiple"
+        component={RetrieveMultiple}
+        props={childProps}
+      />
     </Switch>
   )
 }
