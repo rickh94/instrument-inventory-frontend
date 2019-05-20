@@ -16,13 +16,13 @@ const prod = {
   stage: 'prod',
   apiGateway: {
     REGION: 'us-east-1',
-    URL: ''
+    URL: 'https://3dw921ejuh.execute-api.us-east-1.amazonaws.com/prod/'
   },
   cognito: {
     REGION: 'us-east-1',
-    USER_POOL_ID: '',
-    APP_CLIENT_ID: '',
-    IDENTITY_POOL_ID: ''
+    USER_POOL_ID: 'us-east-1_x5p2txsmA',
+    APP_CLIENT_ID: '7rvmg6d2cklqe6jrt3mscbqba7',
+    IDENTITY_POOL_ID: 'us-east-1:95a1e528-85e0-4e89-ac57-810a8f2219ae'
   }
 }
 
