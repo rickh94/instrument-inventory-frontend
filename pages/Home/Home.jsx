@@ -59,7 +59,11 @@ function Home(props) {
         <Typography variant="body2" color="inherit">
           &copy; Rick Henry 2019
         </Typography>
-        <Link target="_blank" href="http://chittagongit.com/icon/violin-icon-27.html">
+        <Link
+          target="_blank"
+          href="http://chittagongit.com/icon/violin-icon-27.html"
+          rel="noopener"
+        >
           <Typography variant="body2" color="inherit">
             Icon Credit
           </Typography>
