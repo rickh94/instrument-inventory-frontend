@@ -45,7 +45,7 @@ export function Nav(props) {
   return (
     <React.Fragment>
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <IconButton
               color="inherit"
@@ -71,6 +71,7 @@ export function Nav(props) {
           </Toolbar>
         </AppBar>
       </div>
+      <Toolbar />
       <SwipeableDrawer
         open={drawerIsOpen}
         onClose={() => setDrawerOpen(false)}

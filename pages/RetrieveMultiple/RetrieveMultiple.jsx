@@ -71,9 +71,11 @@ class RetrieveMultiple extends Component {
   }
 
   addToList = item => {
-    this.setState({
-      instrumentList: this.state.instrumentList.concat([item.toUpperCase()])
-    })
+    if (item) {
+      this.setState({
+        instrumentList: this.state.instrumentList.concat([item.toUpperCase()])
+      })
+    }
   }
 
   removeInstrumentIndex = idx => {
