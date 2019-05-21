@@ -74,7 +74,7 @@ export function Nav(props) {
       <SwipeableDrawer
         open={drawerIsOpen}
         onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(false)}
+        onOpen={() => setDrawerOpen(true)}
       >
         <List>
           <NavItem to="/" icon={<HomeIcon />} text="Home" {...navRequiredProps} />
