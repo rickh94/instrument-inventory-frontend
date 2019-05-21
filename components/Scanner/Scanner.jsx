@@ -49,6 +49,7 @@ function Scanner(props) {
     Quagga.onDetected(_onDetected)
     return function cleanup() {
       Quagga.offDetected(_onDetected)
+      Quagga.stop()
     }
   })
 
