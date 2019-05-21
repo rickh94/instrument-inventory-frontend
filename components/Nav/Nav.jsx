@@ -6,8 +6,9 @@ import { Link as RouterLink, withRouter } from 'react-router-dom'
 import MenuIcon from '@material-ui/icons/Menu'
 import PersonIcon from '@material-ui/icons/Person'
 import HomeIcon from '@material-ui/icons/Home'
-import ArchiveIcon from '@material-ui/icons/Archive'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
+import InputIcon from '@material-ui/icons/Input'
+
 import {
   IconButton,
   Toolbar,
@@ -41,7 +42,6 @@ const styles = {
 export function Nav(props) {
   const { classes } = props
   const [drawerIsOpen, setDrawerOpen] = useState(false)
-  const navRequiredProps = { setDrawerOpen, history: props.history }
   return (
     <React.Fragment>
       <div className={classes.root}>
@@ -77,25 +77,30 @@ export function Nav(props) {
         onOpen={() => setDrawerOpen(true)}
       >
         <List>
-          <NavItem to="/" icon={<HomeIcon />} text="Home" {...navRequiredProps} />
+          <NavItem
+            to="/"
+            icon={<HomeIcon />}
+            text="Home"
+            setDrawerOpen={setDrawerOpen}
+          />
           <NavItem
             to="/retrieve-single"
             text="Retrieve Instrument"
-            icon={<ArchiveIcon />}
-            {...navRequiredProps}
+            icon={<InputIcon />}
+            setDrawerOpen={setDrawerOpen}
           />
           <NavItem
             to="/retrieve-multiple"
             text="Retrieve Multiple Instruments"
             icon={<ListIcon />}
-            {...navRequiredProps}
+            setDrawerOpen={setDrawerOpen}
           />
           <Divider />
           <NavItem
             to="/profile"
             icon={<PersonIcon />}
             text="Profile"
-            {...navRequiredProps}
+            setDrawerOpen={setDrawerOpen}
           />
         </List>
       </SwipeableDrawer>
@@ -109,20 +114,20 @@ Nav.propTypes = {
   handleLogout: PropTypes.func.isRequired
 }
 
-function NavItem(props) {
+const NavItem = withRouter(({ to, icon, history, setDrawerOpen, text }) => {
   return (
     <ListItem
       button
       onClick={() => {
-        props.setDrawerOpen(false)
-        props.history.push(props.to)
+        setDrawerOpen(false)
+        history.push(to)
       }}
     >
-      {props.icon && <ListItemIcon>{props.icon}</ListItemIcon>}
-      <ListItemText>{props.text}</ListItemText>
+      {icon && <ListItemIcon>{icon}</ListItemIcon>}
+      <ListItemText>{text}</ListItemText>
     </ListItem>
   )
-}
+})
 
 NavItem.propTypes = {
   to: PropTypes.string.isRequired,

@@ -10,9 +10,10 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core'
-import ArchiveIcon from '@material-ui/icons/Archive'
+import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import purple from '@material-ui/core/colors/purple'
+import { withRouter } from 'react-router-dom'
 
 import { root } from '../../globalStyles'
 
@@ -24,11 +25,14 @@ const styles = theme => ({
     display: 'flex',
     textAlign: 'center',
     alignItems: 'center',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: purple[50],
+    // backgroundColor: purple[50],
     color: purple[300]
+  },
+  footerItem: {
+    marginLeft: '0.2rem'
   }
 })
 
@@ -38,34 +42,32 @@ function Home(props) {
     <React.Fragment>
       <Paper className={classes.root}>
         <Typography variant="h4" color="inherit">
-          Functions
+          Options
         </Typography>
         <List>
-          <ListItem button onClick={() => props.history.push('/retrieve-single')}>
-            <ListItemIcon>
-              <ArchiveIcon />
-            </ListItemIcon>
-            <ListItemText>Retrieve An Instrument</ListItemText>
-          </ListItem>
-          <ListItem button onClick={() => props.history.push('/retrieve-multiple')}>
-            <ListItemIcon>
-              <ListIcon />
-            </ListItemIcon>
-            <ListItemText>Retrieve Multiple Instruments</ListItemText>
-          </ListItem>
+          <ListOptionItem
+            to="/retrieve-single"
+            icon={<InputIcon />}
+            text="Retrieve An Instrument"
+          />
+          <ListOptionItem
+            to="/retrieve-multiple"
+            icon={<ListIcon />}
+            text="Retrieve Multiple Instruments"
+          />
         </List>
       </Paper>
       <div className={classes.footer}>
-        <Typography variant="body2" color="inherit">
-          &copy; Rick Henry 2019
+        <Typography variant="body2" color="inherit" className={classes.footerItem}>
+          &copy; Rick Henry 2019 |{' '}
         </Typography>
         <Link
           target="_blank"
           href="http://chittagongit.com/icon/violin-icon-27.html"
           rel="noopener"
         >
-          <Typography variant="body2" color="inherit">
-            Icon Credit
+          <Typography variant="body2" color="inherit" className={classes.footerItem}>
+            {' '}Icon Credit
           </Typography>
         </Link>
       </div>
@@ -79,3 +81,19 @@ Home.propTypes = {
 }
 
 export default withStyles(styles)(Home)
+
+const ListOptionItem = withRouter(({ to, icon, text, history }) => {
+  return (
+    <ListItem button onClick={() => history.push(to)}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText>{text}</ListItemText>
+    </ListItem>
+  )
+})
+
+ListOptionItem.propTypes = {
+  to: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
+  text: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
+}
