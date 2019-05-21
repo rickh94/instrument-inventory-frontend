@@ -62,7 +62,7 @@ export function Nav(props) {
                 Logout
               </Button>
             ) : (
-              <RouterLink to="/login">
+              <RouterLink to="/login" className={classes.cleanLink}>
                 <Button color="inherit" className={classes.barText}>
                   Login
                 </Button>

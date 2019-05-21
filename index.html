@@ -5,20 +5,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#ffffff">
   <title>Instrument Inventory</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-  <link rel="manifest" href="assets/site.webmanifest">
+  <link rel="manifest" href="assets/manifest.webmanifest">
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app</noscript>
   <div id="root"></div>
-  <!-- remember to add to footer -->
 
   <script src="index.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope), function (err) {
+            console.log('Service Worker registration failed: ', err)
+          }
+        }).catch(function (err) {
+          console.error(err)
+        })
+      })
+    } else {
+      console.error('service worker not supported')
+    }
+  </script>
 </body>
 
 </html>
