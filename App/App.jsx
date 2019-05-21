@@ -4,6 +4,13 @@ import 'typeface-roboto'
 import Routes from '../Routes'
 import { Auth } from 'aws-amplify'
 import {withRouter} from 'react-router-dom'
+import { withStyles } from '@material-ui/core'
+
+const styles = {
+  isMomentumScrollable: {
+    webkitOverflowScrolling: 'touch'
+  }
+}
 
 class App extends Component {
   constructor(props) {
@@ -45,10 +52,10 @@ class App extends Component {
     return (
       <React.Fragment>
         <Nav isAuthenticated={this.state.isAuthenticated} handleLogout={this.handleLogout} />
-        <Routes childProps={childProps} />
+        <Routes childProps={childProps} classes={this.props.classes.isMomentumScrollable} />
       </React.Fragment>
     )
   }
 }
 
-export default App
+export default withStyles(styles)(App)
