@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#ffffff">
-  <meta name="Description" content="App to manage Trenton Music Makers Instrument Inventory">
-  <meta name="robots" content="noindex">
   <title>Instrument Inventory</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -21,6 +19,21 @@
   <div id="root"></div>
 
   <script src="index.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope), function (err) {
+            console.log('Service Worker registration failed: ', err)
+          }
+        }).catch(function (err) {
+          console.error(err)
+        })
+      })
+    } else {
+      console.error('service worker not supported')
+    }
+  </script>
 </body>
 
 </html>
