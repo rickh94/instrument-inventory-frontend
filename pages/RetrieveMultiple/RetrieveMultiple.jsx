@@ -126,9 +126,11 @@ class RetrieveMultiple extends Component {
           {this.state.scanning ? (
             <div>
               <Scanner onDetected={this.onDetected} />{' '}
-              <Button onClick={() => this.setState({ scanning: false })}>
-                Stop Scanning
-              </Button>
+              <div className={classes.centerButtons}>
+                <Button onClick={() => this.setState({ scanning: false })}>
+                  Stop Scanning
+                </Button>
+              </div>
             </div>
           ) : (
             <form onSubmit={this.addToListFromForm} style={{ width: '100%' }}>

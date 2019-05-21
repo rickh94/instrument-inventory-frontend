@@ -45,7 +45,6 @@
     "parcel": "^1.12.3",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-compress": "^1.0.9",
-    "parcel-plugin-sw-precache": "^1.1.1",
     "sass": "^1.20.1"
   },
   "scripts": {
