@@ -135,6 +135,7 @@ class Login extends Component {
                     aria-describedby="email-error-text"
                     type="email"
                     value={this.state.email}
+                    required
                   />
                   {this.state.errors.email && (
                     <FormHelperText id="email-error-text">
@@ -155,6 +156,7 @@ class Login extends Component {
                     aria-describedby="password-error-text"
                     type="password"
                     value={this.state.password}
+                    required
                   />
                   {this.state.errors.password && (
                     <FormHelperText id="password-error-text">

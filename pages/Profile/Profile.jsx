@@ -142,6 +142,7 @@ class Profile extends Component {
                   onChange={e => this.setState({ oldPassword: e.target.value })}
                   aria-describedby="old-password-error-text"
                   type="password"
+                  required
                   onBlur={() => {
                     if (this.state.oldPassword.length < 6) {
                       this.setState({
@@ -171,6 +172,7 @@ class Profile extends Component {
                   onChange={e => this.setState({ newPassword1: e.target.value })}
                   aria-describedby="password-error-text1"
                   type="password"
+                  required
                   onBlur={() => {
                     if (this.state.newPassword1.length < 8) {
                       this.setState({
@@ -197,6 +199,7 @@ class Profile extends Component {
                   id="password2"
                   onChange={e => this.setState({ newPassword2: e.target.value })}
                   aria-describedby="password-error-text2"
+                  required
                   type="password"
                   onBlur={() => {
                     if (this.state.newPassword2 !== this.state.newPassword1) {

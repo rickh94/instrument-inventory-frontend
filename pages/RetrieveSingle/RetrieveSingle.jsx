@@ -92,6 +92,7 @@ class RetrieveSingle extends Component {
               <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
               <Input
                 id="instrument-number"
+                required
                 onChange={e => this.setState({ instrumentNumber: e.target.value })}
                 aria-describedby="instrument-number-error"
                 type="text"
@@ -134,7 +135,7 @@ class RetrieveSingle extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.props.history.push('/')}>Return Home</Button>
-            <Button onClick={this.retrieveAnother}>Retrieve Another</Button>
+            <Button onClick={this.retrieveAnother}>Continue</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>

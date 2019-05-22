@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
+import LabelIcon from '@material-ui/icons/Label'
 import purple from '@material-ui/core/colors/purple'
 import { withRouter } from 'react-router-dom'
 
@@ -55,6 +56,7 @@ function Home(props) {
             icon={<ListIcon />}
             text="Retrieve Multiple Instruments"
           />
+          <ListOptionItem to="/sign-out" icon={<LabelIcon />} text="Sign out instrument" />
         </List>
       </Paper>
       <div className={classes.footer}>

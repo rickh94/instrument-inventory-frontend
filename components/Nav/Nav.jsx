@@ -8,6 +8,7 @@ import PersonIcon from '@material-ui/icons/Person'
 import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import InputIcon from '@material-ui/icons/Input'
+import LabelIcon from '@material-ui/icons/Label'
 
 import {
   IconButton,
@@ -96,6 +97,12 @@ export function Nav(props) {
             icon={<ListIcon />}
             setDrawerOpen={setDrawerOpen}
           />
+          <NavItem
+            to="/sign-out"
+            text="Sign out instrument"
+            icon={<LabelIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
           <Divider />
           <NavItem
             to="/profile"
@@ -133,7 +140,6 @@ const NavItem = withRouter(({ to, icon, history, setDrawerOpen, text }) => {
 NavItem.propTypes = {
   to: PropTypes.string.isRequired,
   setDrawerOpen: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
   icon: PropTypes.object,
   text: PropTypes.string.isRequired
 }

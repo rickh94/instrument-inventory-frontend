@@ -31,6 +31,11 @@ const RetrieveMultiple = Loadable({
   loading: () => <LoadingScreen />
 })
 
+const SignOut = Loadable({
+  loader: () => import('./pages/SignOut'),
+  loading: () => <LoadingScreen />
+})
+
 export default function Routes({ childProps }) {
   return (
     <Switch>
@@ -52,6 +57,12 @@ export default function Routes({ childProps }) {
         exact
         path="/retrieve-multiple"
         component={RetrieveMultiple}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/sign-out"
+        component={SignOut}
         props={childProps}
       />
     </Switch>
