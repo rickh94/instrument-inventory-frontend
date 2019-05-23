@@ -143,7 +143,7 @@ class SignOut extends Component {
                       </InputAdornment>
                     }
                   />
-                  {this.state.errors && (
+                  {this.state.errors.instrumentNumber && (
                     <FormHelperText id="instrument-number-error">
                       {this.state.errors.instrumentNumber}
                     </FormHelperText>
@@ -170,7 +170,7 @@ class SignOut extends Component {
             <FormControl fullWidth error={this.state.errors.school ? true : false}>
               <InputLabel htmlFor="school">School</InputLabel>
               <NativeSelect
-                id="instrument-number"
+                id="school"
                 onChange={e => this.setState({ school: e.target.value })}
                 aria-describedby="student-name-error"
                 value={this.state.school}

@@ -8,32 +8,37 @@ import LoadingScreen from './components/LoadingScreen'
 
 const Home = Loadable({
   loader: () => import('./pages/Home'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
 })
 
 const Login = Loadable({
   loader: () => import('./pages/Login'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
 })
 
 const Profile = Loadable({
   loader: () => import('./pages/Profile'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
 })
 
 const RetrieveSingle = Loadable({
   loader: () => import('./pages/RetrieveSingle'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
 })
 
 const RetrieveMultiple = Loadable({
   loader: () => import('./pages/RetrieveMultiple'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
 })
 
 const SignOut = Loadable({
   loader: () => import('./pages/SignOut'),
-  loading: () => <LoadingScreen />
+  loading: () => <LoadingScreen />,
+})
+
+const Create = Loadable({
+  loader: () => import('./pages/Create'),
+  loading: () => <LoadingScreen />,
 })
 
 export default function Routes({ childProps }) {
@@ -65,6 +70,7 @@ export default function Routes({ childProps }) {
         component={SignOut}
         props={childProps}
       />
+      <AuthenticatedRoute exact path="/create" component={Create} props={childProps} />
     </Switch>
   )
 }

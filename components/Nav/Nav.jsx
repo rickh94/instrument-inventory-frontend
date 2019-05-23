@@ -9,6 +9,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import InputIcon from '@material-ui/icons/Input'
 import LabelIcon from '@material-ui/icons/Label'
+import AddIcon from '@material-ui/icons/Add'
 
 import {
   IconButton,
@@ -21,23 +22,23 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  ListItemIcon
+  ListItemIcon,
 } from '@material-ui/core'
 
 const styles = {
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   barText: {
-    color: 'white'
+    color: 'white',
   },
   cleanLink: {
     textDecoration: 'none',
-    color: 'inherit'
-  }
+    color: 'inherit',
+  },
 }
 
 export function Nav(props) {
@@ -99,8 +100,14 @@ export function Nav(props) {
           />
           <NavItem
             to="/sign-out"
-            text="Sign out instrument"
+            text="Sign Out instrument"
             icon={<LabelIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/create"
+            text="Create New Instrument"
+            icon={<AddIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />
@@ -119,7 +126,7 @@ export function Nav(props) {
 Nav.propTypes = {
   classes: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  handleLogout: PropTypes.func.isRequired
+  handleLogout: PropTypes.func.isRequired,
 }
 
 const NavItem = withRouter(({ to, icon, history, setDrawerOpen, text }) => {
@@ -141,7 +148,7 @@ NavItem.propTypes = {
   to: PropTypes.string.isRequired,
   setDrawerOpen: PropTypes.func.isRequired,
   icon: PropTypes.object,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
 }
 
 export default withStyles(styles)(withRouter(Nav))
