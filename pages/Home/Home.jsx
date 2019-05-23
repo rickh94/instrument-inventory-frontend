@@ -13,6 +13,7 @@ import {
 import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import LabelIcon from '@material-ui/icons/Label'
+import AddIcon from '@material-ui/icons/Add'
 import purple from '@material-ui/core/colors/purple'
 import { withRouter } from 'react-router-dom'
 
@@ -47,6 +48,16 @@ function Home(props) {
         </Typography>
         <List>
           <ListOptionItem
+            to="/create"
+            icon={<AddIcon />}
+            text="Create a New Instrument"
+          />
+          <ListOptionItem
+            to="/sign-out"
+            icon={<LabelIcon />}
+            text="Sign out instrument"
+          />
+          <ListOptionItem
             to="/retrieve-single"
             icon={<InputIcon />}
             text="Retrieve An Instrument"
@@ -56,7 +67,6 @@ function Home(props) {
             icon={<ListIcon />}
             text="Retrieve Multiple Instruments"
           />
-          <ListOptionItem to="/sign-out" icon={<LabelIcon />} text="Sign out instrument" />
         </List>
       </Paper>
       <div className={classes.footer}>
@@ -69,7 +79,8 @@ function Home(props) {
           rel="noopener"
         >
           <Typography variant="body2" color="inherit" className={classes.footerItem}>
-            {' '}Icon Credit
+            {' '}
+            Icon Credit
           </Typography>
         </Link>
       </div>
@@ -96,6 +107,5 @@ const ListOptionItem = withRouter(({ to, icon, text, history }) => {
 ListOptionItem.propTypes = {
   to: PropTypes.string.isRequired,
   icon: PropTypes.element.isRequired,
-  text: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired
+  text: PropTypes.string.isRequired
 }

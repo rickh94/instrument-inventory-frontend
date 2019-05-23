@@ -14,9 +14,14 @@ import {
   FormControlLabel,
   Checkbox,
   FormGroup,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
+import { API } from 'aws-amplify'
 
 import { root, lastButton } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
@@ -27,21 +32,21 @@ const emptyForm = {
   instrumentType: '',
   size: '',
   location: '',
-  maintenanceNotes: '',
   assignedTo: '',
+  maintenanceNotes: '',
   conditionNotes: '',
-  readyToGo: '',
   condition: null,
   quality: null,
   rosin: false,
   bow: false,
   shoulderRestRockStop: false,
-  giftedToStudent: false,
+  readyToGo: false,
+  gifted: false
 }
 
 const styles = {
   root,
-  lastButton,
+  lastButton
 }
 
 class Create extends Component {
@@ -53,24 +58,77 @@ class Create extends Component {
       scanning: false,
       isLoading: false,
       errors: {},
+      response: { message: '', item: {} }
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault()
 
+    if (!this.validateForm()) {
+      return
+    }
+
     this.setState({ isLoading: true })
+
+    const {
+      instrumentNumber,
+      instrumentType,
+      size,
+      location,
+      assignedTo,
+      maintenanceNotes,
+      conditionNotes,
+      condition,
+      quality,
+      rosin,
+      bow,
+      shoulderRestRockStop,
+      readyToGo,
+      gifted
+    } = this.state
+
+    try {
+      const response = await API.post('instrument-inventory', 'create', {
+        body: {
+          instrumentNumber,
+          instrumentType,
+          size,
+          location,
+          assignedTo,
+          maintenanceNotes,
+          conditionNotes,
+          condition,
+          quality,
+          rosin,
+          bow,
+          shoulderRestRockStop,
+          readyToGo,
+          gifted
+        }
+      })
+      console.log(response)
+      this.setState({ ...emptyForm, response })
+    } catch (err) {
+      console.error(err)
+      if (err.response.data.errors) {
+        this.setState({ errors: err.response.data.errors })
+      }
+      console.error(err.response)
+    }
+
+    this.setState({ isLoading: false })
   }
 
   clearForm = () => {
-    this.setState({ ...emptyForm, scanning: false })
+    this.setState({ ...emptyForm, scanning: false, repsonse: { message: '' } })
   }
 
   onDetected = result => {
     if (result.codeResult.code !== this.state.instrumentNumber) {
       this.setState({
         instrumentNumber: result.codeResult.code,
-        scanning: false,
+        scanning: false
       })
     }
   }
@@ -86,17 +144,17 @@ class Create extends Component {
   handleRating = name => e => {
     if (e.target.value > 5 || e.target.value < 0) {
       this.setState({
-        errors: { [name]: 'Value must be between 1 and 5' },
+        errors: { [name]: 'Value must be between 1 and 5' }
       })
     } else if (e.target.value == 0) {
       this.setState({
         [name]: null,
-        errors: { ...this.state.errors, [name]: null },
+        errors: { ...this.state.errors, [name]: null }
       })
     } else {
       this.setState({
         [name]: e.target.value,
-        errors: { ...this.state.errors, [name]: null },
+        errors: { ...this.state.errors, [name]: null }
       })
     }
   }
@@ -376,18 +434,16 @@ class Create extends Component {
                 }
                 label="Ready To Go"
               />
-              <FormControl>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.gifted}
-                      onChange={this.handleCheck('gifted')}
-                      color="primary"
-                    />
-                  }
-                  label="Gifted To Student"
-                />
-              </FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.gifted}
+                    onChange={this.handleCheck('gifted')}
+                    color="primary"
+                  />
+                }
+                label="Gifted To Student"
+              />
             </FormGroup>
             <FormGroup row>
               <Button onClick={this.clearForm} className={classes.lastButton}>
@@ -399,6 +455,18 @@ class Create extends Component {
             </FormGroup>
           </form>
         </Paper>
+        <Dialog
+          open={this.state.response.message ? true : false}
+          onClose={this.clearForm}
+        >
+          <DialogContent>
+            <DialogContentText>{this.state.response.message}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.props.history.push('/')}>Return Home</Button>
+            <Button onClick={this.clearForm}>Continue</Button>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     )
   }

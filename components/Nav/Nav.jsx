@@ -22,23 +22,23 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  ListItemIcon,
+  ListItemIcon
 } from '@material-ui/core'
 
 const styles = {
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   grow: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   barText: {
-    color: 'white',
+    color: 'white'
   },
   cleanLink: {
     textDecoration: 'none',
-    color: 'inherit',
-  },
+    color: 'inherit'
+  }
 }
 
 export function Nav(props) {
@@ -87,15 +87,9 @@ export function Nav(props) {
             setDrawerOpen={setDrawerOpen}
           />
           <NavItem
-            to="/retrieve-single"
-            text="Retrieve Instrument"
-            icon={<InputIcon />}
-            setDrawerOpen={setDrawerOpen}
-          />
-          <NavItem
-            to="/retrieve-multiple"
-            text="Retrieve Multiple Instruments"
-            icon={<ListIcon />}
+            to="/create"
+            text="Create New Instrument"
+            icon={<AddIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <NavItem
@@ -105,9 +99,15 @@ export function Nav(props) {
             setDrawerOpen={setDrawerOpen}
           />
           <NavItem
-            to="/create"
-            text="Create New Instrument"
-            icon={<AddIcon />}
+            to="/retrieve-single"
+            text="Retrieve Instrument"
+            icon={<InputIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/retrieve-multiple"
+            text="Retrieve Multiple Instruments"
+            icon={<ListIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />
@@ -126,7 +126,7 @@ export function Nav(props) {
 Nav.propTypes = {
   classes: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  handleLogout: PropTypes.func.isRequired,
+  handleLogout: PropTypes.func.isRequired
 }
 
 const NavItem = withRouter(({ to, icon, history, setDrawerOpen, text }) => {
@@ -148,7 +148,7 @@ NavItem.propTypes = {
   to: PropTypes.string.isRequired,
   setDrawerOpen: PropTypes.func.isRequired,
   icon: PropTypes.object,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(withRouter(Nav))
