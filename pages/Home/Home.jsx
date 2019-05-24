@@ -14,12 +14,11 @@ import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
-import purple from '@material-ui/core/colors/purple'
 import { withRouter } from 'react-router-dom'
 
 import { root } from '../../globalStyles'
 
-const styles = theme => ({
+const styles = {
   root,
   footer: {
     position: 'absolute',
@@ -30,13 +29,11 @@ const styles = theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    // backgroundColor: purple[50],
-    color: purple[300]
   },
   footerItem: {
     marginLeft: '0.2rem'
   }
-})
+}
 
 function Home(props) {
   const { classes } = props

@@ -21,11 +21,12 @@ import {
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
-import { API } from 'aws-amplify'
+import { API, Storage } from 'aws-amplify'
 
 import { root, lastButton } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 import Scanner from '../../components/Scanner'
+import { s3Upload } from '../../libs/awsLib'
 
 const emptyForm = {
   instrumentNumber: '',
@@ -41,12 +42,16 @@ const emptyForm = {
   bow: false,
   shoulderRestRockStop: false,
   readyToGo: false,
-  gifted: false
+  gifted: false,
+  photo: null
 }
 
 const styles = {
   root,
-  lastButton
+  lastButton,
+  fileInput: {
+    display: 'none'
+  }
 }
 
 class Create extends Component {
@@ -85,10 +90,23 @@ class Create extends Component {
       bow,
       shoulderRestRockStop,
       readyToGo,
-      gifted
+      gifted,
+      photo
     } = this.state
 
     try {
+      let photoUrl = null
+      if (photo) {
+        if (photo.size > 5000000) {
+          this.setState({
+            errors: { photo: 'Photo is too large. Choose Photo under 5MB' }
+          })
+          return
+        }
+        const uploadedPhoto = await s3Upload(this.state.photo)
+        photoUrl = await Storage.vault.get(uploadedPhoto)
+      }
+
       const response = await API.post('instrument-inventory', 'create', {
         body: {
           instrumentNumber,
@@ -104,7 +122,8 @@ class Create extends Component {
           bow,
           shoulderRestRockStop,
           readyToGo,
-          gifted
+          gifted,
+          photo: photoUrl
         }
       })
       console.log(response)
@@ -121,7 +140,7 @@ class Create extends Component {
   }
 
   clearForm = () => {
-    this.setState({ ...emptyForm, scanning: false, repsonse: { message: '' } })
+    this.setState({ ...emptyForm, scanning: false, response: { message: '' } })
   }
 
   onDetected = result => {
@@ -135,6 +154,10 @@ class Create extends Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value })
+  }
+
+  handlePhoto = event => {
+    this.setState({ photo: event.target.files[0] })
   }
 
   handleCheck = name => event => {
@@ -445,6 +468,25 @@ class Create extends Component {
                 label="Gifted To Student"
               />
             </FormGroup>
+            <input
+              accept="image/*"
+              id="upload-photo"
+              type="file"
+              className={classes.fileInput}
+              onChange={this.handlePhoto}
+            />
+            <FormControl fullWidth error={this.state.errors.photo ? true: false}>
+              <label htmlFor="upload-photo">
+                <Button variant="contained" component="span" color="primary">
+                  Upload Photo
+                </Button>
+              </label>
+              {this.state.errors.photo && (
+                <FormHelperText id="photo-error">
+                  {this.state.errors.photo}
+                </FormHelperText>
+              )}
+            </FormControl>
             <FormGroup row>
               <Button onClick={this.clearForm} className={classes.lastButton}>
                 Clear
