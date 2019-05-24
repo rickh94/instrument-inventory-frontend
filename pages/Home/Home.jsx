@@ -40,9 +40,6 @@ function Home(props) {
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Typography variant="h4" color="inherit">
-          Options
-        </Typography>
         <List>
           <ListOptionItem
             to="/create"
