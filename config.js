@@ -9,6 +9,10 @@ const dev = {
     USER_POOL_ID: 'us-east-1_E8bTuMdrD',
     APP_CLIENT_ID: '4uk5fpfv8tji91s1e1j86hvb35',
     IDENTITY_POOL_ID: 'us-east-1:c6ffd490-2cbf-4465-9c62-657ec10924b1'
+  },
+  s3: {
+    REGION: 'us-east-1',
+    BUCKET: 'instrument-inventory-dev-photosbucket-10qe9d73yvjmj'
   }
 }
 

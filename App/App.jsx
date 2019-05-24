@@ -6,6 +6,28 @@ import { Auth } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core'
 
+import config from '../config'
+
+const styles = {
+  devMarker: {
+    background:
+      'repeating-linear-gradient(45deg, #ffa600, #ffa600 20px, #000 20px, #000 40px)',
+    height: '20px',
+    width: '100%',
+    marginBottom: '10px',
+    position: 'fixed'
+  },
+  devSpacer: {
+    height: 20
+  },
+  devTitle: {
+    margin: '0 0 5px 0',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontFamily: '"Open Sans", sans-serif'
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -39,6 +61,7 @@ class App extends Component {
   }
 
   render() {
+    const { classes } = this.props
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated
@@ -49,10 +72,17 @@ class App extends Component {
           isAuthenticated={this.state.isAuthenticated}
           handleLogout={this.handleLogout}
         />
+        {config.stage === 'dev' && (
+          <React.Fragment>
+            <div className={classes.devMarker} />
+            <div className={classes.devSpacer} />
+            <h4 className={classes.devTitle}>Development Mode</h4>
+          </React.Fragment>
+        )}
         <Routes childProps={childProps} />
       </React.Fragment>
     )
   }
 }
 
-export default App
+export default withStyles(styles)(App)
