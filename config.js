@@ -27,6 +27,10 @@ const prod = {
     USER_POOL_ID: 'us-east-1_x5p2txsmA',
     APP_CLIENT_ID: '7rvmg6d2cklqe6jrt3mscbqba7',
     IDENTITY_POOL_ID: 'us-east-1:95a1e528-85e0-4e89-ac57-810a8f2219ae'
+  },
+  s3: {
+    REGION: 'us-east-1',
+    BUCKET: 'instrument-inventory-prod-photosbucket-1gn4run79aalw'
   }
 }
 
