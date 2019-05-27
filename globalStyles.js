@@ -1,7 +1,8 @@
 export const root = {
   padding: '1rem',
   margin: '1rem auto',
-  maxWidth: 700
+  maxWidth: 700,
+  overflowX: 'auto'
 }
 
 export const lastButton = {
