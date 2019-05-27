@@ -47,6 +47,13 @@ class SignOut extends Component {
     }
   }
 
+  componentDidMount() {
+    const { number } = this.props.match.params
+    if (number) {
+      this.setState({ instrumentNumber: number })
+    }
+  }
+
   handleSubmit = async e => {
     e.preventDefault()
 
@@ -215,7 +222,8 @@ class SignOut extends Component {
 }
 
 SignOut.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  match: PropTypes.object
 }
 
 export default withStyles(styles)(SignOut)

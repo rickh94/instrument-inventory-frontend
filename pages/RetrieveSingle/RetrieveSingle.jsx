@@ -46,6 +46,13 @@ class RetrieveSingle extends Component {
     }
   }
 
+  componentDidMount() {
+    const { number } = this.props.match.params
+    if (number) {
+      this.setState({ instrumentNumber: number })
+    }
+  }
+
   retrieveAnother = () => {
     this.setState({ instrumentNumber: '', ask: false })
   }
@@ -144,7 +151,8 @@ class RetrieveSingle extends Component {
 }
 
 RetrieveSingle.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  match: PropTypes.object
 }
 
 export default withStyles(styles)(RetrieveSingle)

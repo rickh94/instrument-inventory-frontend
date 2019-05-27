@@ -9,21 +9,34 @@ import {
   ListItem,
   ListItemText
 } from '@material-ui/core'
-// import SpeedDial from '@material-ui/lab/SpeedDial'
-// import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
-// import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
+import SpeedDial from '@material-ui/lab/SpeedDial'
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
+import InputIcon from '@material-ui/icons/Input'
+import LabelIcon from '@material-ui/icons/Label'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { API } from 'aws-amplify'
 
 import { root } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 
-const styles = {
-  root
-}
+const styles = theme => ({
+  root,
+  speedDial: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(3)
+  }
+})
 
 function titleCase(text) {
-  return text[0].toUpperCase() + text.slice(1, text.length)
+  if (text) {
+    return text[0].toUpperCase() + text.slice(1, text.length)
+  }
+  return ''
 }
 
 function stars(count) {
@@ -37,14 +50,14 @@ class Single extends Component {
     super(props)
 
     this.state = {
-      number: '1-601',
+      number: '',
       photoUrl: 'https://unsplash.com/photos/wPaBwop_rSo/download',
-      instrumentType: 'violin',
-      size: '4/4',
-      location: 'Grant Elementary School',
-      assignedTo: 'Test Name',
-      condition: 5,
-      quality: 3,
+      instrumentType: '',
+      size: '',
+      location: '',
+      assignedTo: '',
+      condition: null,
+      quality: null,
       conditionNotes:
         'condition notes. this could be rather long and I want to see how it handles it. Will it be any good? What if it were even longer, bordering on two lines',
       maintenanceNotes: 'maintenance',
@@ -58,7 +71,33 @@ class Single extends Component {
     }
   }
 
-  handleSubmit = () => {}
+  async componentDidMount() {
+    this.setState({ isLoading: true })
+    const { recId } = this.props.match.params
+    try {
+      const record = await API.get('instrument-inventory', `get/${recId}`)
+      const { fields } = record
+      this.setState({
+        instrumentType: fields['Instrument Type'],
+        number: fields.Number,
+        size: fields.Size,
+        location: fields.Location,
+        assignedTo: fields['Assigned To'],
+        condition: fields.Condition,
+        quality: fields.Quality,
+        conditionNotes: fields['Condition Notes'],
+        maintenanceNotes: fields['Maintenance Notes'],
+        rosin: fields.Rosin,
+        bow: fields.Bow,
+        readyToGo: fields['Ready To Go'],
+        shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'],
+        giftedToStudent: fields['Gifted to student'],
+        isLoading: false
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   handleChange = field => event => {
     this.setState({ [field]: event.target.value })
@@ -69,6 +108,20 @@ class Single extends Component {
   closeActions = () => this.setState({ actionsOpen: false })
 
   toggleActions = () => this.setState({ actionsOpen: !this.state.actionsOpen })
+
+  onRetrieve = () => {
+    const { number } = this.state
+    this.props.history.push(`/retrieve-single/${number}`)
+  }
+
+  onSignOut = () => {
+    const { number } = this.state
+    this.props.history.push(`/sign-out/${number}`)
+  }
+
+  onEdit = () => {
+    alert('Not implemented yet')
+  }
 
   render() {
     const { classes } = this.props
@@ -102,6 +155,7 @@ class Single extends Component {
             <InfoItem primary="Location" secondary={location} />
             <InfoItem primary="Assigned To" secondary={assignedTo} />
             <InfoItem primary="Condition" secondary={stars(condition)} />
+            <InfoItem primary="Quality" secondary={stars(quality)} />
             <InfoItem primary="Condition Notes" secondary={conditionNotes} />
             <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
             <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
@@ -116,28 +170,48 @@ class Single extends Component {
               secondary={yesOrNo(giftedToStudent)}
             />
           </List>
-          {/* <SpeedDial
-            ariaLabel="actions"
-            icon={<SpeedDialIcon />}
-            onBlur={this.closeActions}
-            onClick={this.toggleActions}
-            onClose={this.closeActions}
-            onFocus={this.openActions}
-            onMouseEnter={this.openActions}
-            onMouseLeave={this.closeActions}
-            open={actionsOpen}
-            direction="up"
-          >
-            <SpeedDialAction />
-          </SpeedDial> */}
         </Paper>
+        <SpeedDial
+          ariaLabel="actions"
+          icon={<SpeedDialIcon />}
+          onBlur={this.closeActions}
+          onClick={this.toggleActions}
+          onClose={this.closeActions}
+          onFocus={this.openActions}
+          onMouseEnter={this.openActions}
+          onMouseLeave={this.closeActions}
+          open={actionsOpen}
+          direction="up"
+          className={classes.speedDial}
+        >
+          <SpeedDialAction
+            icon={<InputIcon />}
+            tooltipTitle="Retrieve"
+            tooltipOpen={actionsOpen}
+            onClick={this.onRetrieve}
+          />
+          <SpeedDialAction
+            icon={<LabelIcon />}
+            tooltipTitle="Sign Out"
+            tooltipOpen={actionsOpen}
+            onClick={this.onSignOut}
+          />
+          <SpeedDialAction
+            icon={<EditIcon />}
+            tooltipTitle="Edit"
+            tooltipOpen={actionsOpen}
+            onClick={this.onEdit}
+          />
+        </SpeedDial>
       </React.Fragment>
     )
   }
 }
 
 Single.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Single)

@@ -65,6 +65,12 @@ export default function Routes({ childProps }) {
       />
       <AuthenticatedRoute
         exact
+        path="/retrieve-single/:number"
+        component={RetrieveSingle}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
         path="/retrieve-multiple"
         component={RetrieveMultiple}
         props={childProps}
@@ -72,6 +78,12 @@ export default function Routes({ childProps }) {
       <AuthenticatedRoute
         exact
         path="/sign-out"
+        component={SignOut}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/sign-out/:number"
         component={SignOut}
         props={childProps}
       />

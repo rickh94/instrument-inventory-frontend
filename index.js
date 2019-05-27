@@ -28,7 +28,7 @@ Amplify.configure({
         region: config.apiGateway.REGION
       }
     ]
-  }, 
+  },
   Storage: {
     region: config.s3.REGION,
     bucket: config.s3.BUCKET,
@@ -40,9 +40,6 @@ const theme = createMuiTheme({
   palette: {
     primary: deepPurple,
     secondary: teal
-  },
-  typography: {
-    useNextVariants: true
   }
 })
 
