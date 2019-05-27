@@ -22,11 +22,11 @@ import { withRouter } from 'react-router-dom'
 import RootPaper from '../../components/RootPaper'
 import LoadingHeader from '../../components/LoadingHeader'
 import Scanner from '../../components/Scanner'
+import SearchResultsList from '../../components/SearchResultsList'
 import { lastButton } from '../../globalStyles'
-import { titleCase } from '../../libs/titleCase'
 
 const getSearchParameters = input =>
-  input.match(/\d-\d+/)
+  input.match(/\w?\d+-\d+/)
     ? ['search/number', 'instrumentNumber']
     : ['search/assigned', 'assignedTo']
 
@@ -67,6 +67,7 @@ class Search extends Component {
       this.setState({ errors: { searchTerm: 'Please enter a search term' } })
       return
     }
+    this.setState({ isLoading: true })
     const { searchTerm } = this.state
     const [path, fieldName] = getSearchParameters(searchTerm)
     try {
@@ -86,6 +87,7 @@ class Search extends Component {
         console.error(err)
       }
     }
+    this.setState({ isLoading: false })
   }
 
   clearForm = () => {
@@ -154,11 +156,7 @@ class Search extends Component {
           </FormGroup>
         </form>
         {this.state.results.length > 0 && (
-          <List>
-            {this.state.results.map(item => (
-              <ResultItem item={item} key={item.id} />
-            ))}
-          </List>
+          <SearchResultsList results={this.state.results} />
         )}
       </RootPaper>
     )
@@ -171,12 +169,3 @@ Search.propTypes = {
 }
 
 export default withStyles(styles)(Search)
-
-const ResultItem = withRouter(({ item, history }) => (
-  <ListItem button onClick={() => history.push(`/instrument/${item.id}`)}>
-    <ListItemText>
-      {titleCase(item.fields['Instrument Type'])} {item.fields.Number} |{' '}
-      {item.fields['Assigned To']}
-    </ListItemText>
-  </ListItem>
-))
