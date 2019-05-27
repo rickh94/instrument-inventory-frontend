@@ -5,6 +5,7 @@ import UnauthenticatedRoute from './components/UnauthenticatedRoute'
 import AuthenticatedRoute from './components/AuthenticatedRoute'
 
 import LoadingScreen from './components/LoadingScreen'
+import NotFound from './pages/NotFound'
 
 const Home = Loadable({
   loader: () => import('./pages/Home'),
@@ -43,6 +44,11 @@ const Create = Loadable({
 
 const Single = Loadable({
   loader: () => import('./pages/Single'),
+  loading: () => <LoadingScreen />
+})
+
+const Search = Loadable({
+  loader: () => import('./pages/Search'),
   loading: () => <LoadingScreen />
 })
 
@@ -94,6 +100,8 @@ export default function Routes({ childProps }) {
         component={Single}
         props={childProps}
       />
+      <AuthenticatedRoute exact path="/search" component={Search} props={childProps} />
+      <Route default component={NotFound} />
     </Switch>
   )
 }

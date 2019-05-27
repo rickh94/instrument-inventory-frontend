@@ -27,13 +27,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
-import { root } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 import { s3Upload } from '../../libs/awsLib'
 import LoadingScreen from '../../components/LoadingScreen'
+import RootPaper from '../../components/RootPaper'
+import { titleCase } from '../../libs/titleCase'
 
 const styles = theme => ({
-  root,
   speedDial: {
     position: 'fixed',
     bottom: theme.spacing(2),
@@ -57,13 +57,6 @@ const styles = theme => ({
     display: 'none'
   }
 })
-
-function titleCase(text) {
-  if (text) {
-    return text[0].toUpperCase() + text.slice(1, text.length)
-  }
-  return ''
-}
 
 function stars(count) {
   return '★'.repeat(count)
@@ -246,7 +239,7 @@ class Single extends Component {
           <LoadingScreen />
         ) : (
           <React.Fragment>
-            <Paper className={classes.root}>
+            <RootPaper>
               <Grid container direction="row">
                 <Grid item>
                   <LoadingHeader
@@ -280,7 +273,7 @@ class Single extends Component {
                   secondary={yesOrNo(giftedToStudent)}
                 />
               </List>
-            </Paper>
+            </RootPaper>
             <SpeedDial
               ariaLabel="actions"
               icon={<SpeedDialIcon />}

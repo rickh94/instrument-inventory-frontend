@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
   withStyles,
-  Paper,
   FormControl,
   Input,
   InputAdornment,
@@ -22,7 +21,7 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
 import LoadingHeader from '../../components/LoadingHeader'
 import Scanner from '../../components/Scanner'
-import { root, centerStuff, lastButton, fullWidth } from '../../globalStyles'
+import { centerStuff, lastButton, fullWidth } from '../../globalStyles'
 import { API } from 'aws-amplify'
 
 const styles = {
@@ -109,7 +108,7 @@ class SignOut extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
           <LoadingHeader
             isLoading={this.state.isLoading}
             title="Sign Out an Instrument"
@@ -206,7 +205,7 @@ class SignOut extends Component {
               </Button>
             </FormGroup>
           </form>
-        </Paper>
+        </RootPaper>
         <Dialog open={this.state.response ? true : false} onClose={this.clearForm}>
           <DialogContent>
             <DialogContentText>{this.state.response}</DialogContentText>

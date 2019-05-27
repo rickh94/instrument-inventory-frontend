@@ -23,10 +23,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
-import { root, lastButton } from '../../globalStyles'
+import { lastButton } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 import Scanner from '../../components/Scanner'
 import { s3Upload } from '../../libs/awsLib'
+import RootPaper from '../../components/RootPaper/RootPaper'
 
 const emptyForm = {
   instrumentNumber: '',
@@ -47,7 +48,6 @@ const emptyForm = {
 }
 
 const styles = {
-  root,
   lastButton,
   fileInput: {
     display: 'none'
@@ -63,7 +63,7 @@ class Create extends Component {
       scanning: false,
       isLoading: false,
       errors: {},
-      response: { message: '', item: {} },
+      response: { message: '', item: {} }
     }
   }
 
@@ -140,7 +140,12 @@ class Create extends Component {
   }
 
   clearForm = () => {
-    this.setState({ ...emptyForm, scanning: false, response: { message: '' }, recId: '' })
+    this.setState({
+      ...emptyForm,
+      scanning: false,
+      response: { message: '' },
+      recId: ''
+    })
   }
 
   onDetected = result => {
@@ -186,7 +191,6 @@ class Create extends Component {
     this.props.history.push(`/instrument/${this.state.response.id}`)
   }
 
-
   validateForm = () => {
     if (!this.state.instrumentNumber) {
       return false
@@ -213,7 +217,7 @@ class Create extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
           <LoadingHeader
             isLoading={this.state.isLoading}
             title="Create a New Instrument"
@@ -480,7 +484,7 @@ class Create extends Component {
               className={classes.fileInput}
               onChange={this.handlePhoto}
             />
-            <FormControl fullWidth error={this.state.errors.photo ? true: false}>
+            <FormControl fullWidth error={this.state.errors.photo ? true : false}>
               <label htmlFor="upload-photo">
                 <Button variant="contained" component="span" color="primary">
                   Upload Photo
@@ -501,7 +505,7 @@ class Create extends Component {
               </Button>
             </FormGroup>
           </form>
-        </Paper>
+        </RootPaper>
         <Dialog
           open={this.state.response.message ? true : false}
           onClose={this.clearForm}

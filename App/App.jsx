@@ -4,7 +4,7 @@ import 'typeface-roboto'
 import Routes from '../Routes'
 import { Auth } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
-import { withStyles } from '@material-ui/core'
+import { withStyles, Snackbar } from '@material-ui/core'
 
 import config from '../config'
 
@@ -34,7 +34,9 @@ class App extends Component {
 
     this.state = {
       isAuthenticated: false,
-      isAuthenticating: true
+      isAuthenticating: true,
+      alert: false,
+      alertMessage: ''
     }
   }
 
@@ -60,11 +62,20 @@ class App extends Component {
     // this.props.history.push('/login')
   }
 
+  showAlert = alertMessage => {
+    this.setState({ alert: true, alertMessage })
+  }
+
+  closeAlert = () => {
+    this.setState({ alert: false, alertMessage: '' })
+  }
+
   render() {
     const { classes } = this.props
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated
+      userHasAuthenticated: this.userHasAuthenticated,
+      showAlert: this.showAlert
     }
     return (
       <React.Fragment>
@@ -80,6 +91,13 @@ class App extends Component {
           </React.Fragment>
         )}
         <Routes childProps={childProps} />
+        <Snackbar
+          autoHideDuration={2000}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          open={this.state.alert}
+          onClose={this.closeAlert}
+          message={this.state.alertMessage}
+        />
       </React.Fragment>
     )
   }

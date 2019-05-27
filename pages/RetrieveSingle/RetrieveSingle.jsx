@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 
 import {
-  Paper,
   Typography,
   TextField,
   FormHelperText,
@@ -25,7 +24,8 @@ import { API } from 'aws-amplify'
 
 import Scanner from '../../components/Scanner'
 import LoadingHeader from '../../components/LoadingHeader'
-import { root, lastButton, fullWidth } from '../../globalStyles'
+import { lastButton, fullWidth } from '../../globalStyles'
+import RootPaper from '../../components/RootPaper'
 
 const styles = {
   root,
@@ -89,7 +89,7 @@ class RetrieveSingle extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
           <LoadingHeader
             isLoading={this.state.isLoading}
             title="Retrieve an Instrument"
@@ -133,7 +133,7 @@ class RetrieveSingle extends Component {
             </FormGroup>
           </form>
           {this.state.scanning && <Scanner onDetected={this.onDetected} />}
-        </Paper>
+        </RootPaper>
         <Dialog open={this.state.ask} onClose={this.retrieveAnother}>
           <DialogContent>
             <DialogContentText>

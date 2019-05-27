@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
-  Paper,
   withStyles,
   Typography,
   FormControl,
@@ -29,12 +28,11 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
 import Scanner from '../../components/Scanner'
-import { root, lastButton, centerStuff } from '../../globalStyles'
+import { lastButton, centerStuff } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 import { red } from '@material-ui/core/colors'
 
 const styles = {
-  root,
   lastButton,
   buttons: {
     width: '100%',
@@ -120,7 +118,7 @@ class RetrieveMultiple extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
           <LoadingHeader
             isLoading={this.state.isLoading}
             title="Retrieve Multiple Instruments"
@@ -189,7 +187,7 @@ class RetrieveMultiple extends Component {
               Submit
             </Button>
           </FormGroup>
-        </Paper>
+        </RootPaper>
         <Dialog
           open={this.state.error ? true : false}
           onClose={() => this.setState({ error: null })}

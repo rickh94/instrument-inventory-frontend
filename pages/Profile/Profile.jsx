@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Auth } from 'aws-amplify'
 import {
-  Paper,
   Typography,
   List,
   ListItem,
@@ -23,11 +22,9 @@ import {
 
 import EmailIcon from '@material-ui/icons/Email'
 
-import { root } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader';
 
 const style = {
-  root
 }
 
 class Profile extends Component {
@@ -104,7 +101,7 @@ class Profile extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
         <LoadingHeader title="User Profile" isLoading={this.state.isLoading} />
           {this.state.user && (
             <List>
@@ -124,7 +121,7 @@ class Profile extends Component {
               </ListItem>
             </List>
           )}
-        </Paper>
+        </RootPaper>
         <Dialog open={this.state.changePassword} onClose={this.cancelChangePassword}>
           <DialogTitle>
             <LoadingHeader isLoading={this.state.isLoadingNewPassword} title="Change Password" />

@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   withStyles,
-  Paper,
   Link,
   ListItemIcon,
   ListItemText
@@ -16,10 +15,10 @@ import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
 import { withRouter } from 'react-router-dom'
 
-import { root } from '../../globalStyles'
+import RootPaper from '../../components/RootPaper'
+
 
 const styles = {
-  root,
   footer: {
     position: 'absolute',
     bottom: 0,
@@ -28,7 +27,7 @@ const styles = {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    width: '100%',
+    width: '100%'
   },
   footerItem: {
     marginLeft: '0.2rem'
@@ -39,7 +38,7 @@ function Home(props) {
   const { classes } = props
   return (
     <React.Fragment>
-      <Paper className={classes.root}>
+      <RootPaper>
         <List>
           <ListOptionItem
             to="/create"
@@ -62,7 +61,7 @@ function Home(props) {
             text="Retrieve Multiple Instruments"
           />
         </List>
-      </Paper>
+      </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>
           &copy; Rick Henry 2019 |{' '}

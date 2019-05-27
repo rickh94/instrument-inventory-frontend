@@ -27,6 +27,7 @@ import { Auth } from 'aws-amplify'
 import { root, lastButton, fullWidth } from '../../globalStyles'
 
 import LoadingHeader from '../../components/LoadingHeader'
+import RootPaper from '../../components/RootPaper';
 
 const styles = {
   root,
@@ -122,7 +123,7 @@ class Login extends Component {
     const { classes } = this.props
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <RootPaper>
           <LoadingHeader isLoading={this.state.isLoading} title="Login" />
           <form onSubmit={this.handleSubmit}>
             <List>
@@ -177,7 +178,7 @@ class Login extends Component {
               </ListItem>
             </List>
           </form>
-        </Paper>
+        </RootPaper>
 
         <Dialog
           open={this.state.completeNewPassword}
