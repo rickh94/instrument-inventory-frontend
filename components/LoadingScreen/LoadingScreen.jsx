@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Paper, withStyles } from '@material-ui/core'
-import { List as LoadingList } from 'react-content-loader'
+import { BulletList as LoadingList } from 'react-content-loader'
 
 import {root} from '../../globalStyles'
 

@@ -30,6 +30,7 @@ import { API, Storage } from 'aws-amplify'
 import { root } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
 import { s3Upload } from '../../libs/awsLib'
+import LoadingScreen from '../../components/LoadingScreen'
 
 const styles = theme => ({
   root,
@@ -111,7 +112,8 @@ class Single extends Component {
       viewPhoto: false,
       newPhoto: null,
       photoFormOpen: false,
-      errors: {}
+      errors: {},
+      initialLoad: true
     }
   }
 
@@ -136,7 +138,8 @@ class Single extends Component {
         readyToGo: fields['Ready To Go'],
         shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'],
         giftedToStudent: fields['Gifted to student'],
-        isLoading: false
+        isLoading: false,
+        initialLoad: false
       })
       console.log(fields['Photo'])
       if (fields.Photo) {
@@ -234,128 +237,135 @@ class Single extends Component {
       actionsOpen,
       thumbnailUrl,
       viewPhoto,
-      fullPhotoUrl
+      fullPhotoUrl,
+      initialLoad
     } = this.state
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
-          <Grid container direction="row">
-            <Grid item>
-              <LoadingHeader
-                isLoading={this.state.isLoading}
-                title={`${titleCase(instrumentType)} ${number}`}
-              />
-            </Grid>
-            {thumbnailUrl && (
-              <Grid item className={classes.thumbnail} onClick={this.showPhoto}>
-                <img src={thumbnailUrl} width="50px" height="50px" />
-              </Grid>
-            )}
-          </Grid>
-          <List disablePadding component="ul">
-            <InfoItem primary="Size" secondary={size} />
-            <InfoItem primary="Location" secondary={location} />
-            <InfoItem primary="Assigned To" secondary={assignedTo} />
-            <InfoItem primary="Condition" secondary={stars(condition)} />
-            <InfoItem primary="Quality" secondary={stars(quality)} />
-            <InfoItem primary="Condition Notes" secondary={conditionNotes} />
-            <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
-            <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
-            <InfoItem primary="Bow" secondary={yesOrNo(bow)} />
-            <InfoItem primary="Ready To Go" secondary={yesOrNo(readyToGo)} />
-            <InfoItem
-              primary="Should Rest/Rock Stop"
-              secondary={yesOrNo(shoulderRestEndpinRest)}
-            />
-            <InfoItem
-              primary="Gifted to Student"
-              secondary={yesOrNo(giftedToStudent)}
-            />
-          </List>
-        </Paper>
-        <SpeedDial
-          ariaLabel="actions"
-          icon={<SpeedDialIcon />}
-          onBlur={this.closeActions}
-          onClick={this.toggleActions}
-          onClose={this.closeActions}
-          onFocus={this.openActions}
-          onMouseEnter={this.openActions}
-          onMouseLeave={this.closeActions}
-          open={actionsOpen}
-          direction="up"
-          className={classes.speedDial}
-        >
-          <SpeedDialAction
-            icon={<InputIcon />}
-            tooltipTitle="Retrieve"
-            tooltipOpen={actionsOpen}
-            onClick={this.onRetrieve}
-          />
-          <SpeedDialAction
-            icon={<LabelIcon />}
-            tooltipTitle="Sign Out"
-            tooltipOpen={actionsOpen}
-            onClick={this.onSignOut}
-          />
-          <SpeedDialAction
-            icon={<EditIcon />}
-            tooltipTitle="Edit"
-            tooltipOpen={actionsOpen}
-            onClick={this.onEdit}
-          />
-          <SpeedDialAction
-            icon={<CameraIcon />}
-            tooltipTitle="Add Photo"
-            tooltipOpen={actionsOpen}
-            onClick={() => this.setState({ photoFormOpen: true })}
-          />
-        </SpeedDial>
-        <Modal open={viewPhoto} onClose={() => this.setState({ viewPhoto: false })}>
-          <Paper className={classes.photoPaper}>
-            <img src={fullPhotoUrl} className={classes.fullImage} />
-          </Paper>
-        </Modal>
-        <Dialog open={this.state.photoFormOpen}>
-          <DialogContent>
-            <form onSubmit={this.uploadPhoto}>
-              <input
-                accept="image/*"
-                id="upload-photo"
-                type="file"
-                className={classes.fileInput}
-                onChange={this.handlePhoto}
-              />
-              <FormControl fullWidth error={this.state.errors.photo ? true : false}>
-                <label htmlFor="upload-photo">
-                  <Button variant="contained" component="span" color="primary">
-                    Choose Photo
-                  </Button>
-                </label>
-                {this.state.errors.photo && (
-                  <FormHelperText id="photo-error">
-                    {this.state.errors.photo}
-                  </FormHelperText>
+        {initialLoad ? (
+          <LoadingScreen />
+        ) : (
+          <React.Fragment>
+            <Paper className={classes.root}>
+              <Grid container direction="row">
+                <Grid item>
+                  <LoadingHeader
+                    isLoading={this.state.isLoading}
+                    title={`${titleCase(instrumentType)} ${number}`}
+                  />
+                </Grid>
+                {thumbnailUrl && (
+                  <Grid item className={classes.thumbnail} onClick={this.showPhoto}>
+                    <img src={thumbnailUrl} width="50px" height="50px" />
+                  </Grid>
                 )}
-              </FormControl>
-            </form>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => this.setState({ photoFormOpen: false })}
-              className={classes.lastButton}
+              </Grid>
+              <List disablePadding component="ul">
+                <InfoItem primary="Size" secondary={size} />
+                <InfoItem primary="Location" secondary={location} />
+                <InfoItem primary="Assigned To" secondary={assignedTo} />
+                <InfoItem primary="Condition" secondary={stars(condition)} />
+                <InfoItem primary="Quality" secondary={stars(quality)} />
+                <InfoItem primary="Condition Notes" secondary={conditionNotes} />
+                <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
+                <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
+                <InfoItem primary="Bow" secondary={yesOrNo(bow)} />
+                <InfoItem primary="Ready To Go" secondary={yesOrNo(readyToGo)} />
+                <InfoItem
+                  primary="Should Rest/Rock Stop"
+                  secondary={yesOrNo(shoulderRestEndpinRest)}
+                />
+                <InfoItem
+                  primary="Gifted to Student"
+                  secondary={yesOrNo(giftedToStudent)}
+                />
+              </List>
+            </Paper>
+            <SpeedDial
+              ariaLabel="actions"
+              icon={<SpeedDialIcon />}
+              onBlur={this.closeActions}
+              onClick={this.toggleActions}
+              onClose={this.closeActions}
+              onFocus={this.openActions}
+              onMouseEnter={this.openActions}
+              onMouseLeave={this.closeActions}
+              open={actionsOpen}
+              direction="up"
+              className={classes.speedDial}
             >
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              disabled={this.state.newPhoto ? false : true}
-              onClick={this.uploadPhoto}
-            >
-              Upload
-            </Button>
-          </DialogActions>
-        </Dialog>
+              <SpeedDialAction
+                icon={<InputIcon />}
+                tooltipTitle="Retrieve"
+                tooltipOpen={actionsOpen}
+                onClick={this.onRetrieve}
+              />
+              <SpeedDialAction
+                icon={<LabelIcon />}
+                tooltipTitle="Sign Out"
+                tooltipOpen={actionsOpen}
+                onClick={this.onSignOut}
+              />
+              <SpeedDialAction
+                icon={<EditIcon />}
+                tooltipTitle="Edit"
+                tooltipOpen={actionsOpen}
+                onClick={this.onEdit}
+              />
+              <SpeedDialAction
+                icon={<CameraIcon />}
+                tooltipTitle="Add Photo"
+                tooltipOpen={actionsOpen}
+                onClick={() => this.setState({ photoFormOpen: true })}
+              />
+            </SpeedDial>
+            <Modal open={viewPhoto} onClose={() => this.setState({ viewPhoto: false })}>
+              <Paper className={classes.photoPaper}>
+                <img src={fullPhotoUrl} className={classes.fullImage} />
+              </Paper>
+            </Modal>
+            <Dialog open={this.state.photoFormOpen}>
+              <DialogContent>
+                <form onSubmit={this.uploadPhoto}>
+                  <input
+                    accept="image/*"
+                    id="upload-photo"
+                    type="file"
+                    className={classes.fileInput}
+                    onChange={this.handlePhoto}
+                  />
+                  <FormControl fullWidth error={this.state.errors.photo ? true : false}>
+                    <label htmlFor="upload-photo">
+                      <Button variant="contained" component="span" color="primary">
+                        Choose Photo
+                      </Button>
+                    </label>
+                    {this.state.errors.photo && (
+                      <FormHelperText id="photo-error">
+                        {this.state.errors.photo}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </form>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => this.setState({ photoFormOpen: false })}
+                  className={classes.lastButton}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  disabled={this.state.newPhoto ? false : true}
+                  onClick={this.uploadPhoto}
+                >
+                  Upload
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        )}
       </React.Fragment>
     )
   }
