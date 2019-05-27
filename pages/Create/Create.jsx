@@ -183,7 +183,7 @@ class Create extends Component {
   }
 
   viewCreated = () => {
-    this.props.history.push(`/single/${this.state.response.id}`)
+    this.props.history.push(`/instrument/${this.state.response.id}`)
   }
 
 

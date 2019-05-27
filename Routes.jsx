@@ -90,7 +90,7 @@ export default function Routes({ childProps }) {
       <AuthenticatedRoute exact path="/create" component={Create} props={childProps} />
       <AuthenticatedRoute
         exact
-        path="/single/:recId"
+        path="/instrument/:recId"
         component={Single}
         props={childProps}
       />

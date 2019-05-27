@@ -9,7 +9,11 @@ import {
   ListItem,
   ListItemText,
   Grid,
-  Modal
+  Modal,
+  Dialog,
+  DialogContent,
+  Button,
+  DialogActions
 } from '@material-ui/core'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
@@ -18,12 +22,14 @@ import InputIcon from '@material-ui/icons/Input'
 import LabelIcon from '@material-ui/icons/Label'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import CameraIcon from '@material-ui/icons/PhotoCamera'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { API } from 'aws-amplify'
+import { API, Storage } from 'aws-amplify'
 
 import { root } from '../../globalStyles'
 import LoadingHeader from '../../components/LoadingHeader'
+import { s3Upload } from '../../libs/awsLib'
 
 const styles = theme => ({
   root,
@@ -44,7 +50,10 @@ const styles = theme => ({
     padding: '2.5vh'
   },
   fullImage: {
-    width: '75vw',
+    width: '75vw'
+  },
+  fileInput: {
+    display: 'none'
   }
 })
 
@@ -99,7 +108,10 @@ class Single extends Component {
       giftedToStudent: true,
       isLoading: false,
       actionsOpen: false,
-      viewPhoto: false
+      viewPhoto: false,
+      newPhoto: null,
+      photoFormOpen: false,
+      errors: {}
     }
   }
 
@@ -164,6 +176,41 @@ class Single extends Component {
 
   showPhoto = () => {
     this.setState({ viewPhoto: true })
+  }
+
+  handlePhoto = event => {
+    this.setState({ newPhoto: event.target.files[0] })
+  }
+
+  uploadPhoto = async e => {
+    e.preventDefault()
+
+    if (!this.state.newPhoto) {
+      this.setState({ errors: { photo: 'Photo is required' } })
+      return
+    }
+
+    if (this.state.newPhoto.size > 5000000) {
+      this.setState({ errors: { photo: 'Photo is too large. Choose Photo under 5MB' } })
+      return
+    }
+
+    try {
+      const uploadedPhoto = await s3Upload(this.state.newPhoto)
+      const photoUrl = await Storage.vault.get(uploadedPhoto)
+
+      const response = await API.patch(
+        'instrument-inventory',
+        `update/photo/${this.props.match.params.recId}`,
+        { body: { photoUrl } }
+      )
+      this.setState({ newPhoto: null, photoFormOpen: false })
+    } catch (err) {
+      console.error(err)
+      if (err.response.data.errors) {
+        this.setState({ errors: err.response.data.errors })
+      }
+    }
   }
 
   render() {
@@ -257,15 +304,58 @@ class Single extends Component {
             tooltipOpen={actionsOpen}
             onClick={this.onEdit}
           />
+          <SpeedDialAction
+            icon={<CameraIcon />}
+            tooltipTitle="Add Photo"
+            tooltipOpen={actionsOpen}
+            onClick={() => this.setState({ photoFormOpen: true })}
+          />
         </SpeedDial>
-        <Modal
-          open={viewPhoto}
-          onClose={() => this.setState({ viewPhoto: false })}
-        >
-          <Paper className={classes.photoPaper} >
+        <Modal open={viewPhoto} onClose={() => this.setState({ viewPhoto: false })}>
+          <Paper className={classes.photoPaper}>
             <img src={fullPhotoUrl} className={classes.fullImage} />
           </Paper>
         </Modal>
+        <Dialog open={this.state.photoFormOpen}>
+          <DialogContent>
+            <form onSubmit={this.uploadPhoto}>
+              <input
+                accept="image/*"
+                id="upload-photo"
+                type="file"
+                className={classes.fileInput}
+                onChange={this.handlePhoto}
+              />
+              <FormControl fullWidth error={this.state.errors.photo ? true : false}>
+                <label htmlFor="upload-photo">
+                  <Button variant="contained" component="span" color="primary">
+                    Choose Photo
+                  </Button>
+                </label>
+                {this.state.errors.photo && (
+                  <FormHelperText id="photo-error">
+                    {this.state.errors.photo}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.setState({ photoFormOpen: false })}
+              className={classes.lastButton}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              disabled={this.state.newPhoto ? false : true}
+              onClick={this.uploadPhoto}
+            >
+              Upload
+            </Button>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     )
   }
