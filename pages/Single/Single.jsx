@@ -7,7 +7,9 @@ import {
   Input,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Grid,
+  Modal
 } from '@material-ui/core'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
@@ -29,6 +31,20 @@ const styles = theme => ({
     position: 'fixed',
     bottom: theme.spacing(2),
     right: theme.spacing(3)
+  },
+  thumbnail: {
+    marginLeft: 'auto',
+    cursor: 'pointer'
+  },
+  photoPaper: {
+    position: 'absolute',
+    width: '80vw',
+    left: '10vw',
+    top: '5vh',
+    padding: '2.5vh'
+  },
+  fullImage: {
+    width: '75vw',
   }
 })
 
@@ -43,6 +59,21 @@ function stars(count) {
   return '★'.repeat(count)
 }
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10
+}
+
+function getModalStyle() {
+  const top = 50 + rand()
+  const left = 50 + rand()
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`
+  }
+}
+
 const yesOrNo = value => (value ? 'Yes' : 'No')
 
 class Single extends Component {
@@ -51,23 +82,24 @@ class Single extends Component {
 
     this.state = {
       number: '',
-      photoUrl: 'https://unsplash.com/photos/wPaBwop_rSo/download',
+      thumbnailUrl: '',
+      fullPhotoUrl: '',
       instrumentType: '',
       size: '',
       location: '',
       assignedTo: '',
       condition: null,
       quality: null,
-      conditionNotes:
-        'condition notes. this could be rather long and I want to see how it handles it. Will it be any good? What if it were even longer, bordering on two lines',
-      maintenanceNotes: 'maintenance',
+      conditionNotes: '',
+      maintenanceNotes: '',
       rosin: true,
       bow: true,
       readyToGo: true,
       shoulderRestEndpinRest: true,
       giftedToStudent: true,
       isLoading: false,
-      actionsOpen: false
+      actionsOpen: false,
+      viewPhoto: false
     }
   }
 
@@ -94,6 +126,13 @@ class Single extends Component {
         giftedToStudent: fields['Gifted to student'],
         isLoading: false
       })
+      console.log(fields['Photo'])
+      if (fields.Photo) {
+        this.setState({
+          thumbnailUrl: fields.Photo[0].thumbnails.small.url,
+          fullPhotoUrl: fields.Photo[0].url
+        })
+      }
     } catch (e) {
       console.error(e)
     }
@@ -123,6 +162,10 @@ class Single extends Component {
     alert('Not implemented yet')
   }
 
+  showPhoto = () => {
+    this.setState({ viewPhoto: true })
+  }
+
   render() {
     const { classes } = this.props
     const {
@@ -141,15 +184,27 @@ class Single extends Component {
       readyToGo,
       shoulderRestEndpinRest,
       giftedToStudent,
-      actionsOpen
+      actionsOpen,
+      thumbnailUrl,
+      viewPhoto,
+      fullPhotoUrl
     } = this.state
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <LoadingHeader
-            isLoading={this.state.isLoading}
-            title={`${titleCase(instrumentType)} ${number}`}
-          />
+          <Grid container direction="row">
+            <Grid item>
+              <LoadingHeader
+                isLoading={this.state.isLoading}
+                title={`${titleCase(instrumentType)} ${number}`}
+              />
+            </Grid>
+            {thumbnailUrl && (
+              <Grid item className={classes.thumbnail} onClick={this.showPhoto}>
+                <img src={thumbnailUrl} width="50px" height="50px" />
+              </Grid>
+            )}
+          </Grid>
           <List disablePadding component="ul">
             <InfoItem primary="Size" secondary={size} />
             <InfoItem primary="Location" secondary={location} />
@@ -203,6 +258,14 @@ class Single extends Component {
             onClick={this.onEdit}
           />
         </SpeedDial>
+        <Modal
+          open={viewPhoto}
+          onClose={() => this.setState({ viewPhoto: false })}
+        >
+          <Paper className={classes.photoPaper} >
+            <img src={fullPhotoUrl} className={classes.fullImage} />
+          </Paper>
+        </Modal>
       </React.Fragment>
     )
   }

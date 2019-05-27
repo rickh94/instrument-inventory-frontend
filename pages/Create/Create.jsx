@@ -63,7 +63,7 @@ class Create extends Component {
       scanning: false,
       isLoading: false,
       errors: {},
-      response: { message: '', item: {} }
+      response: { message: '', item: {} },
     }
   }
 
@@ -140,7 +140,7 @@ class Create extends Component {
   }
 
   clearForm = () => {
-    this.setState({ ...emptyForm, scanning: false, response: { message: '' } })
+    this.setState({ ...emptyForm, scanning: false, response: { message: '' }, recId: '' })
   }
 
   onDetected = result => {
@@ -181,6 +181,11 @@ class Create extends Component {
       })
     }
   }
+
+  viewCreated = () => {
+    this.props.history.push(`/single/${this.state.response.id}`)
+  }
+
 
   validateForm = () => {
     if (!this.state.instrumentNumber) {
@@ -505,8 +510,8 @@ class Create extends Component {
             <DialogContentText>{this.state.response.message}</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.props.history.push('/')}>Return Home</Button>
-            <Button onClick={this.clearForm}>Continue</Button>
+            <Button onClick={this.clearForm}>Create Another</Button>
+            <Button onClick={this.viewCreated}>View</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
