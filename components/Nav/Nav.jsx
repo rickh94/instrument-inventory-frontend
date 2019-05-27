@@ -10,6 +10,7 @@ import ListIcon from '@material-ui/icons/FormatListBulleted'
 import InputIcon from '@material-ui/icons/Input'
 import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
+import SearchIcon from '@material-ui/icons/Search'
 
 import {
   IconButton,
@@ -108,6 +109,12 @@ export function Nav(props) {
             to="/retrieve-multiple"
             text="Retrieve Multiple Instruments"
             icon={<ListIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/search"
+            text="Find an Instrument"
+            icon={<SearchIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />

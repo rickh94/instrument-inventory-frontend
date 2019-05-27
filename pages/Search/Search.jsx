@@ -19,10 +19,7 @@ import { withStyles } from '@material-ui/styles'
 import { API } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 
-import RootPaper from '../../components/RootPaper'
-import LoadingHeader from '../../components/LoadingHeader'
-import Scanner from '../../components/Scanner'
-import SearchResultsList from '../../components/SearchResultsList'
+import {RootPaper, LoadingHeader, Scanner, SearchResultsList} from '../../components'
 import { lastButton } from '../../globalStyles'
 
 const getSearchParameters = input =>

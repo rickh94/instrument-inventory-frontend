@@ -13,10 +13,10 @@ import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
 import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
+import SearchIcon from '@material-ui/icons/Search'
 import { withRouter } from 'react-router-dom'
 
-import RootPaper from '../../components/RootPaper'
-
+import { RootPaper } from '../../components'
 
 const styles = {
   footer: {
@@ -59,6 +59,11 @@ function Home(props) {
             to="/retrieve-multiple"
             icon={<ListIcon />}
             text="Retrieve Multiple Instruments"
+          />
+          <ListOptionItem
+            to="/search"
+            icon={<SearchIcon />}
+            text="Find an Instrument"
           />
         </List>
       </RootPaper>

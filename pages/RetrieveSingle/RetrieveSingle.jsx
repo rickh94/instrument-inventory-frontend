@@ -22,13 +22,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
-import Scanner from '../../components/Scanner'
-import LoadingHeader from '../../components/LoadingHeader'
+import { Scanner, LoadingHeader, RootPaper } from '../../components'
 import { lastButton, fullWidth } from '../../globalStyles'
-import RootPaper from '../../components/RootPaper'
 
 const styles = {
-  root,
   lastButton,
   buttons: fullWidth
 }

@@ -27,9 +27,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
-import Scanner from '../../components/Scanner'
+import { Scanner, LoadingHeader } from '../../components'
 import { lastButton, centerStuff } from '../../globalStyles'
-import LoadingHeader from '../../components/LoadingHeader'
 import { red } from '@material-ui/core/colors'
 
 const styles = {

@@ -21,13 +21,10 @@ import {
   Grid,
   CircularProgress
 } from '@material-ui/core'
-
 import { Auth } from 'aws-amplify'
 
 import { root, lastButton, fullWidth } from '../../globalStyles'
-
-import LoadingHeader from '../../components/LoadingHeader'
-import RootPaper from '../../components/RootPaper';
+import { LoadingHeader, RootPaper } from '../../components'
 
 const styles = {
   root,

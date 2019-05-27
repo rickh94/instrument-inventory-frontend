@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import Nav from '../components/Nav'
 import 'typeface-roboto'
 import Routes from '../Routes'
 import { Auth } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 import { withStyles, Snackbar } from '@material-ui/core'
 
+import { Nav } from '../components'
 import config from '../config'
 
 const styles = {

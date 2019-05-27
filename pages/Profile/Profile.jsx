@@ -22,10 +22,9 @@ import {
 
 import EmailIcon from '@material-ui/icons/Email'
 
-import LoadingHeader from '../../components/LoadingHeader';
+import { LoadingHeader, RootPaper } from '../../components'
 
-const style = {
-}
+const style = { }
 
 class Profile extends Component {
   constructor(props) {

@@ -27,10 +27,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
-import LoadingHeader from '../../components/LoadingHeader'
+import { LoadingHeader, LoadingScreen, RootPaper } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
-import LoadingScreen from '../../components/LoadingScreen'
-import RootPaper from '../../components/RootPaper'
 import { titleCase } from '../../libs/titleCase'
 
 const styles = theme => ({

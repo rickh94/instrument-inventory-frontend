@@ -24,10 +24,8 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
 import { lastButton } from '../../globalStyles'
-import LoadingHeader from '../../components/LoadingHeader'
-import Scanner from '../../components/Scanner'
+import { LoadingHeader, Scanner, RootPaper } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
-import RootPaper from '../../components/RootPaper/RootPaper'
 
 const emptyForm = {
   instrumentNumber: '',

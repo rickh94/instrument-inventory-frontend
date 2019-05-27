@@ -1,9 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
 
-import RootPaper from '../../components/RootPaper/RootPaper';
-
+import { RootPaper } from '../../components'
 
 const NotFound = () => {
   return (
@@ -16,6 +14,5 @@ const NotFound = () => {
   )
 }
 
-NotFound.propTypes = {}
 
 export default NotFound

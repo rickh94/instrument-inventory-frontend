@@ -1,10 +1,8 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Loadable from 'react-loadable'
-import UnauthenticatedRoute from './components/UnauthenticatedRoute'
-import AuthenticatedRoute from './components/AuthenticatedRoute'
+import { AuthenticatedRoute, UnauthenticatedRoute, LoadingScreen } from './components'
 
-import LoadingScreen from './components/LoadingScreen'
 import NotFound from './pages/NotFound'
 
 const Home = Loadable({
