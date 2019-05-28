@@ -25,13 +25,19 @@ InstrumentTypeSelect.propTypes = {
   error: PropTypes.any,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  required: PropTypes.bool
+  required: PropTypes.bool,
 }
 
-export const InstrumentSizeSelect = ({ error, onChange, value, instrumentType }) => (
+export const InstrumentSizeSelect = ({
+  error,
+  onChange,
+  value,
+  instrumentType,
+  required = false,
+}) => (
   <FormControl fullWidth error={error ? true : false}>
     <InputLabel htmlFor="size">Size</InputLabel>
-    <NativeSelect id="size" onChange={onChange} required value={value}>
+    <NativeSelect id="size" onChange={onChange} required={required} value={value}>
       <option value="" />
       {instrumentType === 'viola' ? (
         <React.Fragment>
@@ -64,13 +70,14 @@ InstrumentSizeSelect.propTypes = {
   error: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
-  instrumentType: PropTypes.string.isRequired
+  instrumentType: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 }
 
-export const LocationSelect = ({ error, onChange, value }) => (
+export const LocationSelect = ({ error, onChange, value, required = false }) => (
   <FormControl fullWidth error={error ? true : false}>
     <InputLabel htmlFor="location">Location</InputLabel>
-    <NativeSelect id="location" onChange={onChange} required value={value}>
+    <NativeSelect id="location" onChange={onChange} required={required} value={value}>
       <option value="" />
       <option value="Grant Elementary School">Grant Elementary School</option>
       <option value="Hedgepath Middle School">Hedgepath Middle School</option>
@@ -89,5 +96,6 @@ export const LocationSelect = ({ error, onChange, value }) => (
 LocationSelect.propTypes = {
   error: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  required: PropTypes.bool
 }

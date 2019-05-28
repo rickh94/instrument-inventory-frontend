@@ -124,7 +124,7 @@ class Create extends Component {
           photo: photoUrl
         }
       })
-      console.log(response)
+      // console.log(response)
       this.setState({ ...emptyForm, response })
     } catch (err) {
       console.error(err)

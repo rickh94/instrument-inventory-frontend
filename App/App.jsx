@@ -15,17 +15,17 @@ const styles = {
     height: '20px',
     width: '100%',
     marginBottom: '10px',
-    position: 'fixed'
+    position: 'fixed',
   },
   devSpacer: {
-    height: 20
+    height: 20,
   },
   devTitle: {
     margin: '0 0 5px 0',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontFamily: '"Open Sans", sans-serif'
-  }
+    fontFamily: '"Open Sans", sans-serif',
+  },
 }
 
 class App extends Component {
@@ -36,7 +36,9 @@ class App extends Component {
       isAuthenticated: false,
       isAuthenticating: true,
       alert: false,
-      alertMessage: ''
+      alertMessage: '',
+      searchResults: [],
+      filterResults: [],
     }
   }
 
@@ -59,7 +61,6 @@ class App extends Component {
   handleLogout = async event => {
     await Auth.signOut()
     this.userHasAuthenticated(false)
-    // this.props.history.push('/login')
   }
 
   showAlert = alertMessage => {
@@ -70,12 +71,24 @@ class App extends Component {
     this.setState({ alert: false, alertMessage: '' })
   }
 
+  setSearchResults = results => {
+    this.setState({ searchResults: results })
+  }
+
+  setFilterResults = results => {
+    this.setState({ filterResults: results })
+  }
+
   render() {
     const { classes } = this.props
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
-      showAlert: this.showAlert
+      showAlert: this.showAlert,
+      setSearchResults: this.setSearchResults,
+      setFilterResults: this.setFilterResults,
+      searchResults: this.state.searchResults,
+      filterResults: this.state.filterResults
     }
     return (
       <React.Fragment>

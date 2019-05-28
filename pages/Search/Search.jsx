@@ -11,7 +11,7 @@ import {
   FormGroup,
   List,
   ListItemText,
-  ListItem
+  ListItem,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
@@ -19,7 +19,7 @@ import { withStyles } from '@material-ui/styles'
 import { API } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 
-import {RootPaper, LoadingHeader, Scanner, SearchResultsList} from '../../components'
+import { RootPaper, LoadingHeader, Scanner, SearchResultsList } from '../../components'
 import { lastButton } from '../../globalStyles'
 
 const getSearchParameters = input =>
@@ -28,7 +28,7 @@ const getSearchParameters = input =>
     : ['search/assigned', 'assignedTo']
 
 const styles = {
-  lastButton
+  lastButton,
 }
 
 class Search extends Component {
@@ -40,8 +40,13 @@ class Search extends Component {
       isLoading: false,
       scanning: false,
       errors: {},
-      response: null,
-      results: []
+      results: [],
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.searchResults.length > 0) {
+      this.setState({ results: this.props.searchResults })
     }
   }
 
@@ -53,29 +58,33 @@ class Search extends Component {
     if (result.codeResult.code !== this.state.instrumentNumber) {
       this.setState({
         searchTerm: result.codeResult.code,
-        scanning: false
+        scanning: false,
       })
     }
   }
 
   onSubmit = async event => {
     event.preventDefault()
+
     if (!this.validateForm) {
       this.setState({ errors: { searchTerm: 'Please enter a search term' } })
       return
     }
+
     this.setState({ isLoading: true })
     const { searchTerm } = this.state
     const [path, fieldName] = getSearchParameters(searchTerm)
+
     try {
       const response = await API.post('instrument-inventory', path, {
-        body: { [fieldName]: searchTerm }
+        body: { [fieldName]: searchTerm },
       })
       if (response.length == 1) {
         this.props.showAlert('Instrument found')
         this.props.history.push(`/instrument/${response[0].id}`)
       } else {
         this.setState({ results: response })
+        this.props.setSearchResults(response)
       }
     } catch (err) {
       if (err.response) {
@@ -91,8 +100,9 @@ class Search extends Component {
     this.setState({
       searchTerm: '',
       scanning: false,
-      response: null
+      results: []
     })
+    this.props.setSearchResults([])
   }
 
   validateForm = () => {
@@ -162,7 +172,9 @@ class Search extends Component {
 
 Search.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  setSearchResults: PropTypes.func.isRequired,
+  searchResults: PropTypes.array.isRequired,
 }
 
 export default withStyles(styles)(Search)
