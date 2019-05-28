@@ -14,6 +14,7 @@ import ListIcon from '@material-ui/icons/FormatListBulleted'
 import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
+import FilterIcon from '@material-ui/icons/FilterList'
 import { withRouter } from 'react-router-dom'
 
 import { RootPaper } from '../../components'
@@ -64,6 +65,11 @@ function Home(props) {
             to="/search"
             icon={<SearchIcon />}
             text="Find an Instrument"
+          />
+          <ListOptionItem
+            to="/filter"
+            icon={<FilterIcon />}
+            text="Filter Instruments"
           />
         </List>
       </RootPaper>

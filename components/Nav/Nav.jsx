@@ -11,6 +11,7 @@ import InputIcon from '@material-ui/icons/Input'
 import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
+import FilterIcon from '@material-ui/icons/FilterList'
 
 import {
   IconButton,
@@ -115,6 +116,12 @@ export function Nav(props) {
             to="/search"
             text="Find an Instrument"
             icon={<SearchIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/filter"
+            text="Filter Instruments"
+            icon={<FilterIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />

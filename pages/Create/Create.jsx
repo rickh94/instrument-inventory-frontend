@@ -24,7 +24,7 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
 import { lastButton } from '../../globalStyles'
-import { LoadingHeader, Scanner, RootPaper } from '../../components'
+import { LoadingHeader, Scanner, RootPaper, Fields } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 
 const emptyForm = {
@@ -264,84 +264,25 @@ class Create extends Component {
                 </React.Fragment>
               )}
             </FormControl>
-            <FormControl
-              fullWidth
-              error={this.state.errors.instrumentType ? true : false}
-            >
-              <InputLabel htmlFor="instrument-type">Instrument Type</InputLabel>
-              <NativeSelect
-                id="instrument-type"
-                onChange={this.handleChange('instrumentType')}
-                required
-                value={this.state.instrumentType}
-              >
-                <option value="" />
-                <option value="violin">Violin</option>
-                <option value="viola">Viola</option>
-                <option value="cello">Cello</option>
-                <option value="bass">Bass</option>
-                <option value="violin strug as viola">Violin strung as viola</option>
-              </NativeSelect>
-            </FormControl>
-            <FormControl fullWidth error={this.state.errors.size ? true : false}>
-              <InputLabel htmlFor="size">Size</InputLabel>
-              <NativeSelect
-                id="size"
-                onChange={this.handleChange('size')}
-                required
-                value={this.state.size}
-              >
-                <option value="" />
-                {this.state.instrumentType === 'viola' ? (
-                  <React.Fragment>
-                    <option value={'12"'}>12"</option>
-                    <option value={'13"'}>13"</option>
-                    <option value={'14"'}>14"</option>
-                    <option value={'15"'}>15"</option>
-                    <option value={'15.5"'}>15.5"</option>
-                    <option value={'16"'}>16"</option>
-                    <option value={'16.5"'}>16.5"</option>
-                    <option value={'17"'}>17"</option>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <option value="4/4">4/4</option>
-                    <option value="3/4">3/4</option>
-                    <option value="1/2">1/2</option>
-                    <option value="1/4">1/4</option>
-                    <option value="1/8">1/8</option>
-                    <option value="1/10">1/10</option>
-                    <option value="1/16">1/16</option>
-                    <option value="1/32">1/32</option>
-                  </React.Fragment>
-                )}
-              </NativeSelect>
-            </FormControl>
-            <FormControl fullWidth error={this.state.errors.location ? true : false}>
-              <InputLabel htmlFor="location">Location</InputLabel>
-              <NativeSelect
-                id="location"
-                onChange={this.handleChange('location')}
-                required
-                value={this.state.location}
-              >
-                <option value="" />
-                <option value="Grant Elementary School">Grant Elementary School</option>
-                <option value="Hedgepath Middle School">Hedgepath Middle School</option>
-                <option value="Wilson Elementary School">
-                  Wilson Elementary School
-                </option>
-                <option value="Trenton High School">Trenton High School</option>
-                <option value="Columbus Elementary School">
-                  Columbus Elementary School
-                </option>
-                <option value="office">Office</option>
-                <option value="Storage">Storage</option>
-                <option value="trade">trade</option>
-                <option value="maintenance">Maintenance</option>
-                <option value="transit">Transit</option>
-              </NativeSelect>
-            </FormControl>
+            <Fields.InstrumentTypeSelect
+              error={this.state.errors.instrumentType}
+              onChange={this.handleChange('instrumentType')}
+              value={this.state.instrumentType}
+              required
+            />
+            <Fields.InstrumentSizeSelect
+              error={this.state.errors.size}
+              onChange={this.handleChange('size')}
+              value={this.state.size}
+              instrumentType={this.state.instrumentType}
+              required
+            />
+            <Fields.LocationSelect
+              error={this.state.errors.location}
+              onChange={this.handleChange('location')}
+              value={this.state.location}
+              required
+            />
             <FormControl fullWidth error={this.state.errors.studentName ? true : false}>
               <InputLabel htmlFor="student-name">Student Name</InputLabel>
               <Input
@@ -429,7 +370,6 @@ class Create extends Component {
                   <Checkbox
                     checked={this.state.rosin}
                     onChange={this.handleCheck('rosin')}
-                    color="primary"
                   />
                 }
                 label="Rosin"
@@ -439,7 +379,6 @@ class Create extends Component {
                   <Checkbox
                     checked={this.state.bow}
                     onChange={this.handleCheck('bow')}
-                    color="primary"
                   />
                 }
                 label="Bow"
@@ -449,7 +388,6 @@ class Create extends Component {
                   <Checkbox
                     checked={this.state.shoulderRestRockStop}
                     onChange={this.handleCheck('shoulderRestRockStop')}
-                    color="primary"
                   />
                 }
                 label="Shoulder Rest/Rock Stop"
@@ -459,7 +397,6 @@ class Create extends Component {
                   <Checkbox
                     checked={this.state.readyToGo}
                     onChange={this.handleCheck('readyToGo')}
-                    color="primary"
                   />
                 }
                 label="Ready To Go"
@@ -469,7 +406,6 @@ class Create extends Component {
                   <Checkbox
                     checked={this.state.gifted}
                     onChange={this.handleCheck('gifted')}
-                    color="primary"
                   />
                 }
                 label="Gifted To Student"

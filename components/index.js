@@ -7,6 +7,7 @@ import RootPaper from './RootPaper'
 import Scanner from './Scanner'
 import SearchResultsList from './SearchResultsList'
 import UnauthenticatedRoute from './UnauthenticatedRoute'
+import * as Fields from './CustomFields'
 
 export {
   AppliedRoute,
@@ -17,5 +18,6 @@ export {
   RootPaper,
   Scanner,
   SearchResultsList,
-  UnauthenticatedRoute
+  UnauthenticatedRoute,
+  Fields
 }
