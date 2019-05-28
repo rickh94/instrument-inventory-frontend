@@ -67,7 +67,7 @@ export const InstrumentSizeSelect = ({
 )
 
 InstrumentSizeSelect.propTypes = {
-  error: PropTypes.any.isRequired,
+  error: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   instrumentType: PropTypes.string.isRequired,
@@ -94,7 +94,7 @@ export const LocationSelect = ({ error, onChange, value, required = false }) => 
 )
 
 LocationSelect.propTypes = {
-  error: PropTypes.any.isRequired,
+  error: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   required: PropTypes.bool
