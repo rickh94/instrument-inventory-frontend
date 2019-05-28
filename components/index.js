@@ -8,6 +8,7 @@ import Scanner from './Scanner'
 import SearchResultsList from './SearchResultsList'
 import UnauthenticatedRoute from './UnauthenticatedRoute'
 import * as Fields from './CustomFields'
+import InstrumentForm from './InstrumentForm'
 
 export {
   AppliedRoute,
@@ -19,5 +20,6 @@ export {
   Scanner,
   SearchResultsList,
   UnauthenticatedRoute,
-  Fields
+  Fields,
+  InstrumentForm,
 }

@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
-  withStyles,
   Paper,
   FormControl,
   InputLabel,
@@ -24,8 +23,15 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
 import { lastButton } from '../../globalStyles'
-import { LoadingHeader, Scanner, RootPaper, Fields } from '../../components'
+import {
+  LoadingHeader,
+  Scanner,
+  RootPaper,
+  Fields,
+  InstrumentForm,
+} from '../../components'
 import { s3Upload } from '../../libs/awsLib'
+import { makeStyles } from '@material-ui/styles'
 
 const emptyForm = {
   instrumentNumber: '',
@@ -35,21 +41,14 @@ const emptyForm = {
   assignedTo: '',
   maintenanceNotes: '',
   conditionNotes: '',
-  condition: null,
-  quality: null,
+  condition: '',
+  quality: '',
   rosin: false,
   bow: false,
   shoulderRestRockStop: false,
   readyToGo: false,
   gifted: false,
   photo: null,
-}
-
-const styles = {
-  lastButton,
-  fileInput: {
-    display: 'none',
-  },
 }
 
 class Create extends Component {
@@ -74,7 +73,7 @@ class Create extends Component {
 
     this.setState({ isLoading: true })
 
-    const {
+    let {
       instrumentNumber,
       instrumentType,
       size,
@@ -91,6 +90,9 @@ class Create extends Component {
       gifted,
       photo,
     } = this.state
+
+    condition = parseInt(`${condition}`)
+    quality = parseInt(`${quality}`)
 
     try {
       let photoUrl = null
@@ -211,8 +213,15 @@ class Create extends Component {
     return true
   }
 
+  setValue = (name, value) => {
+    this.setState({ [name]: value })
+  }
+
+  setErrors = (name, value) => {
+    this.setState({ errors: { [name]: value, ...this.state.errors } })
+  }
+
   render() {
-    const { classes } = this.props
     return (
       <React.Fragment>
         <RootPaper>
@@ -220,225 +229,28 @@ class Create extends Component {
             isLoading={this.state.isLoading}
             title="Create a New Instrument"
           />
-          <form onSubmit={this.handleSubmit}>
-            <FormControl
-              fullWidth
-              error={this.state.errors.instrumentNumber ? true : false}
-            >
-              <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
-              {this.state.scanning ? (
-                <React.Fragment>
-                  <Scanner onDetected={this.onDetected} />
-                  <div className={classes.centerButtons}>
-                    <Button onClick={() => this.setState({ scanning: false })}>
-                      Stop Scanning
-                    </Button>
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <Input
-                    id="instrument-number"
-                    onChange={this.handleChange('instrumentNumber')}
-                    aria-describedby="instrument-number-error"
-                    type="text"
-                    value={this.state.instrumentNumber}
-                    required
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            this.setState({ scanning: !this.state.scanning })
-                          }
-                        >
-                          <FontAwesomeIcon icon={faBarcode} />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  {this.state.errors.instrumentNumber && (
-                    <FormHelperText id="instrument-number-error">
-                      {this.state.errors.instrumentNumber}
-                    </FormHelperText>
-                  )}
-                </React.Fragment>
-              )}
-            </FormControl>
-            <Fields.InstrumentTypeSelect
-              error={this.state.errors.instrumentType}
-              onChange={this.handleChange('instrumentType')}
-              value={this.state.instrumentType}
-              required
-            />
-            <Fields.InstrumentSizeSelect
-              error={this.state.errors.size}
-              onChange={this.handleChange('size')}
-              value={this.state.size}
-              instrumentType={this.state.instrumentType}
-              required
-            />
-            <Fields.LocationSelect
-              error={this.state.errors.location}
-              onChange={this.handleChange('location')}
-              value={this.state.location}
-              required
-            />
-            <FormControl fullWidth error={this.state.errors.studentName ? true : false}>
-              <InputLabel htmlFor="student-name">Student Name</InputLabel>
-              <Input
-                id="student-name"
-                onChange={this.handleChange('studentName')}
-                aria-describedby="student-name-error"
-                type="text"
-                value={this.state.studentName}
-              />
-              {this.state.errors.studentName && (
-                <FormHelperText id="student-name-error">
-                  {this.state.errors.studentName}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl
-              fullWidth
-              error={this.state.errors.maintenanceNotes ? true : false}
-            >
-              <InputLabel htmlFor="maintenance-notes">Maintenance Notes</InputLabel>
-              <Input
-                id="maintenance-notes"
-                onChange={this.handleChange('maintenanceNotes')}
-                aria-describedby="maintenance-notes-error"
-                type="text"
-                value={this.state.maintenanceNotes}
-                multiline
-              />
-              {this.state.errors.maintenanceNotes && (
-                <FormHelperText id="maintenance-notes-error">
-                  {this.state.errors.maintenanceNotes}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl
-              fullWidth
-              error={this.state.errors.conditionNotes ? true : false}
-            >
-              <InputLabel htmlFor="condition-notes">Condition Notes</InputLabel>
-              <Input
-                id="condition-notes"
-                onChange={this.handleChange('conditionNotes')}
-                aria-describedby="condition-notes-error"
-                type="text"
-                value={this.state.conditionNotes}
-                multiline
-              />
-              {this.state.errors.conditionNotes && (
-                <FormHelperText id="condition-notes-error">
-                  {this.state.errors.conditionNotes}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl fullWidth error={this.state.errors.condition ? true : false}>
-              <InputLabel htmlFor="condition">Condition Rating</InputLabel>
-              <Input
-                type="number"
-                id="condition"
-                onChange={this.handleRating('condition')}
-                aria-describedby="condition-error"
-              />
-              {this.state.errors.condition && (
-                <FormHelperText id="condition-error">
-                  {this.state.errors.condition}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl fullWidth error={this.state.errors.quality ? true : false}>
-              <InputLabel htmlFor="quality">Quality Rating</InputLabel>
-              <Input
-                type="number"
-                id="quality"
-                onChange={this.handleRating('quality')}
-                aria-describedby="quality-error"
-              />
-              {this.state.errors.quality && (
-                <FormHelperText id="quality-error">
-                  {this.state.errors.quality}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormGroup row>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.rosin}
-                    onChange={this.handleCheck('rosin')}
-                  />
-                }
-                label="Rosin"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.bow}
-                    onChange={this.handleCheck('bow')}
-                  />
-                }
-                label="Bow"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.shoulderRestRockStop}
-                    onChange={this.handleCheck('shoulderRestRockStop')}
-                  />
-                }
-                label="Shoulder Rest/Rock Stop"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.readyToGo}
-                    onChange={this.handleCheck('readyToGo')}
-                  />
-                }
-                label="Ready To Go"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.gifted}
-                    onChange={this.handleCheck('gifted')}
-                  />
-                }
-                label="Gifted To Student"
-              />
-            </FormGroup>
-            <input
-              accept="image/*"
-              id="upload-photo"
-              type="file"
-              className={classes.fileInput}
-              onChange={this.handlePhoto}
-            />
-            <FormControl fullWidth error={this.state.errors.photo ? true : false}>
-              <label htmlFor="upload-photo">
-                <Button variant="contained" component="span" color="primary">
-                  Upload Photo
-                </Button>
-              </label>
-              {this.state.errors.photo && (
-                <FormHelperText id="photo-error">
-                  {this.state.errors.photo}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormGroup row>
-              <Button onClick={this.clearForm} className={classes.lastButton}>
-                Clear
-              </Button>
-              <Button type="submit" color="primary" disabled={!this.validateForm()}>
-                Submit
-              </Button>
-            </FormGroup>
-          </form>
+          <InstrumentForm
+            onSubmit={this.handleSubmit}
+            setValue={this.setValue}
+            errors={this.state.errors}
+            setErrors={this.setErrors}
+            instrumentNumber={this.state.instrumentNumber}
+            instrumentType={this.state.instrumentType}
+            size={this.state.size}
+            location={this.state.location}
+            assignedTo={this.state.assignedTo}
+            maintenanceNotes={this.state.maintenanceNotes}
+            conditionNotes={this.state.conditionNotes}
+            quality={this.state.quality}
+            condition={this.state.condition}
+            rosin={this.state.rosin}
+            bow={this.state.bow}
+            shoulderRestRockStop={this.state.shoulderRestRockStop}
+            readyToGo={this.state.readyToGo}
+            gifted={this.state.gifted}
+            clearForm={this.clearForm}
+            validateForm={this.validateForm}
+          />
         </RootPaper>
         <Dialog
           open={this.state.response.message ? true : false}
@@ -457,6 +269,8 @@ class Create extends Component {
   }
 }
 
-Create.propTypes = {}
+Create.propTypes = {
+  history: PropTypes.object.isRequired,
+}
 
-export default withStyles(styles)(Create)
+export default Create
