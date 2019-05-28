@@ -13,7 +13,7 @@ import {
   Dialog,
   DialogContent,
   Button,
-  DialogActions
+  DialogActions,
 } from '@material-ui/core'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
@@ -35,25 +35,25 @@ const styles = theme => ({
   speedDial: {
     position: 'fixed',
     bottom: theme.spacing(2),
-    right: theme.spacing(3)
+    right: theme.spacing(3),
   },
   thumbnail: {
     marginLeft: 'auto',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   photoPaper: {
     position: 'absolute',
     width: '80vw',
     left: '10vw',
     top: '5vh',
-    padding: '2.5vh'
+    padding: '2.5vh',
   },
   fullImage: {
-    width: '75vw'
+    width: '75vw',
   },
   fileInput: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 })
 
 function stars(count) {
@@ -71,7 +71,7 @@ function getModalStyle() {
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
+    transform: `translate(-${top}%, -${left}%)`,
   }
 }
 
@@ -104,7 +104,7 @@ class Single extends Component {
       newPhoto: null,
       photoFormOpen: false,
       errors: {},
-      initialLoad: true
+      initialLoad: true,
     }
   }
 
@@ -130,13 +130,13 @@ class Single extends Component {
         shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'],
         giftedToStudent: fields['Gifted to student'],
         isLoading: false,
-        initialLoad: false
+        initialLoad: false,
       })
       console.log(fields['Photo'])
       if (fields.Photo) {
         this.setState({
           thumbnailUrl: fields.Photo[0].thumbnails.small.url,
-          fullPhotoUrl: fields.Photo[0].url
+          fullPhotoUrl: fields.Photo[0].url,
         })
       }
     } catch (e) {
@@ -229,7 +229,7 @@ class Single extends Component {
       thumbnailUrl,
       viewPhoto,
       fullPhotoUrl,
-      initialLoad
+      initialLoad,
     } = this.state
     return (
       <React.Fragment>
@@ -365,7 +365,7 @@ class Single extends Component {
 Single.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Single)

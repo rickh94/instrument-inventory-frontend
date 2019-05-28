@@ -1,7 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Loadable from 'react-loadable'
-import { AuthenticatedRoute, UnauthenticatedRoute, LoadingScreen } from './components'
+import { AuthenticatedRoute, UnauthenticatedRoute } from './components'
 import {
   Home,
   Login,
@@ -13,7 +12,7 @@ import {
   Single,
   Search,
   Filter,
-  NotFound
+  NotFound,
 } from './pages'
 
 export default function Routes({ childProps }) {

@@ -88,7 +88,7 @@ class App extends Component {
       setSearchResults: this.setSearchResults,
       setFilterResults: this.setFilterResults,
       searchResults: this.state.searchResults,
-      filterResults: this.state.filterResults
+      filterResults: this.state.filterResults,
     }
     return (
       <React.Fragment>

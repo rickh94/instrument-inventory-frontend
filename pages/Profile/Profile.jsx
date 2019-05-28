@@ -17,14 +17,14 @@ import {
   FormControlLabel,
   InputLabel,
   Input,
-  FormHelperText
+  FormHelperText,
 } from '@material-ui/core'
 
 import EmailIcon from '@material-ui/icons/Email'
 
 import { LoadingHeader, RootPaper } from '../../components'
 
-const style = { }
+const style = {}
 
 class Profile extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class Profile extends Component {
       changePassword: false,
       errors: {},
       isLoading: false,
-      isLoadingNewPassword: false
+      isLoadingNewPassword: false,
     }
   }
 
@@ -57,7 +57,7 @@ class Profile extends Component {
       oldPassword: '',
       newPassword1: '',
       newPassword2: '',
-      errors: {}
+      errors: {},
     })
   }
 
@@ -76,7 +76,7 @@ class Profile extends Component {
       return
     }
 
-    this.setState({isLoadingNewPassword: true })
+    this.setState({ isLoadingNewPassword: true })
     try {
       await Auth.changePassword(
         this.state.user,
@@ -93,7 +93,7 @@ class Profile extends Component {
         console.error(e)
       }
     }
-    this.setState({isLoadingNewPassword: false })
+    this.setState({ isLoadingNewPassword: false })
   }
 
   render() {
@@ -101,7 +101,7 @@ class Profile extends Component {
     return (
       <React.Fragment>
         <RootPaper>
-        <LoadingHeader title="User Profile" isLoading={this.state.isLoading} />
+          <LoadingHeader title="User Profile" isLoading={this.state.isLoading} />
           {this.state.user && (
             <List>
               <ListItem>
@@ -123,8 +123,11 @@ class Profile extends Component {
         </RootPaper>
         <Dialog open={this.state.changePassword} onClose={this.cancelChangePassword}>
           <DialogTitle>
-            <LoadingHeader isLoading={this.state.isLoadingNewPassword} title="Change Password" />
-            </DialogTitle>
+            <LoadingHeader
+              isLoading={this.state.isLoadingNewPassword}
+              title="Change Password"
+            />
+          </DialogTitle>
           <DialogContent>
             <form onSubmit={this.changePassword}>
               <FormControl
@@ -142,11 +145,11 @@ class Profile extends Component {
                   onBlur={() => {
                     if (this.state.oldPassword.length < 6) {
                       this.setState({
-                        errors: { oldPassword: 'Please enter current password' }
+                        errors: { oldPassword: 'Please enter current password' },
                       })
                     } else {
                       this.setState({
-                        errors: { oldPassword: null }
+                        errors: { oldPassword: null },
                       })
                     }
                   }}
@@ -172,7 +175,7 @@ class Profile extends Component {
                   onBlur={() => {
                     if (this.state.newPassword1.length < 8) {
                       this.setState({
-                        errors: { newPassword1: 'Password is not long enough' }
+                        errors: { newPassword1: 'Password is not long enough' },
                       })
                     } else {
                       this.setState({ errors: { newPassword1: null } })
@@ -200,7 +203,7 @@ class Profile extends Component {
                   onBlur={() => {
                     if (this.state.newPassword2 !== this.state.newPassword1) {
                       this.setState({
-                        errors: { newPassword2: 'Passwords do not match' }
+                        errors: { newPassword2: 'Passwords do not match' },
                       })
                     } else {
                       this.setState({ errors: { newPassword2: null } })

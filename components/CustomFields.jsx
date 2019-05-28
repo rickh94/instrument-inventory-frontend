@@ -97,5 +97,5 @@ LocationSelect.propTypes = {
   error: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
-  required: PropTypes.bool
+  required: PropTypes.bool,
 }

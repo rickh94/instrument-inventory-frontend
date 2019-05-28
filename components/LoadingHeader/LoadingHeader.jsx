@@ -6,11 +6,11 @@ import { withStyles, CircularProgress, Typography } from '@material-ui/core'
 const styles = {
   heading: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   loader: {
-    marginLeft: '1rem'
-  }
+    marginLeft: '1rem',
+  },
 }
 
 const LoadingHeader = ({ classes, isLoading, title }) => {
@@ -27,7 +27,7 @@ const LoadingHeader = ({ classes, isLoading, title }) => {
 LoadingHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 }
 
 export default withStyles(styles)(LoadingHeader)

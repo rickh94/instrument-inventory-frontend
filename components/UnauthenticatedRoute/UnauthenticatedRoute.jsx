@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const UnauthenticatedRoute = ({ component: C, props: cProps, ...rest }) => {
   const redirect = querystring('redirect')
@@ -33,6 +34,9 @@ function querystring(name, url = window.location.href) {
   return decodeURIComponent(results[2].replace(/\+/g, ' '))
 }
 
-UnauthenticatedRoute.propTypes = {}
+UnauthenticatedRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+  props: PropTypes.object.isRequired,
+}
 
 export default UnauthenticatedRoute

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
 
 const AuthenticatedRoute = ({ component: C, props: cProps, ...rest }) => {
@@ -16,6 +17,11 @@ const AuthenticatedRoute = ({ component: C, props: cProps, ...rest }) => {
       }
     />
   )
+}
+
+AuthenticatedRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+  props: PropTypes.object.isRequired,
 }
 
 export default AuthenticatedRoute

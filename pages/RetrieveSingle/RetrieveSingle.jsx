@@ -16,7 +16,7 @@ import {
   DialogContentText,
   DialogActions,
   IconButton,
-  InputAdornment
+  InputAdornment,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
@@ -27,7 +27,7 @@ import { lastButton, fullWidth } from '../../globalStyles'
 
 const styles = {
   lastButton,
-  buttons: fullWidth
+  buttons: fullWidth,
 }
 
 class RetrieveSingle extends Component {
@@ -39,7 +39,7 @@ class RetrieveSingle extends Component {
       error: '',
       ask: false,
       scanning: false,
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -66,7 +66,7 @@ class RetrieveSingle extends Component {
 
     try {
       await API.post('instrument-inventory', 'retrieve-single', {
-        body: { instrumentNumber: this.state.instrumentNumber.toUpperCase() }
+        body: { instrumentNumber: this.state.instrumentNumber.toUpperCase() },
       })
       this.setState({ ask: true })
     } catch (err) {
@@ -149,7 +149,7 @@ class RetrieveSingle extends Component {
 
 RetrieveSingle.propTypes = {
   classes: PropTypes.object.isRequired,
-  match: PropTypes.object
+  match: PropTypes.object,
 }
 
 export default withStyles(styles)(RetrieveSingle)

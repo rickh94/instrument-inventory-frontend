@@ -100,7 +100,7 @@ class Search extends Component {
     this.setState({
       searchTerm: '',
       scanning: false,
-      results: []
+      results: [],
     })
     this.props.setSearchResults([])
   }

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { Paper, withStyles } from '@material-ui/core'
 import { BulletList as LoadingList } from 'react-content-loader'
 
-import {root} from '../../globalStyles'
+import { root } from '../../globalStyles'
 
-const styles = {root}
+const styles = { root }
 
-const LoadingScreen = ({classes}) => {
+const LoadingScreen = ({ classes }) => {
   return (
     <React.Fragment>
       <Paper className={classes.root}>
@@ -18,7 +18,7 @@ const LoadingScreen = ({classes}) => {
 }
 
 LoadingScreen.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(LoadingScreen)

@@ -2,15 +2,15 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    jest: true
+    jest: true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
   },
   plugins: ['react'],
   rules: {
@@ -18,19 +18,19 @@ module.exports = {
       'error',
       2,
       {
-        SwitchCase: 1
-      }
+        SwitchCase: 1,
+      },
     ],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
-    semi: ['error', 'never']
+    semi: ['error', 'never'],
   },
   settings: {
     react: {
       createClass: 'createReactClass',
       pragma: 'React',
       version: '16.7.0',
-      flowVersion: '0.53'
-    }
-  }
+      flowVersion: '0.53',
+    },
+  },
 }

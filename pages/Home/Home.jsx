@@ -7,7 +7,7 @@ import {
   withStyles,
   Link,
   ListItemIcon,
-  ListItemText
+  ListItemText,
 } from '@material-ui/core'
 import InputIcon from '@material-ui/icons/Input'
 import ListIcon from '@material-ui/icons/FormatListBulleted'
@@ -28,11 +28,11 @@ const styles = {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
   },
   footerItem: {
-    marginLeft: '0.2rem'
-  }
+    marginLeft: '0.2rem',
+  },
 }
 
 function Home(props) {
@@ -94,7 +94,7 @@ function Home(props) {
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Home)
@@ -111,5 +111,5 @@ const ListOptionItem = withRouter(({ to, icon, text, history }) => {
 ListOptionItem.propTypes = {
   to: PropTypes.string.isRequired,
   icon: PropTypes.element.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
 }

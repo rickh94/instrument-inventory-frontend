@@ -17,7 +17,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
+  DialogContentText,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
@@ -42,14 +42,14 @@ const emptyForm = {
   shoulderRestRockStop: false,
   readyToGo: false,
   gifted: false,
-  photo: null
+  photo: null,
 }
 
 const styles = {
   lastButton,
   fileInput: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 }
 
 class Create extends Component {
@@ -61,7 +61,7 @@ class Create extends Component {
       scanning: false,
       isLoading: false,
       errors: {},
-      response: { message: '', item: {} }
+      response: { message: '', item: {} },
     }
   }
 
@@ -89,7 +89,7 @@ class Create extends Component {
       shoulderRestRockStop,
       readyToGo,
       gifted,
-      photo
+      photo,
     } = this.state
 
     try {
@@ -97,7 +97,7 @@ class Create extends Component {
       if (photo) {
         if (photo.size > 5000000) {
           this.setState({
-            errors: { photo: 'Photo is too large. Choose Photo under 5MB' }
+            errors: { photo: 'Photo is too large. Choose Photo under 5MB' },
           })
           return
         }
@@ -121,8 +121,8 @@ class Create extends Component {
           shoulderRestRockStop,
           readyToGo,
           gifted,
-          photo: photoUrl
-        }
+          photo: photoUrl,
+        },
       })
       // console.log(response)
       this.setState({ ...emptyForm, response })
@@ -142,7 +142,7 @@ class Create extends Component {
       ...emptyForm,
       scanning: false,
       response: { message: '' },
-      recId: ''
+      recId: '',
     })
   }
 
@@ -150,7 +150,7 @@ class Create extends Component {
     if (result.codeResult.code !== this.state.instrumentNumber) {
       this.setState({
         instrumentNumber: result.codeResult.code,
-        scanning: false
+        scanning: false,
       })
     }
   }
@@ -170,17 +170,17 @@ class Create extends Component {
   handleRating = name => e => {
     if (e.target.value > 5 || e.target.value < 0) {
       this.setState({
-        errors: { [name]: 'Value must be between 1 and 5' }
+        errors: { [name]: 'Value must be between 1 and 5' },
       })
     } else if (e.target.value == 0) {
       this.setState({
         [name]: null,
-        errors: { ...this.state.errors, [name]: null }
+        errors: { ...this.state.errors, [name]: null },
       })
     } else {
       this.setState({
         [name]: e.target.value,
-        errors: { ...this.state.errors, [name]: null }
+        errors: { ...this.state.errors, [name]: null },
       })
     }
   }

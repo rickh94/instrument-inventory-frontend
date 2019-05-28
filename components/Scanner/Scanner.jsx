@@ -8,12 +8,11 @@ import './Scanner.scss'
 const styles = {
   scanner: {
     width: '100%',
-    height: 'auto'
-  }
+    height: 'auto',
+  },
 }
 
 function Scanner(props) {
-  const { classes } = props
   useEffect(() => {
     function _onDetected(result) {
       props.onDetected(result)
@@ -26,18 +25,18 @@ function Scanner(props) {
             width: { min: 640 },
             height: { min: 480 },
             aspectRatio: { min: 1, max: 100 },
-            facing: 'environment'
-          }
+            facing: 'environment',
+          },
         },
         locator: {
           patchSize: 'medium',
-          halfSample: true
+          halfSample: true,
         },
         numOfWorkers: 2,
         decoder: {
-          readers: ['code_128_reader', 'code_39_reader']
+          readers: ['code_128_reader', 'code_39_reader'],
         },
-        locate: true
+        locate: true,
       },
       err => {
         if (err) {
@@ -53,18 +52,12 @@ function Scanner(props) {
     }
   })
 
-  return (
-    <div
-      id="interactive"
-      // className={}
-      className="viewport"
-    />
-  )
+  return <div id="interactive" className="viewport" />
 }
 
 Scanner.propTypes = {
   onDetected: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Scanner)

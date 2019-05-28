@@ -19,7 +19,7 @@ import {
   DialogContentText,
   DialogActions,
   DialogTitle,
-  FormHelperText
+  FormHelperText,
 } from '@material-ui/core'
 
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -35,9 +35,9 @@ const styles = {
   lastButton,
   buttons: {
     width: '100%',
-    display: 'flex'
+    display: 'flex',
   },
-  centerButtons: centerStuff
+  centerButtons: centerStuff,
 }
 
 class RetrieveMultiple extends Component {
@@ -50,7 +50,7 @@ class RetrieveMultiple extends Component {
       error: null,
       instrumentNumber: '',
       message: { new: false, successList: [], failureList: [] },
-      isLoading: false
+      isLoading: false,
     }
   }
 
@@ -70,7 +70,7 @@ class RetrieveMultiple extends Component {
   addToList = item => {
     if (item) {
       this.setState({
-        instrumentList: this.state.instrumentList.concat([item.toUpperCase()])
+        instrumentList: this.state.instrumentList.concat([item.toUpperCase()]),
       })
     }
   }
@@ -99,7 +99,7 @@ class RetrieveMultiple extends Component {
 
     try {
       const res = await API.post('instrument-inventory', 'retrieve-multiple', {
-        body: { instrumentNumbers: this.state.instrumentList }
+        body: { instrumentNumbers: this.state.instrumentList },
       })
       const successList = res.instrumentsUpdated.join(', ')
       const failureList = []
@@ -236,7 +236,7 @@ class RetrieveMultiple extends Component {
 }
 
 RetrieveMultiple.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(RetrieveMultiple)

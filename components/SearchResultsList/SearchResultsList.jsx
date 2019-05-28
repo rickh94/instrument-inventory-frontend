@@ -17,7 +17,7 @@ const ResultRow = withRouter(({ item, history }) => (
 ))
 
 ResultRow.propTypes = {
-  item: PropTypes.object.isRequired
+  item: PropTypes.object.isRequired,
 }
 
 const SearchResultsList = ({ results }) => (
@@ -39,7 +39,7 @@ const SearchResultsList = ({ results }) => (
 )
 
 SearchResultsList.propTypes = {
-  results: PropTypes.array.isRequired
+  results: PropTypes.array.isRequired,
 }
 
 export default SearchResultsList

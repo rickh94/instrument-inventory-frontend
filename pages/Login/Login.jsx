@@ -19,7 +19,7 @@ import {
   DialogContent,
   Paper,
   Grid,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 
@@ -29,7 +29,7 @@ import { LoadingHeader, RootPaper } from '../../components'
 const styles = {
   root,
   lastButton,
-  buttons: fullWidth
+  buttons: fullWidth,
 }
 
 class Login extends Component {
@@ -46,12 +46,12 @@ class Login extends Component {
       newPassword1: '',
       newPassword2: '',
       loginError: null,
-      isLoadingNewPassword: false
+      isLoadingNewPassword: false,
     }
   }
 
   static propTypes = {
-    userHasAuthenticated: PropTypes.func.isRequired
+    userHasAuthenticated: PropTypes.func.isRequired,
   }
 
   handleSubmit = async event => {
@@ -73,7 +73,7 @@ class Login extends Component {
         this.setState({ loginError: 'You need to reset your password' })
       } else if (err.code === 'NotAuthorizedException') {
         this.setState({
-          loginError: 'You are not authorized to perform this operation'
+          loginError: 'You are not authorized to perform this operation',
         })
       } else if (err.code === 'UserNotFoundException') {
         this.setState({ loginError: 'Could not find user' })
@@ -206,7 +206,7 @@ class Login extends Component {
                   onBlur={() => {
                     if (this.state.newPassword1.length < 8) {
                       this.setState({
-                        errors: { newPassword1: 'Password is not long enough' }
+                        errors: { newPassword1: 'Password is not long enough' },
                       })
                     } else {
                       this.setState({ errors: { newPassword1: null } })
@@ -233,7 +233,7 @@ class Login extends Component {
                   onBlur={() => {
                     if (this.state.newPassword2 !== this.state.newPassword1) {
                       this.setState({
-                        errors: { newPassword2: 'Passwords do not match' }
+                        errors: { newPassword2: 'Passwords do not match' },
                       })
                     } else {
                       this.setState({ errors: { newPassword2: null } })
