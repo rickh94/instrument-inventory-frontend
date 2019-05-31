@@ -10,6 +10,7 @@ import UnauthenticatedRoute from './UnauthenticatedRoute'
 import * as Fields from './CustomFields'
 import InstrumentForm from './InstrumentForm'
 import InstrumentDisplay from './InstrumentDisplay'
+import FindInstrument from './FindInstrument'
 
 export {
   AppliedRoute,
@@ -23,5 +24,6 @@ export {
   UnauthenticatedRoute,
   Fields,
   InstrumentForm,
-  InstrumentDisplay
+  InstrumentDisplay,
+  FindInstrument,
 }

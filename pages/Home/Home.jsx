@@ -17,7 +17,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import FilterIcon from '@material-ui/icons/FilterList'
 import { withRouter } from 'react-router-dom'
 
-import { RootPaper } from '../../components'
+import { RootPaper, FindInstrument } from '../../components'
 
 const styles = {
   footer: {
@@ -37,8 +37,19 @@ const styles = {
 
 function Home(props) {
   const { classes } = props
+  const showMultipleResults = results => {
+    props.setSearchResults(results)
+    props.history.push('/search')
+  }
+
   return (
     <React.Fragment>
+      <RootPaper>
+        <FindInstrument
+          showMultipleResults={showMultipleResults}
+          showAlert={props.showAlert}
+        />
+      </RootPaper>
       <RootPaper>
         <List>
           <ListOptionItem
@@ -95,6 +106,8 @@ function Home(props) {
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  showAlert: PropTypes.func.isRequired,
+  setSearchResults: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Home)

@@ -18,7 +18,7 @@ import {
 export default function Routes({ childProps }) {
   return (
     <Switch>
-      <Route exact path="/" component={Home} props={childProps} />
+      <AuthenticatedRoute exact path="/" component={Home} props={childProps} />
       <UnauthenticatedRoute exact path="/login" component={Login} props={childProps} />
       <AuthenticatedRoute
         exact

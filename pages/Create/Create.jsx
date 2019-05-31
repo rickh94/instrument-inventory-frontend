@@ -157,17 +157,9 @@ class Create extends Component {
     }
   }
 
-  // handleChange = name => event => {
-  //   this.setState({ [name]: event.target.value })
-  // }
-
   handlePhoto = event => {
     this.setState({ photo: event.target.files[0] })
   }
-
-  // handleCheck = name => event => {
-  //   this.setState({ [name]: event.target.checked })
-  // }
 
   handleRating = name => e => {
     if (e.target.value > 5 || e.target.value < 0) {

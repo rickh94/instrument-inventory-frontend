@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   FormControl,
@@ -12,6 +12,7 @@ import {
   List,
   ListItemText,
   ListItem,
+  makeStyles,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
@@ -19,17 +20,14 @@ import { withStyles } from '@material-ui/styles'
 import { API } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 
-import { RootPaper, LoadingHeader, Scanner, SearchResultsList } from '../../components'
+import {
+  RootPaper,
+  LoadingHeader,
+  Scanner,
+  SearchResultsList,
+  FindInstrument,
+} from '../../components'
 import { lastButton } from '../../globalStyles'
-
-const getSearchParameters = input =>
-  input.match(/\w?\d+-\d+/)
-    ? ['search/number', 'instrumentNumber']
-    : ['search/assigned', 'assignedTo']
-
-const styles = {
-  lastButton,
-}
 
 class Search extends Component {
   constructor(props) {
@@ -109,59 +107,18 @@ class Search extends Component {
     return this.state.searchTerm.length > 0
   }
 
+  showResults = results => {
+    this.setState({ results })
+    this.props.setSearchResults(results)
+  }
+
   render() {
-    const { classes } = this.props
     return (
       <RootPaper>
-        <LoadingHeader isLoading={this.state.isLoading} title="Find an Instrument" />
-        <form onSubmit={this.onSubmit}>
-          <FormControl fullWidth error={this.state.errors.searchTerm ? true : false}>
-            <InputLabel htmlFor="search-term">Number or Name</InputLabel>
-            {this.state.scanning ? (
-              <React.Fragment>
-                <Scanner onDetected={this.onDetected} />
-                <Button onClick={() => this.setState({ scanning: false })}>
-                  Stop Scanning
-                </Button>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Input
-                  id="search-term"
-                  onChange={this.handleChange('searchTerm')}
-                  aria-describedby="instrument-number-error"
-                  type="text"
-                  value={this.state.searchTerm}
-                  required
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() =>
-                          this.setState({ scanning: !this.state.scanning })
-                        }
-                      >
-                        <FontAwesomeIcon icon={faBarcode} />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                {this.state.errors.searchTerm && (
-                  <FormHelperText id="instrument-number-error">
-                    {this.state.errors.searchTerm}
-                  </FormHelperText>
-                )}
-              </React.Fragment>
-            )}
-          </FormControl>
-          <FormGroup row>
-            <Button onClick={this.clearForm} className={classes.lastButton}>
-              Clear
-            </Button>
-            <Button type="submit" color="primary" disabled={!this.validateForm()}>
-              Submit
-            </Button>
-          </FormGroup>
-        </form>
+        <FindInstrument
+          showMultipleResults={this.showResults}
+          showAlert={this.props.showAlert}
+        />
         {this.state.results.length > 0 && (
           <SearchResultsList results={this.state.results} />
         )}
@@ -171,10 +128,11 @@ class Search extends Component {
 }
 
 Search.propTypes = {
-  classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   setSearchResults: PropTypes.func.isRequired,
   searchResults: PropTypes.array.isRequired,
+  showAlert: PropTypes.func.isRequired,
+  setSearchResults: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Search)
+export default Search

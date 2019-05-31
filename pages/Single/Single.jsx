@@ -304,7 +304,14 @@ class Single extends Component {
 
   render() {
     const { classes } = this.props
-    const { actionsOpen, initialLoad, editing, photoFormOpen, errors } = this.state
+    const {
+      actionsOpen,
+      initialLoad,
+      editing,
+      photoFormOpen,
+      errors,
+      isLoading,
+    } = this.state
     return (
       <React.Fragment>
         {initialLoad ? (
@@ -313,15 +320,18 @@ class Single extends Component {
           <React.Fragment>
             <RootPaper>
               {editing ? (
-                <InstrumentForm
-                  {...this.state}
-                  onSubmit={this.handleSubmit}
-                  setValue={this.setValue}
-                  setErrors={this.setErrors}
-                  validateForm={this.validateForm}
-                  onCancel={this.cancelEdit}
-                  buttonsLeft
-                />
+                <React.Fragment>
+                  <LoadingHeader isLoading={isLoading} title="Edit Instrument" />
+                  <InstrumentForm
+                    {...this.state}
+                    onSubmit={this.handleSubmit}
+                    setValue={this.setValue}
+                    setErrors={this.setErrors}
+                    validateForm={this.validateForm}
+                    onCancel={this.cancelEdit}
+                    buttonsLeft
+                  />
+                </React.Fragment>
               ) : (
                 <InstrumentDisplay {...this.state} />
               )}
