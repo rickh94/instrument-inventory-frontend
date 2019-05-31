@@ -62,13 +62,14 @@ const InstrumentForm = ({
 
   const handleRating = name => event => {
     if (event.target.value > 5 || event.target.value < 0) {
-      setErrors({ [name]: 'Value must be between 1 and 5' })
+      setValue(event.target.value)
+      setErrors(name, 'Value must be between 1 and 5' )
     } else if (event.target.value == 0) {
       setValue(name, '')
-      setErrors({ [name]: null })
+      setErrors(name, null)
     } else {
       setValue(name, event.target.value)
-      setErrors({ [name]: null })
+      setErrors(name, null)
     }
   }
 
