@@ -64,7 +64,7 @@ const InstrumentForm = ({
     if (event.target.value > 5 || event.target.value < 0) {
       setErrors({ [name]: 'Value must be between 1 and 5' })
     } else if (event.target.value == 0) {
-      setValue(name, 0)
+      setValue(name, '')
       setErrors({ [name]: null })
     } else {
       setValue(name, event.target.value)
