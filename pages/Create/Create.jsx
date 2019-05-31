@@ -45,7 +45,7 @@ const emptyForm = {
   quality: '',
   rosin: false,
   bow: false,
-  shoulderRestRockStop: false,
+  shoulderRestEndpinRest: false,
   readyToGo: false,
   gifted: false,
   photo: null,
@@ -85,7 +85,7 @@ class Create extends Component {
       quality,
       rosin,
       bow,
-      shoulderRestRockStop,
+      shoulderRestEndpinRest,
       readyToGo,
       gifted,
       photo,
@@ -107,7 +107,7 @@ class Create extends Component {
         photoUrl = await Storage.vault.get(uploadedPhoto)
       }
 
-      const response = await API.post('instrument-inventory', 'create', {
+      const response = await API.post('instrument-inventory', 'instruments', {
         body: {
           instrumentNumber,
           instrumentType,
@@ -120,7 +120,7 @@ class Create extends Component {
           quality,
           rosin,
           bow,
-          shoulderRestRockStop,
+          shoulderRestEndpinRest,
           readyToGo,
           gifted,
           photo: photoUrl,
@@ -157,17 +157,17 @@ class Create extends Component {
     }
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value })
-  }
+  // handleChange = name => event => {
+  //   this.setState({ [name]: event.target.value })
+  // }
 
   handlePhoto = event => {
     this.setState({ photo: event.target.files[0] })
   }
 
-  handleCheck = name => event => {
-    this.setState({ [name]: event.target.checked })
-  }
+  // handleCheck = name => event => {
+  //   this.setState({ [name]: event.target.checked })
+  // }
 
   handleRating = name => e => {
     if (e.target.value > 5 || e.target.value < 0) {
@@ -230,26 +230,13 @@ class Create extends Component {
             title="Create a New Instrument"
           />
           <InstrumentForm
+            {...this.state}
             onSubmit={this.handleSubmit}
             setValue={this.setValue}
-            errors={this.state.errors}
             setErrors={this.setErrors}
-            instrumentNumber={this.state.instrumentNumber}
-            instrumentType={this.state.instrumentType}
-            size={this.state.size}
-            location={this.state.location}
-            assignedTo={this.state.assignedTo}
-            maintenanceNotes={this.state.maintenanceNotes}
-            conditionNotes={this.state.conditionNotes}
-            quality={this.state.quality}
-            condition={this.state.condition}
-            rosin={this.state.rosin}
-            bow={this.state.bow}
-            shoulderRestRockStop={this.state.shoulderRestRockStop}
-            readyToGo={this.state.readyToGo}
-            gifted={this.state.gifted}
             clearForm={this.clearForm}
             validateForm={this.validateForm}
+            photoField
           />
         </RootPaper>
         <Dialog

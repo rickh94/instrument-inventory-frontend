@@ -43,9 +43,12 @@ const InstrumentForm = ({
   condition,
   rosin,
   bow,
-  shoulderRestRockStop,
+  shoulderRestEndpinRest,
   readyToGo,
   gifted,
+  onCancel,
+  buttonsLeft,
+  photoField,
 }) => {
   const classes = useStyles()
   const [scanning, setScanning] = useState(false)
@@ -217,8 +220,8 @@ const InstrumentForm = ({
         <FormControlLabel
           control={
             <Checkbox
-              checked={shoulderRestRockStop}
-              onChange={handleCheck('shoulderRestRockStop')}
+              checked={shoulderRestEndpinRest}
+              onChange={handleCheck('shoulderRestEndpinRest')}
             />
           }
           label="Shoulder Rest/Rock Stop"
@@ -232,27 +235,38 @@ const InstrumentForm = ({
           label="Gifted To Student"
         />
       </FormGroup>
-      <input
-        accept="image/*"
-        id="upload-photo"
-        type="file"
-        className={classes.fileInput}
-        onChange={handlePhoto}
-      />
-      <FormControl fullWidth error={errors.photo ? true : false}>
-        <label htmlFor="upload-photo">
-          <Button variant="contained" component="span" color="primary">
-            Upload Photo
+      {photoField && (
+        <React.Fragment>
+          <input
+            accept="image/*"
+            id="upload-photo"
+            type="file"
+            className={classes.fileInput}
+            onChange={handlePhoto}
+          />
+          <FormControl fullWidth error={errors.photo ? true : false}>
+            <label htmlFor="upload-photo">
+              <Button variant="contained" component="span" color="primary">
+                Upload Photo
+              </Button>
+            </label>
+            {errors.photo && (
+              <FormHelperText id="photo-error">{errors.photo}</FormHelperText>
+            )}
+          </FormControl>
+        </React.Fragment>
+      )}
+      <FormGroup row style={buttonsLeft ? { paddingTop: '0.5rem' } : {}}>
+        {clearForm && (
+          <Button onClick={clearForm} className={buttonsLeft ? '' : classes.lastButton}>
+            Clear
           </Button>
-        </label>
-        {errors.photo && (
-          <FormHelperText id="photo-error">{errors.photo}</FormHelperText>
         )}
-      </FormControl>
-      <FormGroup row>
-        <Button onClick={clearForm} className={classes.lastButton}>
-          Clear
-        </Button>
+        {onCancel && (
+          <Button onClick={onCancel} className={buttonsLeft ? '' : classes.lastButton}>
+            Cancel
+          </Button>
+        )}
         <Button type="submit" color="primary" disabled={!validateForm()}>
           Submit
         </Button>
@@ -277,11 +291,14 @@ InstrumentForm.propTypes = {
   quality: PropTypes.string,
   rosin: PropTypes.bool,
   bow: PropTypes.bool,
-  shoulderRestRockStop: PropTypes.bool,
+  shoulderRestEndpinRest: PropTypes.bool,
   readyToGo: PropTypes.bool,
   gifted: PropTypes.bool,
-  clearForm: PropTypes.func.isRequired,
+  clearForm: PropTypes.func,
   validateForm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  buttonsLeft: PropTypes.bool,
+  photoField: PropTypes.bool,
 }
 
 export default InstrumentForm

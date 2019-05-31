@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Paper,
@@ -14,6 +14,7 @@ import {
   DialogContent,
   Button,
   DialogActions,
+  makeStyles,
 } from '@material-ui/core'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
@@ -27,41 +28,38 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
-import { LoadingHeader, LoadingScreen, RootPaper } from '../../components'
+import {
+  LoadingHeader,
+  LoadingScreen,
+  RootPaper,
+  InstrumentDisplay,
+  InstrumentForm,
+} from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 import { titleCase } from '../../libs/titleCase'
 
 const styles = theme => ({
-  speedDial: {
-    position: 'fixed',
-    bottom: theme.spacing(2),
-    right: theme.spacing(3),
-  },
-  thumbnail: {
-    marginLeft: 'auto',
-    cursor: 'pointer',
-  },
-  photoPaper: {
-    position: 'absolute',
-    width: '80vw',
-    left: '10vw',
-    top: '5vh',
-    padding: '2.5vh',
-  },
-  fullImage: {
-    width: '75vw',
-  },
   fileInput: {
     display: 'none',
   },
 })
 
-function stars(count) {
-  return '★'.repeat(count)
-}
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10
+const emptyForm = {
+  instrumentNumber: '',
+  instrumentType: '',
+  size: '',
+  location: '',
+  assignedTo: '',
+  maintenanceNotes: '',
+  conditionNotes: '',
+  condition: '',
+  quality: '',
+  rosin: false,
+  bow: false,
+  shoulderRestRockStop: false,
+  readyToGo: false,
+  gifted: false,
+  photo: null,
 }
 
 function getModalStyle() {
@@ -75,11 +73,29 @@ function getModalStyle() {
   }
 }
 
-const yesOrNo = value => (value ? 'Yes' : 'No')
-
 class Single extends Component {
   constructor(props) {
     super(props)
+
+    this.actions = {
+      onRetrieve: () => {
+        const { number } = this.state
+        this.props.history.push(`/retrieve-single/${number}`)
+      },
+
+      onSignOut: () => {
+        const { number } = this.state
+        this.props.history.push(`/sign-out/${number}`)
+      },
+
+      onEdit: () => {
+        this.setState({ editing: true })
+      },
+
+      onAddPhoto: () => {
+        this.setState({ photoFormOpen: true })
+      },
+    }
 
     this.state = {
       number: '',
@@ -99,40 +115,42 @@ class Single extends Component {
       shoulderRestEndpinRest: true,
       giftedToStudent: true,
       isLoading: false,
-      actionsOpen: false,
-      viewPhoto: false,
-      newPhoto: null,
+      photo: null,
       photoFormOpen: false,
       errors: {},
       initialLoad: true,
+      editing: false,
     }
   }
 
   async componentDidMount() {
+    await this.getInstrument()
+  }
+
+  getInstrument = async () => {
     this.setState({ isLoading: true })
     const { recId } = this.props.match.params
     try {
-      const record = await API.get('instrument-inventory', `get/${recId}`)
+      const record = await API.get('instrument-inventory', `instruments/${recId}`)
       const { fields } = record
       this.setState({
         instrumentType: fields['Instrument Type'],
-        number: fields.Number,
-        size: fields.Size,
-        location: fields.Location,
-        assignedTo: fields['Assigned To'],
-        condition: fields.Condition,
-        quality: fields.Quality,
-        conditionNotes: fields['Condition Notes'],
-        maintenanceNotes: fields['Maintenance Notes'],
-        rosin: fields.Rosin,
-        bow: fields.Bow,
-        readyToGo: fields['Ready To Go'],
-        shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'],
-        giftedToStudent: fields['Gifted to student'],
+        instrumentNumber: fields.Number,
+        size: fields.Size || '',
+        location: fields.Location || '',
+        assignedTo: fields['Assigned To'] || '',
+        condition: fields.Condition || '',
+        quality: fields.Quality || '',
+        conditionNotes: fields['Condition Notes'] || '',
+        maintenanceNotes: fields['Maintenance Notes'] || '',
+        rosin: fields.Rosin || false,
+        bow: fields.Bow || false,
+        readyToGo: fields['Ready To Go'] || false,
+        shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'] || false,
+        giftedToStudent: fields['Gifted to student'] || false,
         isLoading: false,
         initialLoad: false,
       })
-      console.log(fields['Photo'])
       if (fields.Photo) {
         this.setState({
           thumbnailUrl: fields.Photo[0].thumbnails.small.url,
@@ -144,28 +162,105 @@ class Single extends Component {
     }
   }
 
-  handleChange = field => event => {
-    this.setState({ [field]: event.target.value })
+  handleSubmit = async e => {
+    e.preventDefault()
+
+    if (!this.validateForm()) {
+      return
+    }
+
+    this.setState({ isLoading: true })
+
+    let {
+      instrumentNumber,
+      instrumentType,
+      size,
+      location,
+      assignedTo,
+      maintenanceNotes,
+      conditionNotes,
+      condition,
+      quality,
+      rosin,
+      bow,
+      shoulderRestEndpinRest,
+      readyToGo,
+      gifted,
+      photo,
+    } = this.state
+
+    condition = parseInt(`${condition}`)
+    quality = parseInt(`${quality}`)
+
+    try {
+      let fields = {
+        instrumentNumber,
+        instrumentType,
+        size,
+        location,
+        assignedTo,
+        maintenanceNotes,
+        conditionNotes,
+        condition,
+        quality,
+        rosin,
+        bow,
+        shoulderRestEndpinRest,
+        readyToGo,
+        gifted,
+      }
+
+      const response = await API.patch(
+        'instrument-inventory',
+        `instruments/${this.props.match.params.recId}`,
+        {
+          body: fields,
+        }
+      )
+      this.setState({ editing: false })
+    } catch (err) {
+      console.error(err)
+      if (err.response.data.errors) {
+        this.setState({ errors: err.response.data.errors })
+      }
+      console.error(err.response)
+    }
+
+    this.setState({ isLoading: false })
   }
 
-  openActions = () => this.setState({ actionsOpen: true })
-
-  closeActions = () => this.setState({ actionsOpen: false })
-
-  toggleActions = () => this.setState({ actionsOpen: !this.state.actionsOpen })
-
-  onRetrieve = () => {
-    const { number } = this.state
-    this.props.history.push(`/retrieve-single/${number}`)
+  cancelEdit = () => {
+    this.setState({ editing: false })
   }
 
-  onSignOut = () => {
-    const { number } = this.state
-    this.props.history.push(`/sign-out/${number}`)
+  setErrors = (name, value) => {
+    this.setState({ [name]: value, ...this.state.errors })
   }
 
-  onEdit = () => {
-    alert('Not implemented yet')
+  validateForm = () => {
+    if (!this.state.instrumentNumber) {
+      return false
+    }
+    if (!this.state.instrumentType) {
+      return false
+    }
+    if (!this.state.size) {
+      return false
+    }
+    if (!this.state.location) {
+      return false
+    }
+    if (this.state.errors.condition) {
+      return false
+    }
+    if (this.state.errors.quality) {
+      return false
+    }
+    return true
+  }
+
+  setValue = (name, value) => {
+    this.setState({ [name]: value })
   }
 
   showPhoto = () => {
@@ -173,24 +268,24 @@ class Single extends Component {
   }
 
   handlePhoto = event => {
-    this.setState({ newPhoto: event.target.files[0] })
+    this.setState({ photo: event.target.files[0] })
   }
 
   uploadPhoto = async e => {
     e.preventDefault()
 
-    if (!this.state.newPhoto) {
+    if (!this.state.photo) {
       this.setState({ errors: { photo: 'Photo is required' } })
       return
     }
 
-    if (this.state.newPhoto.size > 5000000) {
+    if (this.state.photo.size > 5000000) {
       this.setState({ errors: { photo: 'Photo is too large. Choose Photo under 5MB' } })
       return
     }
 
     try {
-      const uploadedPhoto = await s3Upload(this.state.newPhoto)
+      const uploadedPhoto = await s3Upload(this.state.photo)
       const photoUrl = await Storage.vault.get(uploadedPhoto)
 
       const response = await API.patch(
@@ -198,7 +293,7 @@ class Single extends Component {
         `update/photo/${this.props.match.params.recId}`,
         { body: { photoUrl } }
       )
-      this.setState({ newPhoto: null, photoFormOpen: false })
+      this.setState({ photo: null, photoFormOpen: false })
     } catch (err) {
       console.error(err)
       if (err.response.data.errors) {
@@ -209,28 +304,7 @@ class Single extends Component {
 
   render() {
     const { classes } = this.props
-    const {
-      number,
-      instrumentType,
-      size,
-      photoUrl,
-      location,
-      assignedTo,
-      condition,
-      quality,
-      conditionNotes,
-      maintenanceNotes,
-      rosin,
-      bow,
-      readyToGo,
-      shoulderRestEndpinRest,
-      giftedToStudent,
-      actionsOpen,
-      thumbnailUrl,
-      viewPhoto,
-      fullPhotoUrl,
-      initialLoad,
-    } = this.state
+    const { actionsOpen, initialLoad, editing, photoFormOpen, errors } = this.state
     return (
       <React.Fragment>
         {initialLoad ? (
@@ -238,125 +312,61 @@ class Single extends Component {
         ) : (
           <React.Fragment>
             <RootPaper>
-              <Grid container direction="row">
-                <Grid item>
-                  <LoadingHeader
-                    isLoading={this.state.isLoading}
-                    title={`${titleCase(instrumentType)} ${number}`}
-                  />
-                </Grid>
-                {thumbnailUrl && (
-                  <Grid item className={classes.thumbnail} onClick={this.showPhoto}>
-                    <img src={thumbnailUrl} width="50px" height="50px" />
-                  </Grid>
-                )}
-              </Grid>
-              <List disablePadding component="ul">
-                <InfoItem primary="Size" secondary={size} />
-                <InfoItem primary="Location" secondary={location} />
-                <InfoItem primary="Assigned To" secondary={assignedTo} />
-                <InfoItem primary="Condition" secondary={stars(condition)} />
-                <InfoItem primary="Quality" secondary={stars(quality)} />
-                <InfoItem primary="Condition Notes" secondary={conditionNotes} />
-                <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
-                <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
-                <InfoItem primary="Bow" secondary={yesOrNo(bow)} />
-                <InfoItem primary="Ready To Go" secondary={yesOrNo(readyToGo)} />
-                <InfoItem
-                  primary="Should Rest/Rock Stop"
-                  secondary={yesOrNo(shoulderRestEndpinRest)}
+              {editing ? (
+                <InstrumentForm
+                  {...this.state}
+                  onSubmit={this.handleSubmit}
+                  setValue={this.setValue}
+                  setErrors={this.setErrors}
+                  validateForm={this.validateForm}
+                  onCancel={this.cancelEdit}
+                  buttonsLeft
                 />
-                <InfoItem
-                  primary="Gifted to Student"
-                  secondary={yesOrNo(giftedToStudent)}
-                />
-              </List>
+              ) : (
+                <InstrumentDisplay {...this.state} />
+              )}
             </RootPaper>
-            <SpeedDial
-              ariaLabel="actions"
-              icon={<SpeedDialIcon />}
-              onBlur={this.closeActions}
-              onClick={this.toggleActions}
-              onClose={this.closeActions}
-              onFocus={this.openActions}
-              onMouseEnter={this.openActions}
-              onMouseLeave={this.closeActions}
-              open={actionsOpen}
-              direction="up"
-              className={classes.speedDial}
-            >
-              <SpeedDialAction
-                icon={<InputIcon />}
-                tooltipTitle="Retrieve"
-                tooltipOpen={actionsOpen}
-                onClick={this.onRetrieve}
-              />
-              <SpeedDialAction
-                icon={<LabelIcon />}
-                tooltipTitle="Sign Out"
-                tooltipOpen={actionsOpen}
-                onClick={this.onSignOut}
-              />
-              <SpeedDialAction
-                icon={<EditIcon />}
-                tooltipTitle="Edit"
-                tooltipOpen={actionsOpen}
-                onClick={this.onEdit}
-              />
-              <SpeedDialAction
-                icon={<CameraIcon />}
-                tooltipTitle="Add Photo"
-                tooltipOpen={actionsOpen}
-                onClick={() => this.setState({ photoFormOpen: true })}
-              />
-            </SpeedDial>
-            <Modal open={viewPhoto} onClose={() => this.setState({ viewPhoto: false })}>
-              <Paper className={classes.photoPaper}>
-                <img src={fullPhotoUrl} className={classes.fullImage} />
-              </Paper>
-            </Modal>
-            <Dialog open={this.state.photoFormOpen}>
-              <DialogContent>
-                <form onSubmit={this.uploadPhoto}>
-                  <input
-                    accept="image/*"
-                    id="upload-photo"
-                    type="file"
-                    className={classes.fileInput}
-                    onChange={this.handlePhoto}
-                  />
-                  <FormControl fullWidth error={this.state.errors.photo ? true : false}>
-                    <label htmlFor="upload-photo">
-                      <Button variant="contained" component="span" color="primary">
-                        Choose Photo
-                      </Button>
-                    </label>
-                    {this.state.errors.photo && (
-                      <FormHelperText id="photo-error">
-                        {this.state.errors.photo}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </form>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => this.setState({ photoFormOpen: false })}
-                  className={classes.lastButton}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  disabled={this.state.newPhoto ? false : true}
-                  onClick={this.uploadPhoto}
-                >
-                  Upload
-                </Button>
-              </DialogActions>
-            </Dialog>
           </React.Fragment>
         )}
+        <SingleActions {...this.actions} />
+        <Dialog open={photoFormOpen}>
+          <DialogContent>
+            <form onSubmit={this.uploadPhoto}>
+              <input
+                accept="image/*"
+                id="upload-photo"
+                type="file"
+                className={classes.fileInput}
+                onChange={this.handlePhoto}
+              />
+              <FormControl fullWidth error={errors.photo ? true : false}>
+                <label htmlFor="upload-photo">
+                  <Button variant="contained" component="span" color="primary">
+                    Choose Photo
+                  </Button>
+                </label>
+                {errors.photo && (
+                  <FormHelperText id="photo-error">{errors.photo}</FormHelperText>
+                )}
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.setState({ photoFormOpen: false })}
+              className={classes.lastButton}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              disabled={this.state.photo ? false : true}
+              onClick={this.uploadPhoto}
+            >
+              Upload
+            </Button>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     )
   }
@@ -370,13 +380,66 @@ Single.propTypes = {
 
 export default withStyles(styles)(Single)
 
-const InfoItem = ({ primary, secondary }) => (
-  <ListItem component="li">
-    <ListItemText
-      primary={primary}
-      secondary={secondary}
-      primaryTypographyProps={{ variant: 'subtitle1', color: 'textSecondary' }}
-      secondaryTypographyProps={{ variant: 'subtitle2', color: 'textPrimary' }}
-    />
-  </ListItem>
-)
+const singleActionsStyles = makeStyles(theme => ({
+  speedDial: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(3),
+  },
+}))
+
+const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto }) => {
+  const [isOpen, setOpen] = useState(false)
+  const classes = singleActionsStyles()
+  const open = () => setOpen(true)
+  const close = () => setOpen(false)
+  const toggle = () => setOpen(!isOpen)
+
+  return (
+    <SpeedDial
+      ariaLabel="actions"
+      icon={<SpeedDialIcon />}
+      onBlur={close}
+      onClick={toggle}
+      onClose={close}
+      onFocus={open}
+      onMouseEnter={open}
+      onMouseLeave={close}
+      open={isOpen}
+      direction="up"
+      className={classes.speedDial}
+    >
+      <SpeedDialAction
+        icon={<InputIcon />}
+        tooltipTitle="Retrieve"
+        tooltipOpen={isOpen}
+        onClick={onRetrieve}
+      />
+      <SpeedDialAction
+        icon={<LabelIcon />}
+        tooltipTitle="Sign Out"
+        tooltipOpen={isOpen}
+        onClick={onSignOut}
+      />
+      <SpeedDialAction
+        icon={<EditIcon />}
+        tooltipTitle="Edit"
+        tooltipOpen={isOpen}
+        onClick={onEdit}
+      />
+      <SpeedDialAction
+        icon={<CameraIcon />}
+        tooltipTitle="Add Photo"
+        tooltipOpen={isOpen}
+        onClick={onAddPhoto}
+      />
+    </SpeedDial>
+  )
+}
+
+SingleActions.propTypes = {
+  onRetrieve: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onAddPhoto: PropTypes.func.isRequired,
+}
