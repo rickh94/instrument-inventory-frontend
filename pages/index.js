@@ -1,16 +1,19 @@
 import React from 'react'
 import Loadable from 'react-loadable'
 import { LoadingScreen } from '../components'
+import Login from './Login'
+
+export {Login}
 
 export const Home = Loadable({
   loader: () => import('./Home'),
   loading: () => <LoadingScreen />,
 })
 
-export const Login = Loadable({
-  loader: () => import('./Login'),
-  loading: () => <LoadingScreen />,
-})
+// export const Login = Loadable({
+//   loader: () => import('./Login'),
+//   loading: () => <LoadingScreen />,
+// })
 
 export const Profile = Loadable({
   loader: () => import('./Profile'),

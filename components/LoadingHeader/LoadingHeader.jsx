@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { withStyles, CircularProgress, Typography } from '@material-ui/core'
+import { makeStyles, CircularProgress, Typography } from '@material-ui/core'
 
-const styles = {
+const useStyles = makeStyles({
   heading: {
     display: 'flex',
     flexDirection: 'row',
@@ -11,9 +11,10 @@ const styles = {
   loader: {
     marginLeft: '1rem',
   },
-}
+})
 
-const LoadingHeader = ({ classes, isLoading, title }) => {
+const LoadingHeader = ({ isLoading, title }) => {
+  const classes = useStyles()
   return (
     <div className={classes.heading}>
       <Typography variant="h5" color="inherit">
@@ -25,9 +26,8 @@ const LoadingHeader = ({ classes, isLoading, title }) => {
 }
 
 LoadingHeader.propTypes = {
-  classes: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
 }
 
-export default withStyles(styles)(LoadingHeader)
+export default LoadingHeader

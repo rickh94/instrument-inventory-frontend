@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Quagga from 'quagga'
-import { withStyles } from '@material-ui/core'
 
 import './Scanner.scss'
-
-const styles = {
-  scanner: {
-    width: '100%',
-    height: 'auto',
-  },
-}
 
 function Scanner(props) {
   useEffect(() => {
@@ -57,7 +49,6 @@ function Scanner(props) {
 
 Scanner.propTypes = {
   onDetected: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Scanner)
+export default Scanner

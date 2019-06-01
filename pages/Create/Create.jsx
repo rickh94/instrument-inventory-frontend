@@ -18,8 +18,6 @@ import {
   DialogContent,
   DialogContentText,
 } from '@material-ui/core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
 
 import { lastButton } from '../../globalStyles'

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {
   Typography,
   ListItem,
-  withStyles,
+  makeStyles,
   Link,
   ListItemIcon,
   ListItemText,
@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom'
 
 import { RootPaper, FindInstrument, TodoList } from '../../components'
 
-const styles = {
+const useStyles = makeStyles({
   footer: {
     position: 'absolute',
     bottom: 0,
@@ -26,10 +26,11 @@ const styles = {
   footerItem: {
     marginLeft: '0.2rem',
   },
-}
+})
 
 function Home(props) {
-  const { classes } = props
+  const classes = useStyles()
+  
   const showMultipleResults = results => {
     props.setSearchResults(results)
     props.history.push('/search')
@@ -44,7 +45,7 @@ function Home(props) {
         />
       </RootPaper>
       <RootPaper>
-        <TodoList />
+        <TodoList showAlert={props.showAlert} />
       </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>
@@ -66,13 +67,12 @@ function Home(props) {
 }
 
 Home.propTypes = {
-  classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   showAlert: PropTypes.func.isRequired,
   setSearchResults: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Home)
+export default Home
 
 const ListOptionItem = withRouter(({ to, icon, text, history }) => {
   return (

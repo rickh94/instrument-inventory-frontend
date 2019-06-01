@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, InputLabel, NativeSelect } from '@material-ui/core'
+import Scanner from './ScannerField'
+
+export { Scanner }
 
 export const InstrumentTypeSelect = ({ error, value, onChange, required = false }) => (
   <FormControl fullWidth error={error ? true : false}>

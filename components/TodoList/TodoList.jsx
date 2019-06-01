@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
 import {
   Table,
@@ -9,18 +9,22 @@ import {
   TableBody,
   TextField,
   Button,
+  Input,
+  Typography,
+  Tooltip,
 } from '@material-ui/core'
-import { withRouter } from 'react-router-dom'
 import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import EditIcon from '@material-ui/icons/Edit'
 
 import { LoadingHeader } from '..'
 import { API } from 'aws-amplify'
+import TooltipIconButton from '../TooltipIconButton/TooltipIconButton'
 
-const TodoList = () => {
+const TodoList = ({ showAlert }) => {
   const [todoList, setTodoList] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [showCompleted, setShowCompleted] = useState(false)
@@ -52,8 +56,23 @@ const TodoList = () => {
     setLoading(false)
   }
 
-  const afterCreate = () => {
-    afterAction()
+  const createTodo = async data => {
+    if (!data.content) {
+      showAlert('Please enter some content')
+      return
+    }
+
+    setLoading(true)
+    try {
+      await API.post('instrument-inventory', 'todos', {
+        body: data,
+      })
+    } catch (err) {
+      showAlert(`Error: ${err}`)
+    }
+
+    setLoading(false)
+    setNeedsUpdate(true)
     setCreating(false)
   }
 
@@ -72,10 +91,12 @@ const TodoList = () => {
         </TableHead>
         <TableBody component="tbody">
           {creating ? (
-            <CreateTodoForm
-              after={afterCreate}
-              before={beforeAction}
-              cancel={() => setCreating(false)}
+            <TodoForm
+              onSubmit={createTodo}
+              icon={<AddIcon style={{ marginLeft: '3px' }} />}
+              // after={afterCreate}
+              // before={beforeAction}
+              onCancel={() => setCreating(false)}
             />
           ) : (
             <TableRow component="tr" hover onClick={() => setCreating(true)}>
@@ -93,6 +114,7 @@ const TodoList = () => {
               key={item.todoId}
               beforeAction={beforeAction}
               afterAction={afterAction}
+              showAlert={showAlert}
             />
           ))}
           <TableRow
@@ -118,17 +140,20 @@ const TodoList = () => {
   )
 }
 
-TodoList.propTypes = {}
+TodoList.propTypes = {
+  showAlert: PropTypes.func.isRequired,
+}
 
 export default TodoList
 
-const TodoItem = ({ item, beforeAction, afterAction }) => {
+const TodoItem = ({ item, beforeAction, afterAction, showAlert }) => {
+  const [editing, setEditing] = useState(false)
   const deleteTodo = async () => {
     beforeAction()
     try {
       await API.del('instrument-inventory', `todos/${item.todoId}`)
     } catch (err) {
-      console.error(err)
+      showAlert(`Error: ${err}`)
     }
     afterAction()
   }
@@ -139,26 +164,75 @@ const TodoItem = ({ item, beforeAction, afterAction }) => {
       const end = item.completed ? 'unmark-completed' : 'mark-completed'
       await API.post('instrument-inventory', `todos/${item.todoId}/${end}`)
     } catch (err) {
-      console.error(err)
+      showAlert(`Error: ${err}`)
     }
     afterAction()
   }
 
+  const updateTodo = async data => {
+    beforeAction()
+
+    if (!data.content) {
+      showAlert('Please enter some content')
+      return
+    }
+    try {
+      await API.put('instrument-inventory', `todos/${item.todoId}`, { body: data })
+    } catch (err) {
+      showAlert(`Error: ${err}`)
+    }
+
+    setEditing(false)
+    afterAction()
+  }
+
   return (
-    <TableRow component="tr">
-      <TableCell component="td">
-        <IconButton size="small" onClick={toggleCompleted}>
-          {item.completed ? <CheckCircle /> : <CheckCircleOutline />}
-        </IconButton>
-      </TableCell>
-      <TableCell component="td">{item.content}</TableCell>
-      <TableCell component="td">{item.relevantInstrument}</TableCell>
-      <TableCell component="td">
-        <IconButton size="small" onClick={deleteTodo}>
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <React.Fragment>
+      {editing ? (
+        <TodoForm
+          onSubmit={updateTodo}
+          icon={<EditIcon />}
+          onCancel={() => setEditing(false)}
+          initial={item}
+        />
+      ) : (
+        <TableRow component="tr">
+          <TableCell component="td">
+            {item.completed ? (
+              <TooltipIconButton
+                title="Mark Incomplete"
+                size="small"
+                onClick={toggleCompleted}
+              >
+                <CheckCircle />
+              </TooltipIconButton>
+            ) : (
+              <TooltipIconButton
+                title="Mark Completed"
+                size="small"
+                onClick={toggleCompleted}
+              >
+                <CheckCircleOutline />
+              </TooltipIconButton>
+            )}
+          </TableCell>
+          <TableCell component="td">{item.content}</TableCell>
+          <TableCell component="td">{item.relevantInstrument}</TableCell>
+          <TableCell component="td">
+            <TooltipIconButton
+              title="Edit"
+              size="small"
+              onClick={() => setEditing(true)}
+            >
+              <EditIcon />
+            </TooltipIconButton>
+            <TooltipIconButton title="Delete" size="small" onClick={deleteTodo}>
+              <DeleteIcon />
+            </TooltipIconButton>
+          </TableCell>
+        </TableRow>
+      )}
+    </React.Fragment>
   )
 }
 
@@ -166,44 +240,35 @@ TodoItem.propTypes = {
   item: PropTypes.object.isRequired,
   beforeAction: PropTypes.func,
   afterAction: PropTypes.func,
+  showAlert: PropTypes.func.isRequired,
 }
 
-const CreateTodoForm = ({ before, after, cancel }) => {
-  const [content, setContent] = useState('')
-  const [relevantInstrument, setRelevantInstrument] = useState('')
-  const [error, setError] = useState(false)
-
-  const handleSubmit = async () => {
-    if (!content) {
-      setError(true)
-      return
-    }
-
-    before()
-    try {
-      await API.post('instrument-inventory', 'todos', {
-        body: { content, relevantInstrument },
-      })
-    } catch (err) {
-      console.error(err)
-    }
-
-    after()
-  }
+const TodoForm = ({
+  initial = { content: '', relevantInstrument: '' },
+  onCancel,
+  onSubmit,
+  icon,
+}) => {
+  const [content, setContent] = useState(initial.content)
+  const [relevantInstrument, setRelevantInstrument] = useState(
+    initial.relevantInstrument
+  )
 
   return (
     <TableRow component="tr">
       <TableCell component="td">
-        <AddIcon style={{ marginLeft: '3px' }} />
+        {icon}
+        {/* <AddIcon style={{ marginLeft: '3px' }} /> */}
       </TableCell>
       <TableCell component="td">
         <TextField
           style={{ verticalAlign: 'center' }}
           label="Task"
           value={content}
+          name="content"
           onChange={event => setContent(event.target.value)}
           required
-          error={error}
+          // error={error}
         />
       </TableCell>
       <TableCell component="td">
@@ -214,10 +279,14 @@ const CreateTodoForm = ({ before, after, cancel }) => {
         />
       </TableCell>
       <TableCell component="td">
-        <Button onClick={handleSubmit} size="small">
+        <Button
+          onClick={() => onSubmit({ content, relevantInstrument })}
+          size="small"
+          disabled={!content}
+        >
           Submit
         </Button>
-        <Button onClick={cancel} size="small">
+        <Button onClick={onCancel} size="small">
           Cancel
         </Button>
       </TableCell>
@@ -225,7 +294,9 @@ const CreateTodoForm = ({ before, after, cancel }) => {
   )
 }
 
-CreateTodoForm.propTypes = {
-  before: PropTypes.func,
-  after: PropTypes.func,
+TodoForm.propTypes = {
+  initial: PropTypes.object,
+  onCancel: PropTypes.func.isRequired,
+  icon: PropTypes.element.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 }

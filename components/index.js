@@ -12,6 +12,7 @@ import InstrumentForm from './InstrumentForm'
 import InstrumentDisplay from './InstrumentDisplay'
 import FindInstrument from './FindInstrument'
 import TodoList from './TodoList'
+import TooltipIconButton from './TooltipIconButton'
 
 export {
   AppliedRoute,
@@ -27,5 +28,6 @@ export {
   InstrumentForm,
   InstrumentDisplay,
   FindInstrument,
-  TodoList
+  TodoList,
+  TooltipIconButton,
 }

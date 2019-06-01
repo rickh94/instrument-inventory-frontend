@@ -5,19 +5,8 @@ import { withRouter } from 'react-router-dom'
 
 import { lastButton } from '../../globalStyles'
 import { API } from 'aws-amplify'
-import { LoadingHeader, Scanner } from '..'
-import {
-  FormControl,
-  InputLabel,
-  Button,
-  Input,
-  InputAdornment,
-  IconButton,
-  FormHelperText,
-  FormGroup,
-} from '@material-ui/core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBarcode } from '@fortawesome/free-solid-svg-icons'
+import { LoadingHeader, Fields } from '..'
+import { Button, FormGroup } from '@material-ui/core'
 
 const getSearchParameters = input =>
   input.match(/\w?\d+-\d+/)
@@ -30,15 +19,7 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
   const [isLoading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState('')
-  const [scanning, setScanning] = useState(false)
   const classes = useStyles()
-
-  const onDetected = result => {
-    if (result.codeResult.code !== searchTerm) {
-      setSearchTerm(result.codeResult.code)
-      setScanning(false)
-    }
-  }
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -67,7 +48,7 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
       if (err.response) {
         setError(err.response.data)
       } else {
-        console.error(err)
+        showAlert(`Error: ${err}`)
       }
     }
   }
@@ -76,38 +57,12 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
     <React.Fragment>
       <LoadingHeader isLoading={isLoading} title="Find an Instrument" />
       <form onSubmit={onSubmit}>
-        <FormControl fullWidth error={error ? true : false}>
-          <InputLabel htmlFor="search-term">Number or Name</InputLabel>
-          {scanning ? (
-            <React.Fragment>
-              <Scanner onDetected={onDetected} />
-              <Button onClick={() => setScanning(false)}>
-                Stop Scanning
-              </Button>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <Input
-                id="search-term"
-                onChange={event => setSearchTerm(event.target.value)}
-                aria-describedby="instrument-number-error"
-                type="text"
-                value={searchTerm}
-                required
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setScanning(true)}>
-                      <FontAwesomeIcon icon={faBarcode} />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {error && (
-                <FormHelperText id="instrument-number-error">{error}</FormHelperText>
-              )}
-            </React.Fragment>
-          )}
-        </FormControl>
+        <Fields.Scanner
+          value={searchTerm}
+          setValue={setSearchTerm}
+          error={error}
+          label="Name or Number"
+        />
         <FormGroup row>
           <Button onClick={() => setSearchTerm('')} className={classes.lastButton}>
             Clear
@@ -124,7 +79,7 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
 FindInstrument.propTypes = {
   showMultipleResults: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 }
 
 export default withRouter(FindInstrument)

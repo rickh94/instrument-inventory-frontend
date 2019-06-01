@@ -7,16 +7,12 @@ import {
   InputLabel,
   Button,
   Input,
-  InputAdornment,
-  IconButton,
   FormHelperText,
   FormGroup,
   FormControlLabel,
   Checkbox,
 } from '@material-ui/core'
-import { Scanner, Fields } from '..'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBarcode } from '@fortawesome/free-solid-svg-icons'
+import { Fields } from '..'
 
 const useStyles = makeStyles({
   lastButton,
@@ -51,19 +47,11 @@ const InstrumentForm = ({
   photoField,
 }) => {
   const classes = useStyles()
-  const [scanning, setScanning] = useState(false)
-
-  const onDetected = result => {
-    if (result.codeResult.code !== instrumentNumber) {
-      setValue('instrumentNumber', result.codeResult.code)
-      setScanning(false)
-    }
-  }
 
   const handleRating = name => event => {
     if (event.target.value > 5 || event.target.value < 0) {
       setValue(event.target.value)
-      setErrors(name, 'Value must be between 1 and 5' )
+      setErrors(name, 'Value must be between 1 and 5')
     } else if (event.target.value == 0) {
       setValue(name, '')
       setErrors(name, null)
@@ -87,38 +75,12 @@ const InstrumentForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <FormControl fullWidth error={errors.instrumentNumber ? true : false}>
-        <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
-        {scanning ? (
-          <React.Fragment>
-            <Scanner onDetected={onDetected} />
-            <Button onClick={() => setScanning(false)}>Stop Scanning</Button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <Input
-              id="instrument-number"
-              onChange={handleChange('instrumentNumber')}
-              aria-describedby="instrument-number-error"
-              type="text"
-              value={instrumentNumber}
-              required
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setScanning(true)}>
-                    <FontAwesomeIcon icon={faBarcode} />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-            {errors.instrumentNumber && (
-              <FormHelperText id="instrument-number-error">
-                {errors.instrumentNumber}
-              </FormHelperText>
-            )}
-          </React.Fragment>
-        )}
-      </FormControl>
+      <Fields.Scanner
+        error={errors.instrumentNumber}
+        label="Instrument Number"
+        setValue={value => setValue('instrumentNumber', value)}
+        value={instrumentNumber}
+      />
       <Fields.InstrumentTypeSelect
         error={errors.instrumentType}
         onChange={handleChange('instrumentType')}

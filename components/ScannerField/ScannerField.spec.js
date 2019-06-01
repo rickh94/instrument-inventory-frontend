@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import SingleActions from './SingleActions';
+import ScannerField from './ScannerField';
 
-describe('<SingleActions />', () => {
+describe('<ScannerField />', () => {
   test('renders', () => {
-    const wrapper = shallow(<SingleActions />);
+    const wrapper = shallow(<ScannerField />);
     expect(wrapper).toMatchSnapshot();
   });
 });

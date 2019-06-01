@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { Link as RouterLink, withRouter } from 'react-router-dom'
 
@@ -27,7 +27,7 @@ import {
   ListItemIcon,
 } from '@material-ui/core'
 
-const styles = {
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
@@ -41,11 +41,15 @@ const styles = {
     textDecoration: 'none',
     color: 'inherit',
   },
-}
+})
 
 export function Nav(props) {
-  const { classes } = props
+  const classes = useStyles()
   const [drawerIsOpen, setDrawerOpen] = useState(false)
+
+  const openDrawer = () => setDrawerOpen(true)
+  const closeDrawer = () => setDrawerOpen(false)
+
   return (
     <React.Fragment>
       <div className={classes.root}>
@@ -54,7 +58,7 @@ export function Nav(props) {
             <IconButton
               color="inherit"
               aria-label="Menu"
-              onClick={() => setDrawerOpen(true)}
+              onClick={openDrawer}
             >
               <MenuIcon />
             </IconButton>
@@ -78,8 +82,8 @@ export function Nav(props) {
       <Toolbar />
       <SwipeableDrawer
         open={drawerIsOpen}
-        onClose={() => setDrawerOpen(false)}
-        onOpen={() => setDrawerOpen(true)}
+        onClose={closeDrawer}
+        onOpen={openDrawer}
       >
         <List>
           <NavItem
@@ -138,7 +142,6 @@ export function Nav(props) {
 }
 
 Nav.propTypes = {
-  classes: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   handleLogout: PropTypes.func.isRequired,
 }
@@ -165,4 +168,4 @@ NavItem.propTypes = {
   text: PropTypes.string.isRequired,
 }
 
-export default withStyles(styles)(withRouter(Nav))
+export default withRouter(Nav)

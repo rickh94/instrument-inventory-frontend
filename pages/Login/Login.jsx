@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -52,6 +52,7 @@ class Login extends Component {
 
   static propTypes = {
     userHasAuthenticated: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired,
   }
 
   handleSubmit = async event => {
@@ -95,17 +96,13 @@ class Login extends Component {
     )
   }
 
-  completeNewPassword = async event => {
+  completeNewPassword = async newPassword => {
     event.preventDefault()
-
-    if (!this.validateNewPassword()) {
-      return
-    }
 
     this.setState({ isLoadingNewPassword: true })
 
     try {
-      await Auth.completeNewPassword(this.state.user, this.state.newPassword1)
+      await Auth.completeNewPassword(this.state.user, newPassword)
       this.props.userHasAuthenticated(true)
     } catch (e) {
       if (e.code === 'InvalidPasswordException') {
@@ -115,6 +112,9 @@ class Login extends Component {
       this.setState({ isLoadingNewPassword: false })
     }
   }
+
+  setError = (name, value) =>
+    this.setState({ errors: { [name]: value, ...this.state.errors } })
 
   render() {
     const { classes } = this.props
@@ -176,91 +176,15 @@ class Login extends Component {
             </List>
           </form>
         </RootPaper>
-
-        <Dialog
+        <NewPasswordDialog
+          onSubmit={this.completeNewPassword}
+          setOpen={completeNewPassword => this.setState({ completeNewPassword })}
+          isLoading={this.state.isLoadingNewPassword}
+          showAlert={this.props.showAlert}
+          errors={this.state.errors}
+          setError={this.setError}
           open={this.state.completeNewPassword}
-          onClose={() => this.setState({ completeNewPassword: false })}
-          aria-labelledby="complete-new-password-title"
-        >
-          <DialogTitle id="complete-new-password-title">
-            <LoadingHeader
-              isLoading={this.state.isLoadingNewPassword}
-              title="New Password Required"
-            />
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To complete Sign In, please select a new password.
-            </DialogContentText>
-            <form onSubmit={this.completeNewPassword}>
-              <FormControl
-                fullWidth
-                error={this.state.errors.newPassword1 ? true : false}
-              >
-                <InputLabel htmlFor="password1">New Password</InputLabel>
-                <Input
-                  id="password1"
-                  onChange={e => this.setState({ newPassword1: e.target.value })}
-                  aria-describedby="password-error-text1"
-                  type="password"
-                  onBlur={() => {
-                    if (this.state.newPassword1.length < 8) {
-                      this.setState({
-                        errors: { newPassword1: 'Password is not long enough' },
-                      })
-                    } else {
-                      this.setState({ errors: { newPassword1: null } })
-                    }
-                  }}
-                  value={this.state.newPassword1}
-                />
-                {this.state.errors.newPassword1 && (
-                  <FormHelperText id="password-error-text1">
-                    {this.state.errors.newPassword1}
-                  </FormHelperText>
-                )}
-              </FormControl>
-              <FormControl
-                fullWidth
-                error={this.state.errors.newPassword2 ? true : false}
-              >
-                <InputLabel htmlFor="password2">Confirm New Password</InputLabel>
-                <Input
-                  id="password2"
-                  onChange={e => this.setState({ newPassword2: e.target.value })}
-                  aria-describedby="password-error-text2"
-                  type="password"
-                  onBlur={() => {
-                    if (this.state.newPassword2 !== this.state.newPassword1) {
-                      this.setState({
-                        errors: { newPassword2: 'Passwords do not match' },
-                      })
-                    } else {
-                      this.setState({ errors: { newPassword2: null } })
-                    }
-                  }}
-                  value={this.state.newPassword2}
-                />
-                {this.state.errors.newPassword2 && (
-                  <FormHelperText id="password-error-text2">
-                    {this.state.errors.newPassword2}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </form>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.setState({ completeNewPassword: false })}>
-              Cancel
-            </Button>
-            <Button
-              onClick={this.completeNewPassword}
-              disabled={!this.validateNewPassword()}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
+        />
         <Dialog
           open={this.state.loginError ? true : false}
           onClose={() => this.setState({ loginError: null })}
@@ -277,3 +201,108 @@ class Login extends Component {
 }
 
 export default withStyles(styles)(Login)
+
+
+const NewPasswordDialog = ({
+  open,
+  setOpen,
+  isLoading,
+  onSubmit,
+  showAlert,
+  errors,
+  setError,
+}) => {
+  const [newPassword1, setPassword1] = useState('')
+  const [newPassword2, setPassword2] = useState('')
+
+  const setFromEvent = setCallback => event => setCallback(event.target.value)
+
+  const handleSubmit = event => {
+    event.preventDefault()
+    if (!validateForm()) {
+      return
+    }
+
+    onSubmit(newPassword1)
+  }
+
+  const validateForm = () => newPassword1.length > 8 && newPassword1 === newPassword2
+
+  return (
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="complete-new-password-title"
+    >
+      <DialogTitle id="complete-new-password-title">
+        <LoadingHeader isLoading={isLoading} title="New Password Required" />
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          To complete Sign In, please select a new password.
+        </DialogContentText>
+        <form onSubmit={handleSubmit}>
+          <FormControl fullWidth error={errors.newPassword1 ? true : false}>
+            <InputLabel htmlFor="password1">New Password</InputLabel>
+            <Input
+              id="password1"
+              onChange={setFromEvent(setPassword1)}
+              aria-describedby="password1-error"
+              type="password"
+              value={newPassword1}
+              onBlur={() => {
+                if (newPassword1.length < 8) {
+                  setError('newPassword1', 'Password is not long enough')
+                } else {
+                  setError('newPassword1', null)
+                }
+              }}
+            />
+            {errors.newPassword1 && (
+              <FormHelperText id="password1-error">
+                {errors.newPassword1}
+              </FormHelperText>
+            )}
+          </FormControl>
+          <FormControl fullWidth error={errors.newPassword2 ? true : false}>
+            <InputLabel htmlFor="password2">Confirm Password</InputLabel>
+            <Input
+              id="password2"
+              onChange={setFromEvent(setPassword2)}
+              aria-describedby="password2-error"
+              type="password"
+              value={newPassword2}
+              onBlur={() => {
+                if (newPassword2 !== newPassword1) {
+                  setError('newPassword2', 'Passwords do not match')
+                } else {
+                  setError('newPassword2', null)
+                }
+              }}
+            />
+            {errors.newPassword2 && (
+              <FormHelperText id="password2-error">
+                {errors.newPassword2}
+              </FormHelperText>
+            )}
+          </FormControl>
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={handleSubmit} disabled={!validateForm()}>
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+NewPasswordDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  showAlert: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
+  setError: PropTypes.func.isRequired,
+}

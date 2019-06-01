@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 import { API } from 'aws-amplify'
 
-import { Scanner, LoadingHeader, RootPaper } from '../../components'
+import { Scanner, LoadingHeader, RootPaper, Fields } from '../../components'
 import { lastButton, fullWidth } from '../../globalStyles'
 
 const styles = {
@@ -38,7 +38,6 @@ class RetrieveSingle extends Component {
       instrumentNumber: '',
       error: '',
       ask: false,
-      scanning: false,
       isLoading: false,
     }
   }
@@ -76,11 +75,6 @@ class RetrieveSingle extends Component {
     this.setState({ isLoading: false })
   }
 
-  onDetected = result => {
-    if (result.codeResult.code !== this.state.instrumentNumber) {
-      this.setState({ instrumentNumber: result.codeResult.code, scanning: false })
-    }
-  }
 
   render() {
     const { classes } = this.props
@@ -92,31 +86,12 @@ class RetrieveSingle extends Component {
             title="Retrieve an Instrument"
           />
           <form onSubmit={this.handleSubmit}>
-            <FormControl fullWidth error={this.state.error ? true : false}>
-              <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
-              <Input
-                id="instrument-number"
-                required
-                onChange={e => this.setState({ instrumentNumber: e.target.value })}
-                aria-describedby="instrument-number-error"
-                type="text"
-                value={this.state.instrumentNumber}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => this.setState({ scanning: !this.state.scanning })}
-                    >
-                      <FontAwesomeIcon icon={faBarcode} />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {this.state.error && (
-                <FormHelperText id="instrument-number-error">
-                  {this.state.error}
-                </FormHelperText>
-              )}
-            </FormControl>
+            <Fields.Scanner
+              label="Instrument Number"
+              value={this.state.instrumentNumber}
+              setValue={value => this.setState({ instrumentNumber: value })}
+              error={this.state.error}
+            />
             <FormGroup row className={classes.buttons}>
               <Button
                 onClick={() => this.setState({ instrumentNumber: '', scanning: false })}
@@ -129,7 +104,6 @@ class RetrieveSingle extends Component {
               </Button>
             </FormGroup>
           </form>
-          {this.state.scanning && <Scanner onDetected={this.onDetected} />}
         </RootPaper>
         <Dialog open={this.state.ask} onClose={this.retrieveAnother}>
           <DialogContent>

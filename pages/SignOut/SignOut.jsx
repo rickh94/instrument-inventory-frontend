@@ -14,19 +14,19 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText
+  DialogContentText,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
-import { LoadingHeader, RootPaper, Scanner } from '../../components'
+import { LoadingHeader, RootPaper, Scanner, Fields } from '../../components'
 import { centerStuff, lastButton, fullWidth } from '../../globalStyles'
 import { API } from 'aws-amplify'
 
 const styles = {
   centerButtons: centerStuff,
   lastButton,
-  buttons: fullWidth
+  buttons: fullWidth,
 }
 
 class SignOut extends Component {
@@ -40,7 +40,7 @@ class SignOut extends Component {
       scanning: false,
       isLoading: false,
       response: '',
-      errors: {}
+      errors: {},
     }
   }
 
@@ -67,14 +67,14 @@ class SignOut extends Component {
         body: {
           instrumentNumber,
           school,
-          studentName
-        }
+          studentName,
+        },
       })
       this.setState({ response })
     } catch (err) {
       if (err.response.data.errors.instrumentNumber) {
         this.setState({
-          errors: { instrumentNumber: err.response.data.errors.instrumentNumber }
+          errors: { instrumentNumber: err.response.data.errors.instrumentNumber },
         })
       }
       console.error(err.response)
@@ -98,7 +98,7 @@ class SignOut extends Component {
       school: '',
       studentName: '',
       scanning: false,
-      response: ''
+      response: '',
     })
   }
 
@@ -112,49 +112,12 @@ class SignOut extends Component {
             title="Sign Out an Instrument"
           />
           <form onSubmit={this.handleSubmit}>
-            <FormControl
-              fullWidth
-              error={this.state.errors.instrumentNumber ? true : false}
-            >
-              <InputLabel htmlFor="instrument-number">Instrument Number</InputLabel>
-              {this.state.scanning ? (
-                <React.Fragment>
-                  <Scanner onDetected={this.onDetected} />
-                  <div className={classes.centerButtons}>
-                    <Button onClick={() => this.setState({ scanning: false })}>
-                      Stop Scanning
-                    </Button>
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <Input
-                    id="instrument-number"
-                    onChange={e => this.setState({ instrumentNumber: e.target.value })}
-                    aria-describedby="instrument-number-error"
-                    type="text"
-                    value={this.state.instrumentNumber}
-                    required
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            this.setState({ scanning: !this.state.scanning })
-                          }
-                        >
-                          <FontAwesomeIcon icon={faBarcode} />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  {this.state.errors.instrumentNumber && (
-                    <FormHelperText id="instrument-number-error">
-                      {this.state.errors.instrumentNumber}
-                    </FormHelperText>
-                  )}
-                </React.Fragment>
-              )}
-            </FormControl>
+            <Fields.Scanner
+              label="Instrument Number"
+              error={this.state.errors.instrumentNumber}
+              value={this.state.instrumentNumber}
+              setValue={value => this.setState({ instrumentNumber: value })}
+            />
             <FormControl fullWidth error={this.state.errors.studentName ? true : false}>
               <InputLabel htmlFor="student-name">Student Name</InputLabel>
               <Input
@@ -171,29 +134,10 @@ class SignOut extends Component {
                 </FormHelperText>
               )}
             </FormControl>
-            <FormControl fullWidth error={this.state.errors.school ? true : false}>
-              <InputLabel htmlFor="school">School</InputLabel>
-              <NativeSelect
-                id="school"
-                onChange={e => this.setState({ school: e.target.value })}
-                aria-describedby="student-name-error"
-                value={this.state.school}
-                required
-              >
-                <option value="" />
-                <option value="Grant Elementary School">Grant Elementary School</option>
-                <option value="Hedgepath Middle School">Hedgepath Middle School</option>
-                <option value="Trenton High School">Trenton High School</option>
-                <option value="Columbus Elementary School">
-                  Columbus Elementary School
-                </option>
-              </NativeSelect>
-              {this.state.errors.school && (
-                <FormHelperText id="student-name-error">
-                  {this.state.errors.school}
-                </FormHelperText>
-              )}
-            </FormControl>
+            <Fields.LocationSelect
+              value={this.state.school}
+              onChange={e => this.setState({ school: e.target.value })}
+            />
             <FormGroup row>
               <Button onClick={this.clearForm} className={classes.lastButton}>
                 Clear
@@ -220,7 +164,7 @@ class SignOut extends Component {
 
 SignOut.propTypes = {
   classes: PropTypes.object.isRequired,
-  match: PropTypes.object
+  match: PropTypes.object,
 }
 
 export default withStyles(styles)(SignOut)
