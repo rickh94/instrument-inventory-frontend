@@ -2,19 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
-  List,
   ListItem,
   withStyles,
   Link,
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core'
-import InputIcon from '@material-ui/icons/Input'
-import ListIcon from '@material-ui/icons/FormatListBulleted'
-import LabelIcon from '@material-ui/icons/Label'
-import AddIcon from '@material-ui/icons/Add'
-import SearchIcon from '@material-ui/icons/Search'
-import FilterIcon from '@material-ui/icons/FilterList'
 import { withRouter } from 'react-router-dom'
 
 import { RootPaper, FindInstrument, TodoList } from '../../components'
@@ -52,38 +45,6 @@ function Home(props) {
       </RootPaper>
       <RootPaper>
         <TodoList />
-        {/* <List>
-          <ListOptionItem
-            to="/create"
-            icon={<AddIcon />}
-            text="Create a New Instrument"
-          />
-          <ListOptionItem
-            to="/sign-out"
-            icon={<LabelIcon />}
-            text="Sign out instrument"
-          />
-          <ListOptionItem
-            to="/retrieve-single"
-            icon={<InputIcon />}
-            text="Retrieve An Instrument"
-          />
-          <ListOptionItem
-            to="/retrieve-multiple"
-            icon={<ListIcon />}
-            text="Retrieve Multiple Instruments"
-          />
-          <ListOptionItem
-            to="/search"
-            icon={<SearchIcon />}
-            text="Find an Instrument"
-          />
-          <ListOptionItem
-            to="/filter"
-            icon={<FilterIcon />}
-            text="Filter Instruments"
-          />
-        </List> */}
       </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>
