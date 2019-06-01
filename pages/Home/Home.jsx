@@ -17,7 +17,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import FilterIcon from '@material-ui/icons/FilterList'
 import { withRouter } from 'react-router-dom'
 
-import { RootPaper, FindInstrument } from '../../components'
+import { RootPaper, FindInstrument, TodoList } from '../../components'
 
 const styles = {
   footer: {
@@ -51,7 +51,8 @@ function Home(props) {
         />
       </RootPaper>
       <RootPaper>
-        <List>
+        <TodoList />
+        {/* <List>
           <ListOptionItem
             to="/create"
             icon={<AddIcon />}
@@ -82,7 +83,7 @@ function Home(props) {
             icon={<FilterIcon />}
             text="Filter Instruments"
           />
-        </List>
+        </List> */}
       </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>

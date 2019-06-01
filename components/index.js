@@ -11,6 +11,7 @@ import * as Fields from './CustomFields'
 import InstrumentForm from './InstrumentForm'
 import InstrumentDisplay from './InstrumentDisplay'
 import FindInstrument from './FindInstrument'
+import TodoList from './TodoList'
 
 export {
   AppliedRoute,
@@ -26,4 +27,5 @@ export {
   InstrumentForm,
   InstrumentDisplay,
   FindInstrument,
+  TodoList
 }
