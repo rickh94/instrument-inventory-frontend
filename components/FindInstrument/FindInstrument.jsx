@@ -81,7 +81,7 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
           {scanning ? (
             <React.Fragment>
               <Scanner onDetected={onDetected} />
-              <Button onClick={() => this.setState({ scanning: false })}>
+              <Button onClick={() => setScanning(false)}>
                 Stop Scanning
               </Button>
             </React.Fragment>
@@ -124,6 +124,7 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
 FindInstrument.propTypes = {
   showMultipleResults: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default withRouter(FindInstrument)
