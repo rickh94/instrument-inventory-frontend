@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavItemInternal matches snapshot 1`] = `
+<div>
+  <li
+    aria-disabled="false"
+    class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    data-testid="item"
+    role="button"
+    tabindex="0"
+  >
+    <div
+      class="MuiListItemText-root"
+    >
+      <span
+        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary"
+      >
+        test
+      </span>
+    </div>
+    <span
+      class="MuiTouchRipple-root"
+    />
+  </li>
+</div>
+`;

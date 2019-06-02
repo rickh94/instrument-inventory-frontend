@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LoadingHeader /> matches snapshot 1`] = `
+<div>
+  <div
+    class="makeStyles-heading-1"
+  >
+    <h5
+      class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+    >
+      test
+    </h5>
+  </div>
+</div>
+`;

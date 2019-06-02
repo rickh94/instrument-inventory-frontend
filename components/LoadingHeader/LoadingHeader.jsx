@@ -20,7 +20,9 @@ const LoadingHeader = ({ isLoading, title }) => {
       <Typography variant="h5" color="inherit">
         {title}
       </Typography>
-      {isLoading && <CircularProgress className={classes.loader} />}
+      {isLoading && (
+        <CircularProgress className={classes.loader} />
+      )}
     </div>
   )
 }

@@ -55,11 +55,7 @@ export function Nav(props) {
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="Menu"
-              onClick={openDrawer}
-            >
+            <IconButton color="inherit" aria-label="Menu" onClick={openDrawer}>
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
@@ -80,12 +76,8 @@ export function Nav(props) {
         </AppBar>
       </div>
       <Toolbar />
-      <SwipeableDrawer
-        open={drawerIsOpen}
-        onClose={closeDrawer}
-        onOpen={openDrawer}
-      >
-        <List>
+      <SwipeableDrawer open={drawerIsOpen} onClose={closeDrawer} onOpen={openDrawer}>
+        <List component="ul">
           <NavItem
             to="/"
             icon={<HomeIcon />}
@@ -146,26 +138,29 @@ Nav.propTypes = {
   handleLogout: PropTypes.func.isRequired,
 }
 
-const NavItem = withRouter(({ to, icon, history, setDrawerOpen, text }) => {
-  return (
-    <ListItem
-      button
-      onClick={() => {
-        setDrawerOpen(false)
-        history.push(to)
-      }}
-    >
-      {icon && <ListItemIcon>{icon}</ListItemIcon>}
-      <ListItemText>{text}</ListItemText>
-    </ListItem>
-  )
-})
+export const NavItemInternal = ({ to, icon, history, setDrawerOpen, text }) => (
+  <ListItem
+    button
+    onClick={() => {
+      setDrawerOpen(false)
+      history.push(to)
+    }}
+    data-testid="item"
+    component="li"
+  >
+    {icon && <ListItemIcon>{icon}</ListItemIcon>}
+    <ListItemText>{text}</ListItemText>
+  </ListItem>
+)
 
-NavItem.propTypes = {
+
+NavItemInternal.propTypes = {
   to: PropTypes.string.isRequired,
   setDrawerOpen: PropTypes.func.isRequired,
-  icon: PropTypes.object,
+  icon: PropTypes.element,
   text: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 }
 
+const NavItem = withRouter(NavItemInternal)
 export default withRouter(Nav)

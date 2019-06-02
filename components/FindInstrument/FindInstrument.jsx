@@ -62,7 +62,7 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
           setValue={setSearchTerm}
           error={error}
           label="Name or Number"
-          data-test-id="scanner-field"
+          data-testid="scanner-field"
         />
         <FormGroup row>
           <Button

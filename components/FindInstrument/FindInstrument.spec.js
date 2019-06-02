@@ -1,8 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { FindInstrument } from './FindInstrument'
 import 'jest-dom/extend-expect'
+
+// jest.mock('../CustomFields', () => ({ Scanner: (props) => <div id="mock-scanner-field" {...props} /> }))
 
 describe('FindInstrument', () => {
   it('matches snapshot', () => {
@@ -24,8 +25,9 @@ describe('FindInstrument', () => {
   //       history={{ push: jest.fn() }}
   //     />
   //   )
-  //   const clearButton = getByTestId('clear-button')
-  //   const scannerField = getByTestId('scanner-field')
+  //   expect(getByTestId('scanner-field')).hasAttribute('value', 'test')
 
+  //   fireEvent.click(container.querySelector('button[data-testid="clear-button"]'))
+  //   expect(getByTestId('scanner-field')).hasAttribute('value', '')
   // })
 })
