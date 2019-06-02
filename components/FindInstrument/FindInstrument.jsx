@@ -15,7 +15,7 @@ const getSearchParameters = input =>
 
 const useStyles = makeStyles({ lastButton })
 
-const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
+export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
   const [isLoading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState('')
@@ -62,12 +62,22 @@ const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
           setValue={setSearchTerm}
           error={error}
           label="Name or Number"
+          data-test-id="scanner-field"
         />
         <FormGroup row>
-          <Button onClick={() => setSearchTerm('')} className={classes.lastButton}>
+          <Button
+            onClick={() => setSearchTerm('')}
+            className={classes.lastButton}
+            data-testid="clear-button"
+          >
             Clear
           </Button>
-          <Button type="submit" color="primary" disabled={searchTerm === ''}>
+          <Button
+            type="submit"
+            color="primary"
+            disabled={searchTerm === ''}
+            data-testid="submit-button"
+          >
             Submit
           </Button>
         </FormGroup>

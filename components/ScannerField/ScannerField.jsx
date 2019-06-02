@@ -24,10 +24,10 @@ const ScannerField = ({ error, value, setValue, label }) => {
 
   return (
     <FormControl fullWidth error={error ? true : false}>
-      <InputLabel htmlFor="scanner-field">{label}</InputLabel>
+      <InputLabel data-testid="label" htmlFor="scanner-field">{label}</InputLabel>
       {scanning ? (
         <React.Fragment>
-          <Scanner onDetected={onDetected} />
+          <Scanner onDetected={onDetected} data-testid="scanner" />
           <Button onClick={() => setScanning(false)}>Stop Scanning</Button>
         </React.Fragment>
       ) : (
@@ -38,12 +38,14 @@ const ScannerField = ({ error, value, setValue, label }) => {
             aria-describedby="scanner-error"
             type="text"
             value={value}
+            data-testid="input-field"
             required
             endAdornment={
               <InputAdornment position="end">
                 <TooltipIconButton
                   onClick={() => setScanning(true)}
                   title="Scan Barcode"
+                  data-testid="scan-button"
                 >
                   <FontAwesomeIcon icon={faBarcode} />
                 </TooltipIconButton>
