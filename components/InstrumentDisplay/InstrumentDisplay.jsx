@@ -120,7 +120,7 @@ InstrumentDisplay.propTypes = {
 
 export default InstrumentDisplay
 
-const InfoItem = ({ primary, secondary }) => (
+export const InfoItem = ({ primary, secondary }) => (
   <ListItem component="li">
     <ListItemText
       primary={primary}

@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`InfoItem matches snapshot 1`] = `
+<div>
+  <li
+    class="MuiListItem-root MuiListItem-gutters"
+  >
+    <div
+      class="MuiListItemText-root MuiListItemText-multiline"
+    >
+      <span
+        class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+      >
+        test
+      </span>
+      <h6
+        class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+      >
+        test
+      </h6>
+    </div>
+  </li>
+</div>
+`;
+
 exports[`InstrumentDisplay matches snapshot 1`] = `
 <div>
   <div
@@ -14,7 +37,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h5
           class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
         >
-           undefined
+          Testtype testnumber
         </h5>
       </div>
     </div>
@@ -27,39 +50,54 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
       class="MuiListItem-root MuiListItem-gutters"
     >
       <div
-        class="MuiListItemText-root"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
           class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
         >
           Size
         </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          testsize
+        </h6>
       </div>
     </li>
     <li
       class="MuiListItem-root MuiListItem-gutters"
     >
       <div
-        class="MuiListItemText-root"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
           class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
         >
           Location
         </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          testlocation
+        </h6>
       </div>
     </li>
     <li
       class="MuiListItem-root MuiListItem-gutters"
     >
       <div
-        class="MuiListItemText-root"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
           class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
         >
           Assigned To
         </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          testassignedto
+        </h6>
       </div>
     </li>
     <li
@@ -75,7 +113,9 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         </span>
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
-        />
+        >
+          ★★★★★
+        </h6>
       </div>
     </li>
     <li
@@ -91,33 +131,45 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         </span>
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
-        />
+        >
+          ★★★
+        </h6>
       </div>
     </li>
     <li
       class="MuiListItem-root MuiListItem-gutters"
     >
       <div
-        class="MuiListItemText-root"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
           class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
         >
           Condition Notes
         </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          testconditionnotes
+        </h6>
       </div>
     </li>
     <li
       class="MuiListItem-root MuiListItem-gutters"
     >
       <div
-        class="MuiListItemText-root"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
           class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
         >
           Maintenance Notes
         </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          testmaintenancenotes
+        </h6>
       </div>
     </li>
     <li
@@ -134,7 +186,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
         >
-          No
+          Yes
         </h6>
       </div>
     </li>
@@ -152,7 +204,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
         >
-          No
+          Yes
         </h6>
       </div>
     </li>
@@ -170,7 +222,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
         >
-          No
+          Yes
         </h6>
       </div>
     </li>
@@ -188,7 +240,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
         >
-          No
+          Yes
         </h6>
       </div>
     </li>
@@ -206,7 +258,7 @@ exports[`InstrumentDisplay matches snapshot 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
         >
-          No
+          Yes
         </h6>
       </div>
     </li>

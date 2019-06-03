@@ -38,13 +38,42 @@ describe('FindInstrument', () => {
     expect(container.querySelector('input#scanner-field')).toHaveAttribute('value', '')
   })
 
-  it('calls amplify api on submit clicked', async () => {
+  it('calls amplify api and handles a single result', async () => {
     expect.assertions(3)
     const showMultipleResults = jest.fn()
     const push = jest.fn()
     const showAlert = jest.fn()
     API.post = jest.fn().mockImplementation(() => Promise.resolve([{ id: 1 }]))
-    // setImmediate(() => {
+
+    const { container } = render(
+      <FindInstrument
+        showMultipleResults={showMultipleResults}
+        showAlert={showAlert}
+        history={{ push }}
+      />
+    )
+    fireEvent.change(container.querySelector('input#scanner-field'), {
+      target: { value: '1-001' },
+    })
+    fireEvent.click(container.querySelector('button[data-testid="submit-button"]'))
+    expect(API.post).toHaveBeenCalledWith('instrument-inventory', 'search/number', {
+      body: { instrumentNumber: '1-001' },
+    })
+
+    await flushPromises()
+
+    expect(showAlert).toBeCalledWith('Instrument found')
+    expect(push).toHaveBeenCalledWith('/instrument/1')
+  })
+
+  it('calls amplify api on submit clicked and handles multiple results', async () => {
+    expect.assertions(2)
+    const showMultipleResults = jest.fn()
+    const push = jest.fn()
+    const showAlert = jest.fn()
+    const searchResults = [{ id: 1 }, { id: 2 }, { id: 3 }]
+    API.post = jest.fn().mockImplementation(() => Promise.resolve(searchResults))
+
     const { container } = render(
       <FindInstrument
         showMultipleResults={showMultipleResults}
@@ -62,10 +91,7 @@ describe('FindInstrument', () => {
 
     await flushPromises()
 
-    expect(showAlert).toBeCalled()
-    expect(push).toHaveBeenCalledWith('/instrument/1')
-
-    // })
+    expect(showMultipleResults).toBeCalledWith(searchResults)
   })
 })
 
