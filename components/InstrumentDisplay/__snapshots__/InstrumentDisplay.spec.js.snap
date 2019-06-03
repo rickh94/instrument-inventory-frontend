@@ -1,0 +1,215 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstrumentDisplay matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiGrid-root MuiGrid-container"
+  >
+    <div
+      class="MuiGrid-root MuiGrid-item"
+    >
+      <div
+        class="makeStyles-heading-107"
+      >
+        <h5
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+        >
+           undefined
+        </h5>
+      </div>
+    </div>
+    
+  </div>
+  <ul
+    class="MuiList-root"
+  >
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Size
+        </span>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Location
+        </span>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Assigned To
+        </span>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Condition
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        />
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Quality
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        />
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Condition Notes
+        </span>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Maintenance Notes
+        </span>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Rosin
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          No
+        </h6>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Bow
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          No
+        </h6>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Ready To Go
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          No
+        </h6>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Should Rest/Rock Stop
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          No
+        </h6>
+      </div>
+    </li>
+    <li
+      class="MuiListItem-root MuiListItem-gutters"
+    >
+      <div
+        class="MuiListItemText-root MuiListItemText-multiline"
+      >
+        <span
+          class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-colorTextSecondary MuiListItemText-primary"
+        >
+          Gifted to Student
+        </span>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextPrimary MuiListItemText-secondary"
+        >
+          No
+        </h6>
+      </div>
+    </li>
+  </ul>
+</div>
+`;

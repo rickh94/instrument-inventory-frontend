@@ -1,9 +1,10 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { FindInstrument } from './FindInstrument'
+import { FindInstrument, getSearchParameters } from './FindInstrument'
 import 'jest-dom/extend-expect'
+import { API } from 'aws-amplify'
 
-// jest.mock('../CustomFields', () => ({ Scanner: (props) => <div id="mock-scanner-field" {...props} /> }))
+const flushPromises = () => new Promise(setImmediate)
 
 describe('FindInstrument', () => {
   it('matches snapshot', () => {
@@ -17,17 +18,66 @@ describe('FindInstrument', () => {
     expect(container).toMatchSnapshot()
   })
 
-  // it('clears search term on clear click', () => {
-  //   const { container, getByTestId } = render(
-  //     <FindInstrument
-  //       showMultipleResults={jest.fn()}
-  //       showAlert={jest.fn()}
-  //       history={{ push: jest.fn() }}
-  //     />
-  //   )
-  //   expect(getByTestId('scanner-field')).hasAttribute('value', 'test')
+  it('sets search term on change and clears search term on clear click', () => {
+    const { container } = render(
+      <FindInstrument
+        showMultipleResults={jest.fn()}
+        showAlert={jest.fn()}
+        history={{ push: jest.fn() }}
+      />
+    )
+    fireEvent.change(container.querySelector('input#scanner-field'), {
+      target: { value: 'test' },
+    })
+    expect(container.querySelector('input#scanner-field')).toHaveAttribute(
+      'value',
+      'test'
+    )
 
-  //   fireEvent.click(container.querySelector('button[data-testid="clear-button"]'))
-  //   expect(getByTestId('scanner-field')).hasAttribute('value', '')
-  // })
+    fireEvent.click(container.querySelector('button[data-testid="clear-button"]'))
+    expect(container.querySelector('input#scanner-field')).toHaveAttribute('value', '')
+  })
+
+  it('calls amplify api on submit clicked', async () => {
+    expect.assertions(3)
+    const showMultipleResults = jest.fn()
+    const push = jest.fn()
+    const showAlert = jest.fn()
+    API.post = jest.fn().mockImplementation(() => Promise.resolve([{ id: 1 }]))
+    // setImmediate(() => {
+    const { container } = render(
+      <FindInstrument
+        showMultipleResults={showMultipleResults}
+        showAlert={showAlert}
+        history={{ push }}
+      />
+    )
+    fireEvent.change(container.querySelector('input#scanner-field'), {
+      target: { value: 'test' },
+    })
+    fireEvent.click(container.querySelector('button[data-testid="submit-button"]'))
+    expect(API.post).toHaveBeenCalledWith('instrument-inventory', 'search/assigned', {
+      body: { assignedTo: 'test' },
+    })
+
+    await flushPromises()
+
+    expect(showAlert).toBeCalled()
+    expect(push).toHaveBeenCalledWith('/instrument/1')
+
+    // })
+  })
+})
+
+describe('getSearchParameters', () => {
+  it('returns number if it is an instrument ', () => {
+    expect(getSearchParameters('1-201')).toEqual(['search/number', 'instrumentNumber'])
+  })
+
+  it('returns assigned to if it is a name', () => {
+    expect(getSearchParameters('random name')).toEqual([
+      'search/assigned',
+      'assignedTo',
+    ])
+  })
 })

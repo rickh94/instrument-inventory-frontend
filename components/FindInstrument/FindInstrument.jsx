@@ -8,7 +8,7 @@ import { API } from 'aws-amplify'
 import { LoadingHeader, Fields } from '..'
 import { Button, FormGroup } from '@material-ui/core'
 
-const getSearchParameters = input =>
+export const getSearchParameters = input =>
   input.match(/\w?\d+-\d+/)
     ? ['search/number', 'instrumentNumber']
     : ['search/assigned', 'assignedTo']
@@ -26,6 +26,7 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
 
     if (!searchTerm) {
       setError('Please enter a search term')
+      return
     }
 
     setLoading(true)
@@ -35,6 +36,7 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
       const response = await API.post('instrument-inventory', path, {
         body: { [fieldName]: searchTerm },
       })
+
       if (response.length == 1) {
         showAlert('Instrument found')
         showMultipleResults([])
@@ -62,7 +64,6 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
           setValue={setSearchTerm}
           error={error}
           label="Name or Number"
-          data-testid="scanner-field"
         />
         <FormGroup row>
           <Button

@@ -55,19 +55,33 @@ export function Nav(props) {
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar>
-            <IconButton color="inherit" aria-label="Menu" onClick={openDrawer}>
+            <IconButton
+              color="inherit"
+              aria-label="Menu"
+              onClick={openDrawer}
+              data-testid="open-drawer-button"
+            >
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Instrument Inventory
             </Typography>
             {props.isAuthenticated ? (
-              <Button color="inherit" onClick={props.handleLogout} id="#logout">
+              <Button
+                color="inherit"
+                onClick={props.handleLogout}
+                id="#logout"
+                data-testid="logout-button"
+              >
                 Logout
               </Button>
             ) : (
               <RouterLink to="/login" className={classes.cleanLink}>
-                <Button color="inherit" className={classes.barText}>
+                <Button
+                  color="inherit"
+                  className={classes.barText}
+                  data-testid="login-button"
+                >
                   Login
                 </Button>
               </RouterLink>
@@ -76,7 +90,12 @@ export function Nav(props) {
         </AppBar>
       </div>
       <Toolbar />
-      <SwipeableDrawer open={drawerIsOpen} onClose={closeDrawer} onOpen={openDrawer}>
+      <SwipeableDrawer
+        open={drawerIsOpen}
+        onClose={closeDrawer}
+        onOpen={openDrawer}
+        data-testid="nav-drawer"
+      >
         <List component="ul">
           <NavItem
             to="/"
@@ -152,7 +171,6 @@ export const NavItemInternal = ({ to, icon, history, setDrawerOpen, text }) => (
     <ListItemText>{text}</ListItemText>
   </ListItem>
 )
-
 
 NavItemInternal.propTypes = {
   to: PropTypes.string.isRequired,
