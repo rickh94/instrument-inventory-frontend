@@ -47,6 +47,7 @@ const InstrumentForm = ({
   photoField,
 }) => {
   const classes = useStyles()
+  const [photo, setPhoto] = useState(null)
 
   const handleRating = name => event => {
     if (event.target.value > 5 || event.target.value < 0) {
@@ -71,6 +72,7 @@ const InstrumentForm = ({
 
   const handlePhoto = event => {
     setValue('photo', event.target.files[0])
+    setPhoto(event.target.files[0])
   }
 
   return (
@@ -86,6 +88,7 @@ const InstrumentForm = ({
         onChange={handleChange('instrumentType')}
         value={instrumentType}
         required
+        data-testid="instrument-type"
       />
       <Fields.InstrumentSizeSelect
         error={errors.size}
@@ -101,16 +104,16 @@ const InstrumentForm = ({
         required
       />
       <FormControl fullWidth error={errors.assignedTo ? true : false}>
-        <InputLabel htmlFor="student-name">Assigned To</InputLabel>
+        <InputLabel htmlFor="assigned-to">Assigned To</InputLabel>
         <Input
-          id="student-name"
+          id="assigned-to"
           onChange={handleChange('assignedTo')}
-          aria-describedby="student-name-error"
+          aria-describedby="assigned-to-error"
           type="text"
           value={assignedTo}
         />
         {errors.assignedTo && (
-          <FormHelperText id="student-name-error">{errors.assignedTo}</FormHelperText>
+          <FormHelperText id="assigned-to-error">{errors.assignedTo}</FormHelperText>
         )}
       </FormControl>
       <FormControl fullWidth error={errors.maintenanceNotes ? true : false}>
@@ -173,11 +176,11 @@ const InstrumentForm = ({
       </FormControl>
       <FormGroup row>
         <FormControlLabel
-          control={<Checkbox checked={rosin} onChange={handleCheck('rosin')} />}
+          control={<Checkbox checked={rosin} id="rosin" onChange={handleCheck('rosin')} />}
           label="Rosin"
         />
         <FormControlLabel
-          control={<Checkbox checked={bow} onChange={handleCheck('bow')} />}
+          control={<Checkbox checked={bow} id="bow" onChange={handleCheck('bow')} />}
           label="Bow"
         />
         <FormControlLabel
@@ -185,12 +188,13 @@ const InstrumentForm = ({
             <Checkbox
               checked={shoulderRestEndpinRest}
               onChange={handleCheck('shoulderRestEndpinRest')}
+              id="shoulder-rest-endpin-rest"
             />
           }
           label="Shoulder Rest/Rock Stop"
         />
         <FormControlLabel
-          control={<Checkbox checked={readyToGo} onChange={handleCheck('readyToGo')} />}
+          control={<Checkbox checked={readyToGo} id="ready-to-go" onChange={handleCheck('readyToGo')} />}
           label="Ready To Go"
         />
         <FormControlLabel
@@ -200,6 +204,7 @@ const InstrumentForm = ({
       </FormGroup>
       {photoField && (
         <React.Fragment>
+          {photo && <p>Photo: {photo.name}</p>}
           <input
             accept="image/*"
             id="upload-photo"

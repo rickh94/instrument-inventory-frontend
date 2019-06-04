@@ -9,6 +9,7 @@ import {
   Modal,
   Paper,
 } from '@material-ui/core'
+import ExifOrientationImg from 'react-exif-orientation-img'
 import { LoadingHeader } from '..'
 import { titleCase } from '../../libs/titleCase'
 
@@ -17,15 +18,13 @@ const useStyles = makeStyles({
     marginLeft: 'auto',
     cursor: 'pointer',
   },
-  photoPaper: {
-    position: 'absolute',
-    width: '80vw',
-    left: '10vw',
-    top: '5vh',
-    padding: '2.5vh',
-  },
   fullImage: {
+    position: 'absolute',
+    left: '15vw',
+    top: '10vh',
     width: '75vw',
+    imageOrientation: 'from-image',
+    border: 'none',
   },
 })
 
@@ -90,9 +89,11 @@ const InstrumentDisplay = ({
         <InfoItem primary="Gifted to Student" secondary={yesOrNo(giftedToStudent)} />
       </List>
       <Modal open={photoOpen} onClose={() => showPhoto(false)}>
-        <Paper className={classes.photoPaper}>
-          <img src={fullPhotoUrl} className={classes.fullImage} />
-        </Paper>
+        <ExifOrientationImg
+          src={fullPhotoUrl}
+          className={classes.fullImage}
+          alt="instrument image"
+        />
       </Modal>
     </React.Fragment>
   )

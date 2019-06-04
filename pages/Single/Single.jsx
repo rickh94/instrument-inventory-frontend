@@ -15,6 +15,7 @@ import {
   Button,
   DialogActions,
   makeStyles,
+  DialogTitle,
 } from '@material-ui/core'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
@@ -280,7 +281,8 @@ class Single extends Component {
     }
 
     if (this.state.photo.size > 5000000) {
-      this.setState({ errors: { photo: 'Photo is too large. Choose Photo under 5MB' } })
+      this.props.showAlert('Photo is too large')
+      // this.setState({ errors: { photo: 'Photo is too large. Choose Photo under 5MB' } })
       return
     }
 
@@ -290,7 +292,7 @@ class Single extends Component {
 
       const response = await API.patch(
         'instrument-inventory',
-        `update/photo/${this.props.match.params.recId}`,
+        `instruments/${this.props.match.params.recId}/photo`,
         { body: { photoUrl } }
       )
       this.setState({ photo: null, photoFormOpen: false })
@@ -340,7 +342,14 @@ class Single extends Component {
         )}
         <SingleActions {...this.actions} />
         <Dialog open={photoFormOpen}>
+          <DialogTitle>
+            <LoadingHeader
+              title="Add/Change Instrument Photo"
+              isLoading={this.state.isLoading}
+            />
+          </DialogTitle>
           <DialogContent>
+            {this.state.photo && <p>Photo: {this.state.photo.name}</p>}
             <form onSubmit={this.uploadPhoto}>
               <input
                 accept="image/*"

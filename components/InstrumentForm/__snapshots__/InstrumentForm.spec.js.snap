@@ -1,0 +1,718 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstrumentForm matches snapshot 1`] = `
+<div>
+  <form>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        data-testid="label"
+        for="scanner-field"
+      >
+        Instrument Number
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        data-testid="input-field"
+        required=""
+      >
+        <input
+          aria-describedby="scanner-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
+          id="scanner-field"
+          required=""
+          type="text"
+          value="1"
+        />
+        <div
+          class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+        >
+          <button
+            class="MuiButtonBase-root MuiIconButton-root"
+            data-testid="scan-button"
+            tabindex="0"
+            title="Scan Barcode"
+            type="button"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-barcode fa-w-16 "
+                data-icon="barcode"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 448V64h18v384H0zm26.857-.273V64H36v383.727h-9.143zm27.143 0V64h8.857v383.727H54zm44.857 0V64h8.857v383.727h-8.857zm36 0V64h17.714v383.727h-17.714zm44.857 0V64h8.857v383.727h-8.857zm18 0V64h8.857v383.727h-8.857zm18 0V64h8.857v383.727h-8.857zm35.715 0V64h18v383.727h-18zm44.857 0V64h18v383.727h-18zm35.999 0V64h18.001v383.727h-18.001zm36.001 0V64h18.001v383.727h-18.001zm26.857 0V64h18v383.727h-18zm45.143 0V64h26.857v383.727h-26.857zm35.714 0V64h9.143v383.727H476zm18 .273V64h18v384h-18z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="MuiTypography-root MuiTypography-srOnly"
+              >
+                Scan Barcode
+              </span>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="instrument-type"
+      >
+        Instrument Type
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        required=""
+      >
+        <div
+          class="MuiNativeSelect-root"
+        >
+          <select
+            aria-invalid="false"
+            class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+            id="instrument-type"
+            required=""
+          >
+            <option
+              value=""
+            />
+            <option
+              value="violin"
+            >
+              Violin
+            </option>
+            <option
+              value="viola"
+            >
+              Viola
+            </option>
+            <option
+              value="cello"
+            >
+              Cello
+            </option>
+            <option
+              value="bass"
+            >
+              Bass
+            </option>
+            <option
+              value="violin strug as viola"
+            >
+              Violin strung as viola
+            </option>
+          </select>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiNativeSelect-icon"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="size"
+      >
+        Size
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        required=""
+      >
+        <div
+          class="MuiNativeSelect-root"
+        >
+          <select
+            aria-invalid="false"
+            class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+            id="size"
+            required=""
+          >
+            <option
+              value=""
+            />
+            <option
+              value="4/4"
+            >
+              4/4
+            </option>
+            <option
+              value="3/4"
+            >
+              3/4
+            </option>
+            <option
+              value="1/2"
+            >
+              1/2
+            </option>
+            <option
+              value="1/4"
+            >
+              1/4
+            </option>
+            <option
+              value="1/8"
+            >
+              1/8
+            </option>
+            <option
+              value="1/10"
+            >
+              1/10
+            </option>
+            <option
+              value="1/16"
+            >
+              1/16
+            </option>
+            <option
+              value="1/32"
+            >
+              1/32
+            </option>
+          </select>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiNativeSelect-icon"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="location"
+      >
+        Location
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        required=""
+      >
+        <div
+          class="MuiNativeSelect-root"
+        >
+          <select
+            aria-invalid="false"
+            class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+            id="location"
+            required=""
+          >
+            <option
+              value=""
+            />
+            <option
+              value="Grant Elementary School"
+            >
+              Grant Elementary School
+            </option>
+            <option
+              value="Hedgepath Middle School"
+            >
+              Hedgepath Middle School
+            </option>
+            <option
+              value="Wilson Elementary School"
+            >
+              Wilson Elementary School
+            </option>
+            <option
+              value="Trenton High School"
+            >
+              Trenton High School
+            </option>
+            <option
+              value="Columbus Elementary School"
+            >
+              Columbus Elementary School
+            </option>
+            <option
+              value="office"
+            >
+              Office
+            </option>
+            <option
+              value="Storage"
+            >
+              Storage
+            </option>
+            <option
+              value="trade"
+            >
+              trade
+            </option>
+            <option
+              value="maintenance"
+            >
+              Maintenance
+            </option>
+            <option
+              value="transit"
+            >
+              Transit
+            </option>
+          </select>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiNativeSelect-icon"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="assigned-to"
+      >
+        Assigned To
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-describedby="assigned-to-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          id="assigned-to"
+          type="text"
+          value="test person"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="maintenance-notes"
+      >
+        Maintenance Notes
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
+      >
+        <textarea
+          aria-describedby="maintenance-notes-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          id="maintenance-notes"
+          style="overflow: hidden;"
+        >
+          test maintenance notes
+        </textarea>
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; width: 100%;"
+          tabindex="-1"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="condition-notes"
+      >
+        Condition Notes
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
+      >
+        <textarea
+          aria-describedby="condition-notes-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          id="condition-notes"
+          style="overflow: hidden;"
+        >
+          test condition notes
+        </textarea>
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; width: 100%;"
+          tabindex="-1"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="condition"
+      >
+        Condition Rating
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-describedby="condition-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          id="condition"
+          type="number"
+          value="4"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        class="MuiFormLabel-root MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+        data-shrink="true"
+        for="quality"
+      >
+        Quality Rating
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-describedby="quality-error"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          id="quality"
+          type="number"
+          value="5"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiFormGroup-root MuiFormGroup-row"
+    >
+      <label
+        class="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary PrivateSwitchBase-root-139 MuiCheckbox-root MuiCheckbox-colorSecondary PrivateSwitchBase-checked-140 Mui-checked"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <input
+              checked=""
+              class="PrivateSwitchBase-input-142"
+              data-indeterminate="false"
+              id="rosin"
+              type="checkbox"
+              value=""
+            />
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
+        >
+          Rosin
+        </span>
+      </label>
+      <label
+        class="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary PrivateSwitchBase-root-139 MuiCheckbox-root MuiCheckbox-colorSecondary"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <input
+              class="PrivateSwitchBase-input-142"
+              data-indeterminate="false"
+              id="bow"
+              type="checkbox"
+              value=""
+            />
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
+        >
+          Bow
+        </span>
+      </label>
+      <label
+        class="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary PrivateSwitchBase-root-139 MuiCheckbox-root MuiCheckbox-colorSecondary PrivateSwitchBase-checked-140 Mui-checked"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <input
+              checked=""
+              class="PrivateSwitchBase-input-142"
+              data-indeterminate="false"
+              id="shoulder-rest-endpin-rest"
+              type="checkbox"
+              value=""
+            />
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
+        >
+          Shoulder Rest/Rock Stop
+        </span>
+      </label>
+      <label
+        class="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary PrivateSwitchBase-root-139 MuiCheckbox-root MuiCheckbox-colorSecondary PrivateSwitchBase-checked-140 Mui-checked"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <input
+              checked=""
+              class="PrivateSwitchBase-input-142"
+              data-indeterminate="false"
+              id="ready-to-go"
+              type="checkbox"
+              value=""
+            />
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
+        >
+          Ready To Go
+        </span>
+      </label>
+      <label
+        class="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary PrivateSwitchBase-root-139 MuiCheckbox-root MuiCheckbox-colorSecondary PrivateSwitchBase-checked-140 Mui-checked"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <input
+              checked=""
+              class="PrivateSwitchBase-input-142"
+              data-indeterminate="false"
+              type="checkbox"
+              value=""
+            />
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
+        >
+          Gifted To Student
+        </span>
+      </label>
+    </div>
+    <input
+      accept="image/*"
+      class="makeStyles-fileInput-2"
+      id="upload-photo"
+      type="file"
+    />
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        for="upload-photo"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiButton-root MuiButton-containedPrimary MuiButton-contained"
+          role="button"
+          tabindex="0"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Upload Photo
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+      </label>
+    </div>
+    <div
+      class="MuiFormGroup-root MuiFormGroup-row"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root makeStyles-lastButton-1 MuiButton-text"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Clear
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root makeStyles-lastButton-1 MuiButton-text"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Cancel
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-textPrimary MuiButton-text Mui-disabled Mui-disabled"
+        disabled=""
+        tabindex="-1"
+        type="submit"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Submit
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
+`;
