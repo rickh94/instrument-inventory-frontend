@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SearchResultsList /> matches snapshot 1`] = `
+<div>
+  <table
+    class="MuiTable-root"
+  >
+    <thead
+      class="MuiTableHead-root"
+    >
+      <tr
+        class="MuiTableRow-root MuiTableRow-head"
+      >
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Instrument
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Size
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Assigned To
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Location
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="MuiTableBody-root"
+    >
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+        data-testid="result-row"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="type-and-number"
+        >
+          Test
+           
+          1-001
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="size"
+        >
+          4/4
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="assignedTo"
+        >
+          test0
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="location"
+        >
+          test
+        </td>
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+        data-testid="result-row"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="type-and-number"
+        >
+          Test
+           
+          1-001
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="size"
+        >
+          4/4
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="assignedTo"
+        >
+          test1
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="location"
+        >
+          test
+        </td>
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+        data-testid="result-row"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="type-and-number"
+        >
+          Test
+           
+          1-001
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="size"
+        >
+          4/4
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="assignedTo"
+        >
+          test2
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+          data-testid="location"
+        >
+          test
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`ResultRowInternal matches snapshot 1`] = `
+<div>
+  <tr
+    class="MuiTableRow-root MuiTableRow-hover"
+    data-testid="result-row"
+  >
+    <td
+      class="MuiTableCell-root"
+      data-testid="type-and-number"
+    >
+      Test
+       
+      1-001
+    </td>
+    <td
+      class="MuiTableCell-root"
+      data-testid="size"
+    >
+      4/4
+    </td>
+    <td
+      class="MuiTableCell-root"
+      data-testid="assignedTo"
+    >
+      test person
+    </td>
+    <td
+      class="MuiTableCell-root"
+      data-testid="location"
+    >
+      test location
+    </td>
+  </tr>
+</div>
+`;

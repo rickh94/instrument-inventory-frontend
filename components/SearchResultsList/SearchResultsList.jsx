@@ -5,20 +5,34 @@ import { withRouter } from 'react-router-dom'
 import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core'
 import { titleCase } from '../../libs/titleCase'
 
-const ResultRow = withRouter(({ item, history }) => (
-  <TableRow hover onClick={() => history.push(`/instrument/${item.id}`)} component="tr">
-    <TableCell component="td">
+export const ResultRowInternal = ({ item, history }) => (
+  <TableRow
+    hover
+    onClick={() => history.push(`/instrument/${item.id}`)}
+    component="tr"
+    data-testid="result-row"
+  >
+    <TableCell component="td" data-testid="type-and-number">
       {titleCase(item.fields['Instrument Type'])} {item.fields.Number}
     </TableCell>
-    <TableCell component="td">{item.fields.Size}</TableCell>
-    <TableCell component="td">{item.fields['Assigned To'] || 'Not Assigned'}</TableCell>
-    <TableCell component="td">{item.fields['Location']}</TableCell>
+    <TableCell component="td" data-testid="size">
+      {item.fields.Size}
+    </TableCell>
+    <TableCell component="td" data-testid="assignedTo">
+      {item.fields['Assigned To'] || 'Not Assigned'}
+    </TableCell>
+    <TableCell component="td" data-testid="location">
+      {item.fields['Location']}
+    </TableCell>
   </TableRow>
-))
+)
 
-ResultRow.propTypes = {
+ResultRowInternal.propTypes = {
   item: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 }
+
+const ResultRow = withRouter(ResultRowInternal)
 
 const SearchResultsList = ({ results }) => (
   <Table component="table">
