@@ -1,2 +1,6 @@
-create not found component
-add validate form and disabling to others
+use photo processing lib in create new instrument
+allow redirect to single instrument page from retrieve and sign out
+add find instrument search or scanner button to app bar 
+add history display to single (backend)
+continue tests
+refactor more components into functional

@@ -12,19 +12,26 @@ import { Scanner, TooltipIconButton } from '..'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
-const ScannerField = ({ error, value, setValue, label }) => {
+const ScannerField = ({ error, value, setValue, label, submitCallback }) => {
   const [scanning, setScanning] = useState(false)
 
   const onDetected = result => {
     if (result.codeResult.code !== value) {
       setScanning(false)
-      setValue(result.codeResult.code)
+      if (submitCallback) {
+        setValue(result.codeResult.code)
+        submitCallback(result.codeResult.code)
+      } else {
+        setValue(result.codeResult.code)
+      }
     }
   }
 
   return (
     <FormControl fullWidth error={error ? true : false}>
-      <InputLabel data-testid="label" htmlFor="scanner-field">{label}</InputLabel>
+      <InputLabel data-testid="label" htmlFor="scanner-field">
+        {label}
+      </InputLabel>
       {scanning ? (
         <React.Fragment>
           <Scanner onDetected={onDetected} data-testid="scanner" />
@@ -64,6 +71,7 @@ ScannerField.propTypes = {
   value: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  submitCallback: PropTypes.func,
 }
 
 export default ScannerField

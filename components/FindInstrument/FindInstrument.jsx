@@ -22,19 +22,25 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
   const classes = useStyles()
 
   const onSubmit = async event => {
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
 
     if (!searchTerm) {
       setError('Please enter a search term')
       return
     }
 
+    await getInstrument(searchTerm)
+  }
+
+  const getInstrument = async term => {
     setLoading(true)
-    const [path, fieldName] = getSearchParameters(searchTerm)
+    const [path, fieldName] = getSearchParameters(term)
 
     try {
       const response = await API.post('instrument-inventory', path, {
-        body: { [fieldName]: searchTerm },
+        body: { [fieldName]: term },
       })
 
       if (response.length == 1) {
@@ -48,11 +54,13 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
     } catch (err) {
       setLoading(false)
       if (err.response) {
-        setError(err.response.data)
+        showAlert(`Error: ${err}`)
+        // setError(err.response.data)
       } else {
         showAlert(`Error: ${err}`)
       }
     }
+    setLoading(false)
   }
 
   return (
@@ -64,6 +72,7 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
           setValue={setSearchTerm}
           error={error}
           label="Name or Number"
+          submitCallback={getInstrument}
         />
         <FormGroup row>
           <Button
