@@ -38,6 +38,7 @@ import {
 } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 import { titleCase } from '../../libs/titleCase'
+import processImage from '../../libs/processImage'
 
 const styles = theme => ({
   fileInput: {
@@ -77,26 +78,6 @@ function getModalStyle() {
 class Single extends Component {
   constructor(props) {
     super(props)
-
-    this.actions = {
-      onRetrieve: () => {
-        const { number } = this.state
-        this.props.history.push(`/retrieve-single/${number}`)
-      },
-
-      onSignOut: () => {
-        const { number } = this.state
-        this.props.history.push(`/sign-out/${number}`)
-      },
-
-      onEdit: () => {
-        this.setState({ editing: true })
-      },
-
-      onAddPhoto: () => {
-        this.setState({ photoFormOpen: true })
-      },
-    }
 
     this.state = {
       number: '',
@@ -269,7 +250,12 @@ class Single extends Component {
   }
 
   handlePhoto = event => {
-    this.setState({ photo: event.target.files[0] })
+    this.setState({isLoading: true})
+    processImage(event.target.files[0], this.setPhoto)
+  }
+
+  setPhoto = photo => {
+    this.setState({ photo, isLoading: false })
   }
 
   uploadPhoto = async e => {
@@ -287,6 +273,7 @@ class Single extends Component {
     }
 
     try {
+      this.setState({ isLoading: true })
       const uploadedPhoto = await s3Upload(this.state.photo)
       const photoUrl = await Storage.vault.get(uploadedPhoto)
 
@@ -302,9 +289,26 @@ class Single extends Component {
         this.setState({ errors: err.response.data.errors })
       }
     }
+    this.setState({ isLoading: false })
   }
 
   render() {
+    const { instrumentNumber } = this.state
+    const actions = {
+      onRetrieve: () => {
+        this.props.history.push(`/retrieve-single/${instrumentNumber}`)
+      },
+      onSignOut: () => {
+        this.props.history.push(`/sign-out/${instrumentNumber}`)
+      },
+      onEdit: () => {
+        this.setState({ editing: true })
+      },
+      onAddPhoto: () => {
+        this.setState({ photoFormOpen: true })
+      },
+    }
+
     const { classes } = this.props
     const {
       actionsOpen,
@@ -340,7 +344,7 @@ class Single extends Component {
             </RootPaper>
           </React.Fragment>
         )}
-        <SingleActions {...this.actions} />
+        <SingleActions {...actions} />
         <Dialog open={photoFormOpen}>
           <DialogTitle>
             <LoadingHeader
