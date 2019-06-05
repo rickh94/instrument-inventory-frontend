@@ -1,0 +1,248 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Fields InstrumentSizeSelect matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiFormControl-root MuiFormControl-fullWidth"
+  >
+    <label
+      class="MuiFormLabel-root Mui-error Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+      data-shrink="true"
+      for="size"
+    >
+      Size
+    </label>
+    <div
+      class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+    >
+      <div
+        class="MuiNativeSelect-root"
+      >
+        <select
+          aria-invalid="true"
+          class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+          id="size"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="4/4"
+          >
+            4/4
+          </option>
+          <option
+            value="3/4"
+          >
+            3/4
+          </option>
+          <option
+            value="1/2"
+          >
+            1/2
+          </option>
+          <option
+            value="1/4"
+          >
+            1/4
+          </option>
+          <option
+            value="1/8"
+          >
+            1/8
+          </option>
+          <option
+            value="1/10"
+          >
+            1/10
+          </option>
+          <option
+            value="1/16"
+          >
+            1/16
+          </option>
+          <option
+            value="1/32"
+          >
+            1/32
+          </option>
+        </select>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiNativeSelect-icon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Fields InstrumentTypeSelect matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiFormControl-root MuiFormControl-fullWidth"
+  >
+    <label
+      class="MuiFormLabel-root Mui-error Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+      data-shrink="true"
+      for="instrument-type"
+    >
+      Instrument Type
+    </label>
+    <div
+      class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+    >
+      <div
+        class="MuiNativeSelect-root"
+      >
+        <select
+          aria-invalid="true"
+          class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+          id="instrument-type"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="violin"
+          >
+            Violin
+          </option>
+          <option
+            value="viola"
+          >
+            Viola
+          </option>
+          <option
+            value="cello"
+          >
+            Cello
+          </option>
+          <option
+            value="bass"
+          >
+            Bass
+          </option>
+          <option
+            value="violin strug as viola"
+          >
+            Violin strung as viola
+          </option>
+        </select>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiNativeSelect-icon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Fields LocationSelect matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiFormControl-root MuiFormControl-fullWidth"
+  >
+    <label
+      class="MuiFormLabel-root Mui-error Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+      data-shrink="true"
+      for="location"
+    >
+      Location
+    </label>
+    <div
+      class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-error Mui-error MuiInputBase-formControl MuiInput-formControl"
+    >
+      <div
+        class="MuiNativeSelect-root"
+      >
+        <select
+          aria-invalid="true"
+          class="MuiNativeSelect-select MuiInputBase-input MuiInput-input"
+          id="location"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="Grant Elementary School"
+          >
+            Grant Elementary School
+          </option>
+          <option
+            value="Hedgepath Middle School"
+          >
+            Hedgepath Middle School
+          </option>
+          <option
+            value="Wilson Elementary School"
+          >
+            Wilson Elementary School
+          </option>
+          <option
+            value="Trenton High School"
+          >
+            Trenton High School
+          </option>
+          <option
+            value="Columbus Elementary School"
+          >
+            Columbus Elementary School
+          </option>
+          <option
+            value="office"
+          >
+            Office
+          </option>
+          <option
+            value="Storage"
+          >
+            Storage
+          </option>
+          <option
+            value="trade"
+          >
+            trade
+          </option>
+          <option
+            value="maintenance"
+          >
+            Maintenance
+          </option>
+          <option
+            value="transit"
+          >
+            Transit
+          </option>
+        </select>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiNativeSelect-icon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;
