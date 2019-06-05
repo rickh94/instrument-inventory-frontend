@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import { Tooltip, IconButton, Typography } from '@material-ui/core'
 
 const TooltipIconButton = ({ children, title, ...buttonProps }) => (
-  <Tooltip title={title}>
+  <Tooltip title={title} data-testid="tooltip">
     <IconButton {...buttonProps}>
       {children}
-      <Typography variant="srOnly">{title}</Typography>
+      <Typography variant="srOnly" data-testid="sr-text">{title}</Typography>
     </IconButton>
   </Tooltip>
 )
