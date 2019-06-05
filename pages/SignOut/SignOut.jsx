@@ -35,11 +35,10 @@ class SignOut extends Component {
 
     this.state = {
       instrumentNumber: '',
-      school: '',
-      studentName: '',
-      scanning: false,
+      location: '',
+      assignedTo: '',
       isLoading: false,
-      response: '',
+      response: { message: '', id: '' },
       errors: {},
     }
   }
@@ -60,14 +59,14 @@ class SignOut extends Component {
 
     this.setState({ isLoading: true })
 
-    const { instrumentNumber, school, studentName } = this.state
+    const { instrumentNumber, location, assignedTo } = this.state
 
     try {
       const response = await API.post('instrument-inventory', 'sign-out', {
         body: {
           instrumentNumber,
-          school,
-          studentName,
+          location,
+          assignedTo,
         },
       })
       this.setState({ response })
@@ -83,7 +82,7 @@ class SignOut extends Component {
   }
 
   validateForm = () => {
-    return this.state.instrumentNumber && this.state.school && this.state.studentName
+    return this.state.instrumentNumber && this.state.location && this.state.assignedTo
   }
 
   onDetected = result => {
@@ -95,48 +94,53 @@ class SignOut extends Component {
   clearForm = () => {
     this.setState({
       instrumentNumber: '',
-      school: '',
-      studentName: '',
-      scanning: false,
+      location: '',
+      assignedTo: '',
       response: '',
     })
   }
 
   render() {
     const { classes } = this.props
+    const {
+      message,
+      isLoading,
+      errors,
+      instrumentNumber,
+      assignedTo,
+      location,
+      response,
+    } = this.state
     return (
       <React.Fragment>
         <RootPaper>
-          <LoadingHeader
-            isLoading={this.state.isLoading}
-            title="Sign Out an Instrument"
-          />
+          <LoadingHeader isLoading={isLoading} title="Sign Out an Instrument" />
           <form onSubmit={this.handleSubmit}>
             <Fields.Scanner
               label="Instrument Number"
-              error={this.state.errors.instrumentNumber}
-              value={this.state.instrumentNumber}
+              error={errors.instrumentNumber}
+              value={instrumentNumber}
               setValue={value => this.setState({ instrumentNumber: value })}
             />
-            <FormControl fullWidth error={this.state.errors.studentName ? true : false}>
-              <InputLabel htmlFor="student-name">Student Name</InputLabel>
+            <FormControl fullWidth error={errors.studentName ? true : false}>
+              <InputLabel htmlFor="student-name">Assigned To</InputLabel>
               <Input
                 id="student-name"
-                onChange={e => this.setState({ studentName: e.target.value })}
+                onChange={e => this.setState({ assignedTo: e.target.value })}
                 aria-describedby="student-name-error"
                 type="text"
-                value={this.state.studentName}
+                value={assignedTo}
                 required
               />
-              {this.state.errors.studentName && (
+              {errors.assignedTo && (
                 <FormHelperText id="student-name-error">
-                  {this.state.errors.studentName}
+                  {errors.assignedTo}
                 </FormHelperText>
               )}
             </FormControl>
             <Fields.LocationSelect
-              value={this.state.school}
-              onChange={e => this.setState({ school: e.target.value })}
+              value={location}
+              onChange={e => this.setState({ location: e.target.value })}
             />
             <FormGroup row>
               <Button onClick={this.clearForm} className={classes.lastButton}>
@@ -148,13 +152,17 @@ class SignOut extends Component {
             </FormGroup>
           </form>
         </RootPaper>
-        <Dialog open={this.state.response ? true : false} onClose={this.clearForm}>
+        <Dialog open={response.message ? true : false} onClose={this.clearForm}>
           <DialogContent>
-            <DialogContentText>{this.state.response}</DialogContentText>
+            <DialogContentText>{response.message}</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.props.history.push('/')}>Return Home</Button>
             <Button onClick={this.clearForm}>Continue</Button>
+            <Button
+              onClick={() => this.props.history.push(`/instrument/${response.id}`)}
+            >
+              View Instrument
+            </Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
@@ -165,6 +173,7 @@ class SignOut extends Component {
 SignOut.propTypes = {
   classes: PropTypes.object.isRequired,
   match: PropTypes.object,
+  history: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(SignOut)

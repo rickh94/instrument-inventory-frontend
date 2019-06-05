@@ -39,6 +39,7 @@ class RetrieveSingle extends Component {
       error: '',
       ask: false,
       isLoading: false,
+      recId: '',
     }
   }
 
@@ -64,10 +65,10 @@ class RetrieveSingle extends Component {
     this.setState({ isLoading: true })
 
     try {
-      await API.post('instrument-inventory', 'retrieve-single', {
+      const res = await API.post('instrument-inventory', 'retrieve-single', {
         body: { instrumentNumber: this.state.instrumentNumber.toUpperCase() },
       })
-      this.setState({ ask: true })
+      this.setState({ ask: true, recId: res.id })
     } catch (err) {
       this.setState({ error: err.response.data })
       console.error(err)
@@ -75,22 +76,19 @@ class RetrieveSingle extends Component {
     this.setState({ isLoading: false })
   }
 
-
   render() {
     const { classes } = this.props
+    const { isLoading, instrumentNumber, error, ask, recId } = this.state
     return (
       <React.Fragment>
         <RootPaper>
-          <LoadingHeader
-            isLoading={this.state.isLoading}
-            title="Retrieve an Instrument"
-          />
+          <LoadingHeader isLoading={isLoading} title="Retrieve an Instrument" />
           <form onSubmit={this.handleSubmit}>
             <Fields.Scanner
               label="Instrument Number"
-              value={this.state.instrumentNumber}
+              value={instrumentNumber}
               setValue={value => this.setState({ instrumentNumber: value })}
-              error={this.state.error}
+              error={error}
             />
             <FormGroup row className={classes.buttons}>
               <Button
@@ -105,15 +103,17 @@ class RetrieveSingle extends Component {
             </FormGroup>
           </form>
         </RootPaper>
-        <Dialog open={this.state.ask} onClose={this.retrieveAnother}>
+        <Dialog open={ask} onClose={this.retrieveAnother}>
           <DialogContent>
             <DialogContentText>
-              Instrument {this.state.instrumentNumber} marked retrieved.
+              Instrument {instrumentNumber} marked retrieved.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.props.history.push('/')}>Return Home</Button>
             <Button onClick={this.retrieveAnother}>Continue</Button>
+            <Button onClick={() => this.props.history.push(`/instrument/${recId}`)}>
+              View Instrument
+            </Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>

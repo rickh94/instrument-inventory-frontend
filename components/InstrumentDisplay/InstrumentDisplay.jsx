@@ -50,6 +50,7 @@ const InstrumentDisplay = ({
   readyToGo,
   shoulderRestEndpinRest,
   giftedToStudent,
+  instrumentHistory,
   thumbnailUrl = '',
   fullPhotoUrl = '',
 }) => {
@@ -79,6 +80,7 @@ const InstrumentDisplay = ({
         <InfoItem primary="Quality" secondary={stars(quality)} />
         <InfoItem primary="Condition Notes" secondary={conditionNotes} />
         <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
+        <InfoItem primary="History" secondary={instrumentHistory} />
         <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
         <InfoItem primary="Bow" secondary={yesOrNo(bow)} />
         <InfoItem primary="Ready To Go" secondary={yesOrNo(readyToGo)} />
@@ -115,6 +117,7 @@ InstrumentDisplay.propTypes = {
   readyToGo: PropTypes.bool,
   shoulderRestEndpinRest: PropTypes.bool,
   giftedToStudent: PropTypes.bool,
+  instrumentHistory: PropTypes.string,
   thumbnailUrl: PropTypes.string,
   fullPhotoUrl: PropTypes.string,
 }

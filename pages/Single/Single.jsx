@@ -130,6 +130,7 @@ class Single extends Component {
         readyToGo: fields['Ready To Go'] || false,
         shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'] || false,
         giftedToStudent: fields['Gifted to student'] || false,
+        instrumentHistory: fields['History'] || '',
         isLoading: false,
         initialLoad: false,
       })
