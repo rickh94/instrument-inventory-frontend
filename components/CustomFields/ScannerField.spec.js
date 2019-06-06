@@ -1,10 +1,8 @@
 import React from 'react'
 import ScannerField from './ScannerField'
 import { render, fireEvent } from '@testing-library/react'
-import { Scanner } from '..'
 
 import 'jest-dom/extend-expect'
-import TooltipIconButton from '../TooltipIconButton'
 
 jest.mock('../Scanner/Scanner', () => () => <div id="test-scanner" />)
 
@@ -17,7 +15,7 @@ describe('<ScannerField />', () => {
   })
 
   it('renders passed in values', () => {
-    const { container, getByText, getAllByTestId } = render(
+    const { container, getByText } = render(
       <ScannerField
         error="testerror"
         value="testvalue"

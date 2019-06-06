@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import { FindInstrument, getSearchParameters } from './FindInstrument'
 import 'jest-dom/extend-expect'
 import { API } from 'aws-amplify'
@@ -89,7 +90,7 @@ describe('FindInstrument', () => {
       body: { assignedTo: 'test' },
     })
 
-    await flushPromises()
+      await flushPromises()
 
     expect(showMultipleResults).toBeCalledWith(searchResults)
   })

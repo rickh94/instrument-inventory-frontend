@@ -67,6 +67,7 @@ exports[`FindInstrument matches snapshot 1`] = `
               </svg>
               <span
                 class="MuiTypography-root MuiTypography-srOnly"
+                data-testid="sr-text"
               >
                 Scan Barcode
               </span>
