@@ -251,7 +251,7 @@ class Single extends Component {
   }
 
   handlePhoto = event => {
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true })
     processImage(event.target.files[0], this.setPhoto)
   }
 
@@ -340,7 +340,10 @@ class Single extends Component {
                   />
                 </React.Fragment>
               ) : (
-                <InstrumentDisplay {...this.state} />
+                <InstrumentDisplay
+                  {...this.state}
+                  isLoading={isLoading && !photoFormOpen}
+                />
               )}
             </RootPaper>
           </React.Fragment>
@@ -350,7 +353,7 @@ class Single extends Component {
           <DialogTitle>
             <LoadingHeader
               title="Add/Change Instrument Photo"
-              isLoading={this.state.isLoading}
+              isLoading={isLoading && photoFormOpen}
             />
           </DialogTitle>
           <DialogContent>

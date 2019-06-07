@@ -87,6 +87,7 @@ exports[`TodoList matches snapshot 1`] = `
       </tr>
       <tr
         class="MuiTableRow-root MuiTableRow-hover"
+        data-testid="toggle-completed"
       >
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"

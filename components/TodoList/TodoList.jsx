@@ -90,8 +90,6 @@ const TodoList = ({ showAlert }) => {
             <TodoForm
               onSubmit={createTodo}
               icon={<AddIcon style={{ marginLeft: '3px' }} />}
-              // after={afterCreate}
-              // before={beforeAction}
               onCancel={() => setCreating(false)}
             />
           ) : (
@@ -120,6 +118,7 @@ const TodoList = ({ showAlert }) => {
               setShowCompleted(c => !c)
               setNeedsUpdate(true)
             }}
+            data-testid="toggle-completed"
           >
             <TableCell component="td">
               <ArrowForwardIcon />
