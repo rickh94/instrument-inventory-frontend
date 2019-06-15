@@ -20,6 +20,7 @@ import {
   Paper,
   Grid,
   CircularProgress,
+  Link,
 } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 
@@ -47,6 +48,7 @@ class Login extends Component {
       newPassword2: '',
       loginError: null,
       isLoadingNewPassword: false,
+      forgotPassword: false,
     }
   }
 
@@ -165,6 +167,12 @@ class Login extends Component {
               </ListItem>
               <ListItem>
                 <FormGroup row className={classes.buttons}>
+                  <Link
+                    onClick={() => this.setState({ forgotPassword: true })}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Forgot Password
+                  </Link>
                   <Button type="reset" color="secondary" className={classes.lastButton}>
                     Cancel
                   </Button>
@@ -185,6 +193,12 @@ class Login extends Component {
           setError={this.setError}
           open={this.state.completeNewPassword}
         />
+        <ForgotPasswordDialog
+          setOpen={forgotPassword => this.setState({ forgotPassword })}
+          open={this.state.forgotPassword}
+          showAlert={this.props.showAlert}
+          enteredEmail={this.state.email}
+        />
         <Dialog
           open={this.state.loginError ? true : false}
           onClose={() => this.setState({ loginError: null })}
@@ -201,7 +215,6 @@ class Login extends Component {
 }
 
 export default withStyles(styles)(Login)
-
 
 const NewPasswordDialog = ({
   open,
@@ -305,4 +318,174 @@ NewPasswordDialog.propTypes = {
   showAlert: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   setError: PropTypes.func.isRequired,
+}
+
+const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
+  const [newPassword1, setPassword1] = useState('')
+  const [newPassword2, setPassword2] = useState('')
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
+  const [codeSent, setCodeSent] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [isLoading, setLoading] = useState(false)
+  const [password1Error, setPassword1Error] = useState('')
+  const [password2Error, setPassword2Error] = useState('')
+  
+
+  const setFromEvent = setCallback => event => setCallback(event.target.value)
+
+  const sendReset = async event => {
+    event.preventDefault()
+    if (!validateEmailForm()) {
+      setEmailError('Email is required')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const data = await Auth.forgotPassword(email)
+      console.log(data)
+      showAlert('Password reset email sent!')
+      setCodeSent(true)
+    } catch (err) {
+      showAlert(err)
+    }
+    setLoading(false)
+  }
+
+  const changePassword = async event => {
+    event.preventDefault()
+
+    if (!validatePasswordForm()) {
+      return
+    }
+
+    setLoading(true)
+    try {
+      const data = await Auth.forgotPasswordSubmit(email, code, newPassword1)
+      console.log(data)
+    } catch (err) {
+      showAlert(err)
+    }
+
+    setLoading(false)
+    setOpen(false)
+  }
+
+  const validatePasswordForm = () =>
+    newPassword1.length > 8 && newPassword1 === newPassword2
+
+  const validateEmailForm = () => (email ? true : false)
+
+  return (
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="complete-forgot-password-title"
+    >
+      <DialogTitle id="complete-forgot-password-title">
+        <LoadingHeader isLoading={isLoading} title="Reset Password" />
+      </DialogTitle>
+      <DialogContent>
+        {codeSent ? (
+          <React.Fragment>
+            <DialogContentText>
+              Please enter the code received in your email, as well as a new password.
+            </DialogContentText>
+            <form onSubmit={changePassword}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="code">Confirmation Code</InputLabel>
+                <Input
+                  id="code"
+                  onChange={setFromEvent(setCode)}
+                  type="text"
+                  value={code}
+                />
+              </FormControl>
+              <FormControl fullWidth error={password1Error ? true : false}>
+                <InputLabel htmlFor="password1">New Password</InputLabel>
+                <Input
+                  id="password1"
+                  onChange={setFromEvent(setPassword1)}
+                  aria-describedby="password1-error"
+                  type="password"
+                  value={newPassword1}
+                  onBlur={() => {
+                    if (newPassword1.length < 8) {
+                      setPassword1Error('Password is not long enough')
+                    } else {
+                      setPassword1Error('')
+                    }
+                  }}
+                />
+                {password1Error && (
+                  <FormHelperText id="password1-error">{password1Error}</FormHelperText>
+                )}
+              </FormControl>
+              <FormControl fullWidth error={password2Error ? true : false}>
+                <InputLabel htmlFor="password2">Confirm Password</InputLabel>
+                <Input
+                  id="password2"
+                  onChange={setFromEvent(setPassword2)}
+                  aria-describedby="password2-error"
+                  type="password"
+                  value={newPassword2}
+                  onBlur={() => {
+                    if (newPassword2 !== newPassword1) {
+                      setPassword2Error('Passwords do not match')
+                    } else {
+                      setPassword2Error('')
+                    }
+                  }}
+                />
+                {password2Error && (
+                  <FormHelperText id="password2-error">{password2Error}</FormHelperText>
+                )}
+              </FormControl>
+            </form>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <DialogContentText>
+              To reset password, enter email below and click submit
+            </DialogContentText>
+            <form onSubmit={sendReset}>
+              <FormControl fullWidth error={emailError ? true: false}>
+                <InputLabel htmlFor="email">Email</InputLabel>
+                <Input
+                  id="email"
+                  onChange={setFromEvent(setEmail)}
+                  aria-describedby="email-error"
+                  type="email"
+                  value={email}
+                />
+                {emailError && (
+                  <FormHelperText id="email-error">{emailError}</FormHelperText>
+                )}
+              </FormControl>
+            </form>
+          </React.Fragment>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        {codeSent ? (
+          <Button onClick={changePassword} disabled={!validatePasswordForm()}>
+            Submit
+          </Button>
+        ) : (
+          <Button onClick={sendReset} disabled={!validateEmailForm()}>
+            Submit
+          </Button>
+        )}
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+ForgotPasswordDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  showAlert: PropTypes.func.isRequired,
+  enteredEmail: PropTypes.string,
 }

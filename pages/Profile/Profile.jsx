@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Auth } from 'aws-amplify'
 import {
   Typography,
@@ -38,13 +38,15 @@ class Profile extends Component {
       errors: {},
       isLoading: false,
       isLoadingNewPassword: false,
+      verifyEmail: false,
     }
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true })
     try {
-      this.setState({ user: await Auth.currentAuthenticatedUser() })
+      const user = await Auth.currentAuthenticatedUser()
+      this.setState({ user })
     } catch (e) {
       console.error(e)
     }
@@ -58,6 +60,7 @@ class Profile extends Component {
       newPassword1: '',
       newPassword2: '',
       errors: {},
+      verifyEmail: false,
     })
   }
 
@@ -96,6 +99,16 @@ class Profile extends Component {
     this.setState({ isLoadingNewPassword: false })
   }
 
+  startVerification = async () => {
+    try {
+      await Auth.verifyCurrentUserAttribute('email')
+    } catch (err) {
+      console.error(err)
+    }
+
+    this.setState({ verifyEmail: true })
+  }
+
   render() {
     const { classes } = this.props
     return (
@@ -117,10 +130,16 @@ class Profile extends Component {
                 <Button onClick={() => this.setState({ changePassword: true })}>
                   Change Password
                 </Button>
+                <Button onClick={this.startVerification}>Verify Email</Button>
               </ListItem>
             </List>
           )}
         </RootPaper>
+        <VerifyEmailDialog
+          open={this.state.verifyEmail}
+          setOpen={verifyEmail => this.setState({ verifyEmail })}
+          showAlert={this.props.showAlert}
+        />
         <Dialog open={this.state.changePassword} onClose={this.cancelChangePassword}>
           <DialogTitle>
             <LoadingHeader
@@ -234,3 +253,67 @@ class Profile extends Component {
 }
 
 export default withStyles(style)(Profile)
+
+
+const VerifyEmailDialog = ({ open, setOpen, showAlert }) => {
+  const [code, setCode] = useState('')
+  const [isLoading, setLoading] = useState(false)
+
+  const validateForm = () => (code ? true : false)
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    if (!validateForm()) {
+      showAlert('Code is required')
+      return
+    }
+
+    setLoading(true)
+    try {
+      await Auth.verifyCurrentUserAttributeSubmit('email', code)
+      showAlert('Your email has been verified')
+    } catch (err) {
+      showAlert(`Something has gone wrong ${err}`)
+    }
+
+    setLoading(false)
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle>
+        <LoadingHeader isLoading={isLoading} title="Verify Email" />
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          An email has been sent with a verification code, please enter it below
+        </DialogContentText>
+        <form onSubmit={handleSubmit}>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="code">Verification Code</InputLabel>
+            <Input
+              value={code}
+              id="code"
+              onChange={e => setCode(e.target.value)}
+              type="text"
+              required
+            />
+          </FormControl>
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={handleSubmit} disabled={!validateForm()}>
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+VerifyEmailDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  showAlert: PropTypes.func.isRequired,
+}
