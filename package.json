@@ -19,6 +19,7 @@
     "jest-dom": "^3.4.0",
     "material-ui-rating": "^3.1.1",
     "quagga": "^0.12.1",
+    "query-string": "^6.7.0",
     "reac": "^0.0.0",
     "react": ">=15.0.0 <17.0.0",
     "react-content-loader": "^4.2.1",

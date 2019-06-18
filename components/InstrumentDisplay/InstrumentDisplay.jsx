@@ -7,11 +7,11 @@ import {
   ListItem,
   ListItemText,
   Modal,
-  Paper,
 } from '@material-ui/core'
 import ExifOrientationImg from 'react-exif-orientation-img'
 import { LoadingHeader } from '..'
 import { titleCase } from '../../libs/titleCase'
+import { stars, yesOrNo } from '../../libs/display'
 
 const useStyles = makeStyles({
   thumbnail: {
@@ -27,12 +27,6 @@ const useStyles = makeStyles({
     border: 'none',
   },
 })
-
-function stars(count) {
-  return '★'.repeat(count)
-}
-
-const yesOrNo = value => (value ? 'Yes' : 'No')
 
 const InstrumentDisplay = ({
   isLoading,

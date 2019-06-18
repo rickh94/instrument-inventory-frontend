@@ -28,6 +28,7 @@ import CameraIcon from '@material-ui/icons/PhotoCamera'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { API, Storage } from 'aws-amplify'
+import querystring from 'query-string'
 
 import {
   LoadingHeader,
@@ -107,6 +108,10 @@ class Single extends Component {
 
   async componentDidMount() {
     await this.getInstrument()
+    const query = querystring.parse(this.props.location.search)
+    if (query.edit === 'true') {
+      this.setState({ editing: true })
+    }
   }
 
   getInstrument = async () => {
@@ -403,6 +408,7 @@ Single.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(Single)

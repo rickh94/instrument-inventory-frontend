@@ -3,7 +3,7 @@ import Loadable from 'react-loadable'
 import { LoadingScreen } from '../components'
 import Login from './Login'
 
-export {Login}
+export { Login }
 
 export const Home = Loadable({
   loader: () => import('./Home'),
@@ -57,5 +57,10 @@ export const Filter = Loadable({
 
 export const NotFound = Loadable({
   loader: () => import('./NotFound'),
+  loading: () => <LoadingScreen />,
+})
+
+export const Everything = Loadable({
+  loader: () => import('./Everything'),
   loading: () => <LoadingScreen />,
 })

@@ -13,6 +13,7 @@ import {
   Search,
   Filter,
   NotFound,
+  Everything,
 } from './pages'
 
 export default function Routes({ childProps }) {
@@ -65,6 +66,12 @@ export default function Routes({ childProps }) {
       />
       <AuthenticatedRoute exact path="/search" component={Search} props={childProps} />
       <AuthenticatedRoute exact path="/filter" component={Filter} props={childProps} />
+      <AuthenticatedRoute
+        exact
+        path="/everything"
+        component={Everything}
+        props={childProps}
+      />
       <Route default component={NotFound} />
     </Switch>
   )
