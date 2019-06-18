@@ -7,6 +7,10 @@ import { TooltipIconButton } from '..'
 import EditIcon from '@material-ui/icons/Edit'
 
 const InstrumentRow = ({ record, columns, history }) => {
+  let photoUrl = ''
+  if (record.fields.Photo) {
+    photoUrl = record.fields.Photo[0].thumbnails.small.url
+  }
   return (
     <TableRow
       component="tr"
@@ -21,7 +25,11 @@ const InstrumentRow = ({ record, columns, history }) => {
           <EditIcon />
         </TooltipIconButton>
       </TableCell>
-      {columns.includes('Photo') ? <TableCell component="td">Photo</TableCell> : null}
+      {columns.includes('Photo') ? (
+        <TableCell component="td">
+          <img src={photoUrl} />
+        </TableCell>
+      ) : null}
       {columns.includes('Number') ? (
         <TableCell component="td">{record.fields['Number'] || ''}</TableCell>
       ) : null}

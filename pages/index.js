@@ -60,7 +60,9 @@ export const NotFound = Loadable({
   loading: () => <LoadingScreen />,
 })
 
-export const Everything = Loadable({
-  loader: () => import('./Everything'),
-  loading: () => <LoadingScreen />,
-})
+import Everything from './Everything'
+export { Everything }
+// export const Everything = Loadable({
+//   loader: () => import('./Everything'),
+//   loading: () => <LoadingScreen />,
+// })

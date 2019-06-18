@@ -15,19 +15,17 @@
     "@material-ui/styles": "^4.0.0-rc.0",
     "aws-amplify": "^1.1.28",
     "axios": "^0.19.0",
-    "final-form": "^4.13.0",
-    "jest-dom": "^3.4.0",
+    "clsx": "^1.0.4",
     "material-ui-rating": "^3.1.1",
     "quagga": "^0.12.1",
     "query-string": "^6.7.0",
-    "reac": "^0.0.0",
     "react": ">=15.0.0 <17.0.0",
     "react-content-loader": "^4.2.1",
     "react-dom": ">=15.0.0 <17.0.0",
     "react-exif-orientation-img": "^0.1.5",
     "react-loadable": "^5.5.0",
     "react-router-dom": "^5.0.0",
-    "react-star-ratings": "^2.3.0",
+    "react-virtualized": "^9.21.1",
     "typeface-roboto": "^0.0.54"
   },
   "devDependencies": {
@@ -47,6 +45,7 @@
     "eslint-plugin-react": "^7.13.0",
     "jest": "^24.8.0",
     "jest-css-modules": "^2.0.0",
+    "jest-dom": "^3.5.0",
     "jest-transform-css": "^2.0.0",
     "jest-transform-stub": "^2.0.0",
     "parcel": "^1.12.3",
@@ -70,9 +69,6 @@
   "jest": {
     "setupFiles": [
       "./setupTests.js"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
     ]
   },
   "compress": {}

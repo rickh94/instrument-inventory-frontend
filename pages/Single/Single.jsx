@@ -426,7 +426,7 @@ const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto }) => {
   const classes = singleActionsStyles()
   const open = () => setOpen(true)
   const close = () => setOpen(false)
-  const toggle = () => setOpen(!isOpen)
+  const toggle = () => setOpen(isOpen => !isOpen)
 
   return (
     <SpeedDial
@@ -435,7 +435,6 @@ const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto }) => {
       onBlur={close}
       onClick={toggle}
       onClose={close}
-      onFocus={open}
       onMouseEnter={open}
       onMouseLeave={close}
       open={isOpen}

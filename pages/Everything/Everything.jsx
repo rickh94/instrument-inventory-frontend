@@ -7,33 +7,28 @@ import { List as TableLoader } from 'react-content-loader'
 
 const useStyles = makeStyles({
   root: {
-    margin: '0 10px',
-    padding: '10px',
-    overflowX: 'auto',
+    // margin: '0 10px',
+    // paddingRight: 10,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 0,
+    overflow: 'hidden',
+    height: '90vh',
+    width: '100%',
+    // width: '98vw',
+  },
+  tableWrapper: {
+    height: '95%',
+    width: '100%',
+    margin: 0,
+    padding: 0,
+    overflow: 'hidden',
   },
 })
 
 const Everything = ({ showAlert }) => {
   const [isLoading, setLoading] = useState(false)
   const [records, setRecords] = useState([])
-  const columns = [
-    'Photo',
-    'Number',
-    'Instrument Type',
-    'Size',
-    'Location',
-    'Assigned To',
-    'Condition Notes',
-    'Maintenance Notes',
-    'Ready To Go',
-    'Condition',
-    'Quality',
-    'Rosin',
-    'Bow',
-    'Shoulder Rest/Endpin Rest',
-    'Gifted to student',
-    'History',
-  ]
   useEffect(() => {
     const getRecords = async () => {
       setLoading(true)
@@ -51,14 +46,18 @@ const Everything = ({ showAlert }) => {
 
   const classes = useStyles()
   return (
-    <Paper className={classes.root}>
-      <LoadingHeader isLoading={isLoading} title="Everything" />
-      {isLoading ? (
-        <TableLoader />
-      ) : (
-        <InstrumentTable columns={columns} records={records} />
-      )}
-    </Paper>
+    <React.Fragment>
+      <div className={classes.root}>
+        <LoadingHeader isLoading={isLoading} title="Everything" />
+        {isLoading ? (
+          <TableLoader />
+        ) : (
+          <div className={classes.tableWrapper}>
+            <InstrumentTable records={records} />
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   )
 }
 
