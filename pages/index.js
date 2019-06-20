@@ -10,11 +10,6 @@ export const Home = Loadable({
   loading: () => <LoadingScreen />,
 })
 
-// export const Login = Loadable({
-//   loader: () => import('./Login'),
-//   loading: () => <LoadingScreen />,
-// })
-
 export const Profile = Loadable({
   loader: () => import('./Profile'),
   loading: () => <LoadingScreen />,
