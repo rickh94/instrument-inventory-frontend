@@ -48,14 +48,11 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
         showMultipleResults([])
         history.push(`/instrument/${response[0].id}`)
       } else {
-        setLoading(false)
         showMultipleResults(response)
       }
     } catch (err) {
-      setLoading(false)
       if (err.response) {
-        showAlert(`Error: ${err}`)
-        // setError(err.response.data)
+        showAlert(`Error: ${err.response.data}`)
       } else {
         showAlert(`Error: ${err}`)
       }

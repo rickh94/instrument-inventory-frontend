@@ -50,6 +50,9 @@ const InstrumentDisplay = ({
 }) => {
   const [photoOpen, showPhoto] = useState(false)
   const classes = useStyles()
+  if (instrumentHistory) {
+    instrumentHistory = instrumentHistory.join(', ')
+  }
 
   return (
     <React.Fragment>

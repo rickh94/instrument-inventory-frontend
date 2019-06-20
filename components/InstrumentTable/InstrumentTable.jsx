@@ -53,22 +53,20 @@ class MuiVirtualizedTable extends React.PureComponent {
 
   cellRenderer = ({ cellData, columnIndex, dataKey, ...other }) => {
     const { columns, classes, rowHeight, onRowClick } = this.props
-    if (dataKey === 'Condition' || dataKey === 'Quality') {
+    if (dataKey === 'condition' || dataKey === 'quality') {
       cellData = stars(cellData)
     } else if (
-      dataKey === 'Ready To Go' ||
-      dataKey === 'Rosin' ||
-      dataKey === 'Bow' ||
-      dataKey === 'Shoulder Rest/Endpin Rest' ||
-      dataKey === 'Gifted to student'
+      dataKey === 'ready' ||
+      dataKey === 'rosin' ||
+      dataKey === 'bow' ||
+      dataKey === 'shoulderRestEndpinRest' ||
+      dataKey === 'gifted'
     ) {
       cellData = yesOrNo(cellData)
-    } else if (
-      dataKey === 'Maintenance Notes' ||
-      dataKey === 'Condition Notes' ||
-      dataKey === 'History'
-    ) {
+    } else if (dataKey === 'maintenanceNotes' || dataKey === 'conditionNotes') {
       cellData = truncateText(cellData, 15)
+    } else if (dataKey === 'history' && cellData) {
+      cellData = truncateText(cellData.join(', '), 30)
     }
     return (
       <TableCell
@@ -215,16 +213,16 @@ const InstrumentTable = ({ records, history }) => {
         sortDirection={sortDirection === 1 ? 'DESC' : 'ASC'}
         sortByField={sortByField}
         rowCount={rows.length}
-        rowGetter={({ index }) => ({ ...rows[index].fields, id: rows[index].id })}
+        rowGetter={({ index }) => ({ ...rows[index] })}
         onRowClick={onRowClick}
         columns={[
-          { width: 120, label: 'Number', dataKey: 'Number' },
-          { width: 140, label: 'Type', dataKey: 'Instrument Type' },
-          { width: 110, label: 'Size', dataKey: 'Size' },
-          { width: 180, label: 'Assigned To', dataKey: 'Assigned To' },
-          { width: 210, label: 'Location', dataKey: 'Location' },
-          { width: 120, label: 'Condition', dataKey: 'Condition' },
-          { width: 100, label: 'Quality', dataKey: 'Quality' },
+          { width: 120, label: 'Number', dataKey: 'number' },
+          { width: 140, label: 'Type', dataKey: 'type' },
+          { width: 110, label: 'Size', dataKey: 'size' },
+          { width: 180, label: 'Assigned To', dataKey: 'assignedTo' },
+          { width: 210, label: 'Location', dataKey: 'location' },
+          { width: 120, label: 'Condition', dataKey: 'condition' },
+          { width: 100, label: 'Quality', dataKey: 'quality' },
           // { width: 200, label: 'Maintenance Notes', dataKey: 'Maintenance Notes' },
           // { width: 200, label: 'Condition Notes', dataKey: 'Condition Notes' },
           // { width: 80, label: 'Ready', dataKey: 'Ready To Go' },
@@ -235,8 +233,8 @@ const InstrumentTable = ({ records, history }) => {
           //   label: 'Shoulder Rest/EndpinRest',
           //   dataKey: 'Shoulder Rest/EndpinRest',
           // },
-          { width: 100, label: 'Gifted', dataKey: 'Gifted to student' },
-          { width: 200, label: 'History', dataKey: 'History' },
+          { width: 100, label: 'Gifted', dataKey: 'gifted' },
+          { width: 200, label: 'History', dataKey: 'history' },
         ]}
         headerHeight={48}
         rowHeight={48}

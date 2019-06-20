@@ -12,6 +12,7 @@ import LabelIcon from '@material-ui/icons/Label'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterIcon from '@material-ui/icons/FilterList'
+import ViewListIcon from '@material-ui/icons/ViewList'
 
 import {
   IconButton,
@@ -101,6 +102,12 @@ export function Nav(props) {
             to="/"
             icon={<HomeIcon />}
             text="Home"
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/everything"
+            icon={<ViewListIcon />}
+            text="Everything"
             setDrawerOpen={setDrawerOpen}
           />
           <NavItem

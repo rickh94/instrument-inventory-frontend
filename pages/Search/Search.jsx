@@ -48,65 +48,6 @@ class Search extends Component {
     }
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value })
-  }
-
-  onDetected = result => {
-    if (result.codeResult.code !== this.state.instrumentNumber) {
-      this.setState({
-        searchTerm: result.codeResult.code,
-        scanning: false,
-      })
-    }
-  }
-
-  onSubmit = async event => {
-    event.preventDefault()
-
-    if (!this.validateForm) {
-      this.setState({ errors: { searchTerm: 'Please enter a search term' } })
-      return
-    }
-
-    this.setState({ isLoading: true })
-    const { searchTerm } = this.state
-    const [path, fieldName] = getSearchParameters(searchTerm)
-
-    try {
-      const response = await API.post('instrument-inventory', path, {
-        body: { [fieldName]: searchTerm },
-      })
-      if (response.length == 1) {
-        this.props.showAlert('Instrument found')
-        this.props.history.push(`/instrument/${response[0].id}`)
-      } else {
-        this.setState({ results: response })
-        this.props.setSearchResults(response)
-      }
-    } catch (err) {
-      if (err.response) {
-        this.setState({ errors: { searchTerm: err.response.data } })
-      } else {
-        console.error(err)
-      }
-    }
-    this.setState({ isLoading: false })
-  }
-
-  clearForm = () => {
-    this.setState({
-      searchTerm: '',
-      scanning: false,
-      results: [],
-    })
-    this.props.setSearchResults([])
-  }
-
-  validateForm = () => {
-    return this.state.searchTerm.length > 0
-  }
-
   showResults = results => {
     this.setState({ results })
     this.props.setSearchResults(results)

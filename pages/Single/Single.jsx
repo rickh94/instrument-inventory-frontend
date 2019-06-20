@@ -12,6 +12,7 @@ import {
   Modal,
   Dialog,
   DialogContent,
+  DialogContentText,
   Button,
   DialogActions,
   makeStyles,
@@ -103,6 +104,7 @@ class Single extends Component {
       errors: {},
       initialLoad: true,
       editing: false,
+      confirmDelete: false,
     }
   }
 
@@ -119,30 +121,29 @@ class Single extends Component {
     const { recId } = this.props.match.params
     try {
       const record = await API.get('instrument-inventory', `instruments/${recId}`)
-      const { fields } = record
       this.setState({
-        instrumentType: fields['Instrument Type'],
-        instrumentNumber: fields.Number,
-        size: fields.Size || '',
-        location: fields.Location || '',
-        assignedTo: fields['Assigned To'] || '',
-        condition: fields.Condition || '',
-        quality: fields.Quality || '',
-        conditionNotes: fields['Condition Notes'] || '',
-        maintenanceNotes: fields['Maintenance Notes'] || '',
-        rosin: fields.Rosin || false,
-        bow: fields.Bow || false,
-        readyToGo: fields['Ready To Go'] || false,
-        shoulderRestEndpinRest: fields['Shoulder Rest/Endpin Rest'] || false,
-        giftedToStudent: fields['Gifted to student'] || false,
-        instrumentHistory: fields['History'] || '',
+        instrumentType: record.type,
+        instrumentNumber: record.number,
+        size: record.size || '',
+        location: record.location || '',
+        assignedTo: record.assignedTo || '',
+        condition: record.condition || '',
+        quality: record.quality || '',
+        conditionNotes: record.conditionNotes || '',
+        maintenanceNotes: record.maintenanceNotes || '',
+        rosin: record.rosin || false,
+        bow: record.bow || false,
+        readyToGo: record.ready || false,
+        shoulderRestEndpinRest: record.shoulderRestEndpinRest || false,
+        giftedToStudent: record.gifted || false,
+        instrumentHistory: record.history || '',
         isLoading: false,
         initialLoad: false,
       })
-      if (fields.Photo) {
+      if (record.photoUrls) {
         this.setState({
-          thumbnailUrl: fields.Photo[0].thumbnails.small.url,
-          fullPhotoUrl: fields.Photo[0].url,
+          thumbnailUrl: record.photoUrls.thumbnail,
+          fullPhotoUrl: record.photoUrls.full,
         })
       }
     } catch (e) {
@@ -313,6 +314,9 @@ class Single extends Component {
       onAddPhoto: () => {
         this.setState({ photoFormOpen: true })
       },
+      onDelete: () => {
+        this.setState({ confirmDelete: true })
+      },
     }
 
     const { classes } = this.props
@@ -399,6 +403,15 @@ class Single extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+        <DeleteDialog
+          itemId={this.props.match.params.recId}
+          open={this.state.confirmDelete}
+          instrumentType={this.state.instrumentType}
+          instrumentNumber={instrumentNumber}
+          setOpen={confirmDelete => this.setState({ confirmDelete })}
+          showAlert={this.props.showAlert}
+          history={this.props.history}
+        />
       </React.Fragment>
     )
   }
@@ -409,6 +422,7 @@ Single.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  showAlert: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Single)
@@ -421,7 +435,7 @@ const singleActionsStyles = makeStyles(theme => ({
   },
 }))
 
-const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto }) => {
+const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto, onDelete }) => {
   const [isOpen, setOpen] = useState(false)
   const classes = singleActionsStyles()
   const open = () => setOpen(true)
@@ -460,6 +474,12 @@ const SingleActions = ({ onRetrieve, onSignOut, onEdit, onAddPhoto }) => {
         onClick={onEdit}
       />
       <SpeedDialAction
+        icon={<DeleteIcon />}
+        tooltipTitle="Delete"
+        onClick={onDelete}
+        tooltipOpen={isOpen}
+      />
+      <SpeedDialAction
         icon={<CameraIcon />}
         tooltipTitle="Add Photo"
         tooltipOpen={isOpen}
@@ -474,4 +494,52 @@ SingleActions.propTypes = {
   onSignOut: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onAddPhoto: PropTypes.func.isRequired,
+}
+
+const DeleteDialog = ({
+  open,
+  instrumentNumber,
+  itemId,
+  instrumentType,
+  setOpen,
+  showAlert,
+  history,
+}) => {
+  const deleteItem = async () => {
+    try {
+      await API.del('instrument-inventory', `instruments/${itemId}`)
+      history.push('/search')
+    } catch (err) {
+      showAlert('Delete Failed')
+    }
+  }
+
+  return (
+    <Dialog open={open}>
+      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Are you sure you want to delete {instrumentType} {instrumentNumber}?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button color="inherit" onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+        <Button color="primary" onClick={deleteItem}>
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+DeleteDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  instrumentNumber: PropTypes.string,
+  itemId: PropTypes.string.isRequired,
+  instrumentType: PropTypes.string.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  showAlert: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 }

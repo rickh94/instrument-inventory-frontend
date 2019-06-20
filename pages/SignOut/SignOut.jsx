@@ -69,6 +69,7 @@ class SignOut extends Component {
           assignedTo,
         },
       })
+      console.log(response)
       this.setState({ response })
     } catch (err) {
       if (err.response.data.errors.instrumentNumber) {

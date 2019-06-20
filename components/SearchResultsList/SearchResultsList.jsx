@@ -13,16 +13,16 @@ export const ResultRowInternal = ({ item, history }) => (
     data-testid="result-row"
   >
     <TableCell component="td" data-testid="type-and-number">
-      {titleCase(item.fields['Instrument Type'])} {item.fields.Number}
+      {titleCase(item.type)} {item.number}
     </TableCell>
     <TableCell component="td" data-testid="size">
-      {item.fields.Size}
+      {item.size}
     </TableCell>
     <TableCell component="td" data-testid="assignedTo">
-      {item.fields['Assigned To'] || 'Not Assigned'}
+      {item.assignedTo || 'Not Assigned'}
     </TableCell>
     <TableCell component="td" data-testid="location">
-      {item.fields['Location']}
+      {item.location}
     </TableCell>
   </TableRow>
 )
