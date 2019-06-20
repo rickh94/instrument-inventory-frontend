@@ -102,7 +102,9 @@ class MuiVirtualizedTable extends React.PureComponent {
     return (
       <TableCell
         component="div"
-        className={clsx(classes.tableCell, classes.flexContainer, classes.noClick)}
+        className={clsx(classes.tableCell, classes.flexContainer, {
+          [classes.noClick]: dataKey === 'history',
+        })}
         variant="head"
         style={{ height: headerHeight }}
         align={columns[columnIndex].numeric || false ? 'right' : 'left'}
@@ -160,19 +162,19 @@ MuiVirtualizedTable.propTypes = {
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable)
 
 const defaultForField = {
-  Number: '',
-  Type: '',
-  Size: '',
-  'Assigned To': '',
-  Location: '',
-  Condition: 0,
-  Quality: 0,
-  'Gifted to student': false,
+  number: '',
+  type: '',
+  size: '',
+  assignedTo: '',
+  location: '',
+  condition: 0,
+  quality: 0,
+  gifted: false,
 }
 
 const compareField = (field, a, b, sortDirection) => {
-  const aValue = a.fields[field] || defaultForField[field]
-  const bValue = b.fields[field] || defaultForField[field]
+  const aValue = a[field] || defaultForField[field]
+  const bValue = b[field] || defaultForField[field]
   if (aValue < bValue) {
     return -sortDirection
   }
@@ -188,6 +190,9 @@ const InstrumentTable = ({ records, history }) => {
   const [sortDirection, setSortDirection] = useState(1)
 
   const sortByField = field => () => {
+    if (field === 'history') {
+      return
+    }
     let direction = sortDirection
     if (sortedBy === field) {
       setSortDirection(sortDirection => -sortDirection)
@@ -222,7 +227,7 @@ const InstrumentTable = ({ records, history }) => {
           { width: 180, label: 'Assigned To', dataKey: 'assignedTo' },
           { width: 210, label: 'Location', dataKey: 'location' },
           { width: 120, label: 'Condition', dataKey: 'condition' },
-          { width: 100, label: 'Quality', dataKey: 'quality' },
+          { width: 110, label: 'Quality', dataKey: 'quality' },
           // { width: 200, label: 'Maintenance Notes', dataKey: 'Maintenance Notes' },
           // { width: 200, label: 'Condition Notes', dataKey: 'Condition Notes' },
           // { width: 80, label: 'Ready', dataKey: 'Ready To Go' },
