@@ -8,10 +8,8 @@ import { API } from 'aws-amplify'
 import { LoadingHeader, Fields } from '..'
 import { Button, FormGroup } from '@material-ui/core'
 
-export const getSearchParameters = input =>
-  input.match(/\w?\d+-\d+/)
-    ? ['search/number', 'instrumentNumber']
-    : ['search/assigned', 'assignedTo']
+export const getPath = input =>
+  input.match(/\w?\d+-\d+/) ? 'search/number' : 'search/assigned-history'
 
 const useStyles = makeStyles({ lastButton })
 
@@ -36,11 +34,11 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
 
   const getInstrument = async term => {
     setLoading(true)
-    const [path, fieldName] = getSearchParameters(term)
+    const path = getPath(term)
 
     try {
       const response = await API.post('instrument-inventory', path, {
-        body: { [fieldName]: term },
+        body: { term },
       })
 
       if (response.length == 1) {
