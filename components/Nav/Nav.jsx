@@ -111,17 +111,12 @@ export function Nav(props) {
             setDrawerOpen={setDrawerOpen}
           />
           <NavItem
-            to="/create"
-            text="Create New Instrument"
-            icon={<AddIcon />}
+            to="/filter"
+            text="Filter Instruments"
+            icon={<FilterIcon />}
             setDrawerOpen={setDrawerOpen}
           />
-          <NavItem
-            to="/sign-out"
-            text="Sign Out instrument"
-            icon={<LabelIcon />}
-            setDrawerOpen={setDrawerOpen}
-          />
+          <Divider />
           <NavItem
             to="/retrieve-single"
             text="Retrieve Instrument"
@@ -134,16 +129,23 @@ export function Nav(props) {
             icon={<ListIcon />}
             setDrawerOpen={setDrawerOpen}
           />
+          <Divider />
+          <NavItem
+            to="/create"
+            text="Create New Instrument"
+            icon={<AddIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/sign-out"
+            text="Sign Out instrument"
+            icon={<LabelIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
           <NavItem
             to="/search"
             text="Find an Instrument"
             icon={<SearchIcon />}
-            setDrawerOpen={setDrawerOpen}
-          />
-          <NavItem
-            to="/filter"
-            text="Filter Instruments"
-            icon={<FilterIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />

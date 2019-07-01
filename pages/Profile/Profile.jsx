@@ -1,4 +1,5 @@
 import React, { Component, useState } from 'react'
+import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 import {
   Typography,
@@ -18,6 +19,7 @@ import {
   InputLabel,
   Input,
   FormHelperText,
+  Checkbox,
 } from '@material-ui/core'
 
 import EmailIcon from '@material-ui/icons/Email'
@@ -38,6 +40,7 @@ class Profile extends Component {
       errors: {},
       isLoading: false,
       isLoadingNewPassword: false,
+      autoScan: false,
       verifyEmail: false,
     }
   }
@@ -50,7 +53,8 @@ class Profile extends Component {
     } catch (e) {
       console.error(e)
     }
-    this.setState({ isLoading: false })
+    const autoScan = JSON.parse(localStorage.getItem('autoScan', 'false'))
+    this.setState({ autoScan, isLoading: false })
   }
 
   cancelChangePassword = () => {
@@ -99,6 +103,17 @@ class Profile extends Component {
     this.setState({ isLoadingNewPassword: false })
   }
 
+  setAutoScan = e => {
+    e.preventDefault()
+    if (e.target.checked) {
+      localStorage.setItem('autoScan', true)
+      this.setState({ autoScan: true })
+    } else {
+      localStorage.setItem('autoScan', false)
+      this.setState({ autoScan: false })
+    }
+  }
+
   startVerification = async () => {
     try {
       await Auth.verifyCurrentUserAttribute('email')
@@ -125,6 +140,18 @@ class Profile extends Component {
                   <Typography variant="h6">Email</Typography>
                   {this.state.user.attributes.email}
                 </ListItemText>
+              </ListItem>
+              <ListItem>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.autoScan}
+                      onChange={this.setAutoScan}
+                      id="auto-scan"
+                    />
+                  }
+                  label="Automatically Start Scanning"
+                />
               </ListItem>
               <ListItem>
                 <Button onClick={() => this.setState({ changePassword: true })}>
@@ -253,7 +280,6 @@ class Profile extends Component {
 }
 
 export default withStyles(style)(Profile)
-
 
 const VerifyEmailDialog = ({ open, setOpen, showAlert }) => {
   const [code, setCode] = useState('')
