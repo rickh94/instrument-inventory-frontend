@@ -14,6 +14,8 @@ import {
   Filter,
   NotFound,
   Everything,
+  Gifted,
+  SignedOut,
 } from './pages'
 
 export default function Routes({ childProps }) {
@@ -66,6 +68,18 @@ export default function Routes({ childProps }) {
       />
       <AuthenticatedRoute exact path="/search" component={Search} props={childProps} />
       <AuthenticatedRoute exact path="/filter" component={Filter} props={childProps} />
+      <AuthenticatedRoute
+        exact
+        path="/filter/signed-out"
+        component={SignedOut}
+        props={childProps}
+      />
+      <AuthenticatedRoute
+        exact
+        path="/filter/gifted"
+        component={Gifted}
+        props={childProps}
+      />
       <AuthenticatedRoute
         exact
         path="/everything"

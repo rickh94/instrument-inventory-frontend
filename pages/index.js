@@ -55,9 +55,17 @@ export const NotFound = Loadable({
   loading: () => <LoadingScreen />,
 })
 
-// import Everything from './Everything'
-// export { Everything }
 export const Everything = Loadable({
   loader: () => import('./Everything'),
+  loading: () => <LoadingScreen />,
+})
+
+export const SignedOut = Loadable({
+  loader: () => import('./SignedOut'),
+  loading: () => <LoadingScreen />,
+})
+
+export const Gifted = Loadable({
+  loader: () => import('./Gifted'),
   loading: () => <LoadingScreen />,
 })

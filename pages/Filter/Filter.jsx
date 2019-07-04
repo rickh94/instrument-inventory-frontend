@@ -77,42 +77,48 @@ const Filter = ({ history, showAlert, filterResults, setFilterResults }) => {
   }
 
   return (
-    <RootPaper>
-      <LoadingHeader isLoading={isLoading} title="Filter Instruments" />
-      <form onSubmit={onSubmit}>
-        <Fields.InstrumentTypeSelect
-          error={false}
-          value={instrumentType}
-          onChange={setFromEvent(setInstrumentType)}
-        />
-        <Fields.InstrumentSizeSelect
-          error={false}
-          value={size}
-          onChange={setFromEvent(setSize)}
-          instrumentType={instrumentType}
-        />
-        <Fields.LocationSelect
-          error={false}
-          value={location}
-          onChange={setFromEvent(setLocation)}
-        />
-        <FormControlLabel
-          control={
-            <Checkbox checked={notAssigned} onChange={setFromEvent(setNotAssigned)} />
-          }
-          label="Show only unassigned instruments"
-        />
-        <FormGroup row>
-          <Button onClick={clearAll} className={classes.lastButton}>
-            Clear
-          </Button>
-          <Button type="submit" color="primary" disabled={!validateForm()}>
-            Submit
-          </Button>
-        </FormGroup>
-      </form>
-      {results.length > 0 && <SearchResultsList results={results} />}
-    </RootPaper>
+    <React.Fragment>
+      <RootPaper>
+        <LoadingHeader isLoading={isLoading} title="Filter Instruments" />
+        <form onSubmit={onSubmit}>
+          <Fields.InstrumentTypeSelect
+            error={false}
+            value={instrumentType}
+            onChange={setFromEvent(setInstrumentType)}
+          />
+          <Fields.InstrumentSizeSelect
+            error={false}
+            value={size}
+            onChange={setFromEvent(setSize)}
+            instrumentType={instrumentType}
+          />
+          <Fields.LocationSelect
+            error={false}
+            value={location}
+            onChange={setFromEvent(setLocation)}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={notAssigned} onChange={setFromEvent(setNotAssigned)} />
+            }
+            label="Show only unassigned instruments"
+          />
+          <FormGroup row>
+            <Button onClick={clearAll} className={classes.lastButton}>
+              Clear
+            </Button>
+            <Button type="submit" color="primary" disabled={!validateForm()}>
+              Submit
+            </Button>
+          </FormGroup>
+        </form>
+      </RootPaper>
+      {results.length > 0 && (
+        <RootPaper>
+          <SearchResultsList results={results} />
+        </RootPaper>
+      )}
+    </React.Fragment>
   )
 }
 

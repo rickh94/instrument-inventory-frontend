@@ -13,6 +13,10 @@ import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterIcon from '@material-ui/icons/FilterList'
 import ViewListIcon from '@material-ui/icons/ViewList'
+import TagIcon from '@material-ui/icons/LocalOffer'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGift } from '@fortawesome/free-solid-svg-icons'
 
 import {
   IconButton,
@@ -114,6 +118,18 @@ export function Nav(props) {
             to="/filter"
             text="Filter Instruments"
             icon={<FilterIcon />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/filter/gifted"
+            text="Gifted Instruments"
+            icon={<FontAwesomeIcon icon={faGift} />}
+            setDrawerOpen={setDrawerOpen}
+          />
+          <NavItem
+            to="/filter/signed-out"
+            text="Signed Out"
+            icon={<TagIcon />}
             setDrawerOpen={setDrawerOpen}
           />
           <Divider />
