@@ -14,8 +14,7 @@ import { RootPaper, FindInstrument, TodoList } from '../../components'
 
 const useStyles = makeStyles({
   footer: {
-    position: 'absolute',
-    bottom: 0,
+    // bottom: 0,
     display: 'flex',
     textAlign: 'center',
     alignItems: 'center',
@@ -30,7 +29,7 @@ const useStyles = makeStyles({
 
 function Home(props) {
   const classes = useStyles()
-  
+
   const showMultipleResults = results => {
     props.setSearchResults(results)
     props.history.push('/search')
