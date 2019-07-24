@@ -14,7 +14,7 @@ import { Scanner, TooltipIconButton } from '..'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
-const SchemaScannerField = ({ onChange, value, error, label }) => {
+const SchemaScannerField = ({ onChange, value, error, label, required }) => {
   const autoScan = JSON.parse(localStorage.getItem('autoScan', 'false'))
   const [scanning, setScanning] = useState(autoScan)
 
@@ -26,7 +26,9 @@ const SchemaScannerField = ({ onChange, value, error, label }) => {
   }
   return (
     <FormControl fullWidth error={error ? true : false}>
-      <InputLabel htmlFor="scanner-field">{label}</InputLabel>
+      <InputLabel htmlFor="scanner-field" required={required}>
+        {label}
+      </InputLabel>
       {scanning ? (
         <React.Fragment>
           <Scanner onDetected={onDetected} />
@@ -40,7 +42,7 @@ const SchemaScannerField = ({ onChange, value, error, label }) => {
             aria-describedby="scanner-error"
             type="text"
             value={value}
-            required
+            required={required}
             endAdornment={
               <InputAdornment position="end">
                 <TooltipIconButton
@@ -53,7 +55,7 @@ const SchemaScannerField = ({ onChange, value, error, label }) => {
               </InputAdornment>
             }
           />
-          {error && <FormHelperText id="scanner-error">{error}</FormHelperText>}
+          {error && <FormHelperText id="scanner-error">{error.message}</FormHelperText>}
         </React.Fragment>
       )}
     </FormControl>
