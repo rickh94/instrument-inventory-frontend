@@ -20,7 +20,7 @@ import {
   Paper,
   Grid,
   CircularProgress,
-  Link,
+  Link
 } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 
@@ -30,7 +30,7 @@ import { LoadingHeader, RootPaper } from '../../components'
 const styles = {
   root,
   lastButton,
-  buttons: fullWidth,
+  buttons: fullWidth
 }
 
 class Login extends Component {
@@ -48,13 +48,13 @@ class Login extends Component {
       newPassword2: '',
       loginError: null,
       isLoadingNewPassword: false,
-      forgotPassword: false,
+      forgotPassword: false
     }
   }
 
   static propTypes = {
     userHasAuthenticated: PropTypes.func.isRequired,
-    showAlert: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired
   }
 
   handleSubmit = async event => {
@@ -76,7 +76,7 @@ class Login extends Component {
         this.setState({ loginError: 'You need to reset your password' })
       } else if (err.code === 'NotAuthorizedException') {
         this.setState({
-          loginError: 'You are not authorized to perform this operation',
+          loginError: 'You are not authorized to perform this operation'
         })
       } else if (err.code === 'UserNotFoundException') {
         this.setState({ loginError: 'Could not find user' })
@@ -223,7 +223,7 @@ const NewPasswordDialog = ({
   onSubmit,
   showAlert,
   errors,
-  setError,
+  setError
 }) => {
   const [newPassword1, setPassword1] = useState('')
   const [newPassword2, setPassword2] = useState('')
@@ -317,7 +317,7 @@ NewPasswordDialog.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   showAlert: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  setError: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired
 }
 
 const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
@@ -330,7 +330,6 @@ const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
   const [isLoading, setLoading] = useState(false)
   const [password1Error, setPassword1Error] = useState('')
   const [password2Error, setPassword2Error] = useState('')
-  
 
   const setFromEvent = setCallback => event => setCallback(event.target.value)
 
@@ -450,7 +449,7 @@ const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
               To reset password, enter email below and click submit
             </DialogContentText>
             <form onSubmit={sendReset}>
-              <FormControl fullWidth error={emailError ? true: false}>
+              <FormControl fullWidth error={emailError ? true : false}>
                 <InputLabel htmlFor="email">Email</InputLabel>
                 <Input
                   id="email"
@@ -487,5 +486,5 @@ ForgotPasswordDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
-  enteredEmail: PropTypes.string,
+  enteredEmail: PropTypes.string
 }

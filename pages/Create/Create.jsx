@@ -16,7 +16,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
+  DialogContentText
 } from '@material-ui/core'
 import { API, Storage } from 'aws-amplify'
 
@@ -26,10 +26,11 @@ import {
   Scanner,
   RootPaper,
   Fields,
-  InstrumentForm,
+  InstrumentForm
 } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 import { makeStyles } from '@material-ui/styles'
+import SchemaForm from '../../components/SchemaForm/SchemaForm'
 
 const emptyForm = {
   instrumentNumber: '',
@@ -46,7 +47,7 @@ const emptyForm = {
   shoulderRestEndpinRest: false,
   readyToGo: false,
   gifted: false,
-  photo: null,
+  photo: null
 }
 
 class Create extends Component {
@@ -58,7 +59,7 @@ class Create extends Component {
       scanning: false,
       isLoading: false,
       errors: {},
-      response: { message: '', item: {} },
+      response: { message: '', item: {} }
     }
   }
 
@@ -86,7 +87,7 @@ class Create extends Component {
       shoulderRestEndpinRest,
       readyToGo,
       gifted,
-      photo,
+      photo
     } = this.state
 
     condition = parseInt(`${condition}`)
@@ -97,7 +98,7 @@ class Create extends Component {
       if (photo) {
         if (photo.size > 5000000) {
           this.setState({
-            errors: { photo: 'Photo is too large. Choose Photo under 5MB' },
+            errors: { photo: 'Photo is too large. Choose Photo under 5MB' }
           })
           return
         }
@@ -121,8 +122,8 @@ class Create extends Component {
           shoulderRestEndpinRest,
           readyToGo,
           gifted,
-          photo: photoUrl,
-        },
+          photo: photoUrl
+        }
       })
       this.setState({ ...emptyForm, response })
     } catch (err) {
@@ -141,7 +142,7 @@ class Create extends Component {
       ...emptyForm,
       scanning: false,
       response: { message: '' },
-      recId: '',
+      recId: ''
     })
   }
 
@@ -149,7 +150,7 @@ class Create extends Component {
     if (result.codeResult.code !== this.state.instrumentNumber) {
       this.setState({
         instrumentNumber: result.codeResult.code,
-        scanning: false,
+        scanning: false
       })
     }
   }
@@ -161,17 +162,17 @@ class Create extends Component {
   handleRating = name => e => {
     if (e.target.value > 5 || e.target.value < 0) {
       this.setState({
-        errors: { [name]: 'Value must be between 1 and 5' },
+        errors: { [name]: 'Value must be between 1 and 5' }
       })
     } else if (e.target.value == 0) {
       this.setState({
         [name]: null,
-        errors: { ...this.state.errors, [name]: null },
+        errors: { ...this.state.errors, [name]: null }
       })
     } else {
       this.setState({
         [name]: e.target.value,
-        errors: { ...this.state.errors, [name]: null },
+        errors: { ...this.state.errors, [name]: null }
       })
     }
   }
@@ -245,8 +246,39 @@ class Create extends Component {
   }
 }
 
-Create.propTypes = {
-  history: PropTypes.object.isRequired,
+const Create2 = ({ schema }) => {
+  return (
+    <React.Fragment>
+      <RootPaper>
+        <LoadingHeader
+          // isLoading={this.state.isLoading}
+          title="Create a New Instrument"
+        />
+        {schema && (
+          <SchemaForm
+            schema={schema.components.schemas.Instrument}
+            onSubmit={console.log}
+          />
+        )}
+      </RootPaper>
+      <Dialog
+        // open={this.state.response.message ? true : false}
+        // onClose={this.clearForm}
+      >
+        <DialogContent>
+          {/* <DialogContentText>{this.state.response.message}</DialogContentText> */}
+        </DialogContent>
+        <DialogActions>
+          {/* <Button onClick={this.clearForm}>Create Another</Button> */}
+          {/* <Button onClick={this.viewCreated}>View</Button> */}
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  )
 }
 
-export default Create
+Create.propTypes = {
+  history: PropTypes.object.isRequired
+}
+
+export default Create2

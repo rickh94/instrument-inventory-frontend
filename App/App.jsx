@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import 'typeface-roboto'
 import Routes from '../Routes'
-import { Auth } from 'aws-amplify'
+import { Auth, API } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 import { withStyles, Snackbar } from '@material-ui/core'
 
@@ -15,17 +15,17 @@ const styles = {
     height: '20px',
     width: '100%',
     marginBottom: '10px',
-    position: 'fixed',
+    position: 'fixed'
   },
   devSpacer: {
-    height: 20,
+    height: 20
   },
   devTitle: {
     margin: '0 0 5px 0',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontFamily: '"Open Sans", sans-serif',
-  },
+    fontFamily: '"Open Sans", sans-serif'
+  }
 }
 
 class App extends Component {
@@ -38,12 +38,13 @@ class App extends Component {
       alert: false,
       alertMessage: '',
       searchResults: [],
-      filterResults: [],
+      filterResults: []
     }
   }
 
   async componentDidMount() {
     try {
+      this.setState({ schema: await API.get('instrument-inventory', 'schema') })
       await Auth.currentSession()
       this.userHasAuthenticated(true)
     } catch (e) {
@@ -88,7 +89,7 @@ class App extends Component {
       setSearchResults: this.setSearchResults,
       setFilterResults: this.setFilterResults,
       searchResults: this.state.searchResults,
-      filterResults: this.state.filterResults,
+      filterResults: this.state.filterResults
     }
     return (
       <React.Fragment>
@@ -103,7 +104,7 @@ class App extends Component {
             <h4 className={classes.devTitle}>Development Mode</h4>
           </React.Fragment>
         )}
-        <Routes childProps={childProps} />
+        <Routes childProps={{ ...childProps, schema: this.state.schema }} />
         <Snackbar
           autoHideDuration={2000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
