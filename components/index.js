@@ -14,7 +14,7 @@ import FindInstrument from './FindInstrument'
 import TodoList from './TodoList'
 import TooltipIconButton from './TooltipIconButton'
 import InstrumentTable from './InstrumentTable'
-import SchemaForm  from './SchemaForm'
+import SchemaForm from './SchemaForm'
 
 export {
   AppliedRoute,

@@ -49,6 +49,7 @@ const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange
       error={error}
       showInlineError
       onChange={onChange}
+      model={initialData}
     >
       <AutoFields omitFields={omitFields} />
       {schema.properties.password && (

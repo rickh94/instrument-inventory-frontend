@@ -7,27 +7,27 @@ export { Login }
 
 export const Home = Loadable({
   loader: () => import('./Home'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Profile = Loadable({
   loader: () => import('./Profile'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const RetrieveSingle = Loadable({
   loader: () => import('./RetrieveSingle'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const RetrieveMultiple = Loadable({
   loader: () => import('./RetrieveMultiple'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const SignOut = Loadable({
   loader: () => import('./SignOut'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Create = Loadable({
@@ -37,35 +37,35 @@ export const Create = Loadable({
 
 export const Single = Loadable({
   loader: () => import('./Single'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Search = Loadable({
   loader: () => import('./Search'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Filter = Loadable({
   loader: () => import('./Filter'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const NotFound = Loadable({
   loader: () => import('./NotFound'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Everything = Loadable({
   loader: () => import('./Everything'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const SignedOut = Loadable({
   loader: () => import('./SignedOut'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
 
 export const Gifted = Loadable({
   loader: () => import('./Gifted'),
-  loading: () => <LoadingScreen />,
+  loading: () => <LoadingScreen />
 })
