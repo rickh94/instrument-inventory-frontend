@@ -30,10 +30,12 @@ export const SignOut = Loadable({
   loading: () => <LoadingScreen />
 })
 
-export const Create = Loadable({
-  loader: () => import('./Create'),
-  loading: () => <LoadingScreen />,
-})
+// export const Create = Loadable({
+//   loader: () => import('./Create'),
+//   loading: () => <LoadingScreen />,
+// })
+import Create from './Create'
+export { Create }
 
 export const Single = Loadable({
   loader: () => import('./Single'),

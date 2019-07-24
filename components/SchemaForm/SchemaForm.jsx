@@ -12,7 +12,8 @@ import {
   AutoField
 } from 'uniforms-material'
 import { Typography } from '@material-ui/core'
-import SchemaScannerField from '../SchemaScannerField/SchemaScannerField'
+import SchemaScannerField from '../SchemaScannerField'
+import SchemaRatingField from '../SchemaRatingField'
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true })
 
@@ -39,6 +40,16 @@ const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange
   if (schema.properties.number) {
     schema.properties.number.uniforms = {
       component: SchemaScannerField
+    }
+  }
+  if (schema.properties.quality) {
+    schema.properties.quality.uniforms = {
+      component: SchemaRatingField
+    }
+  }
+  if (schema.properties.condition) {
+    schema.properties.condition.uniforms = {
+      component: SchemaRatingField
     }
   }
 
