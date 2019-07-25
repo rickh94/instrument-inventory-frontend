@@ -78,13 +78,6 @@ const InstrumentDisplay = ({
         <InfoItem primary="Condition Notes" secondary={conditionNotes} />
         <InfoItem primary="Maintenance Notes" secondary={maintenanceNotes} />
         <InfoItem primary="History" secondary={instrumentHistory} />
-        <InfoItem primary="Rosin" secondary={yesOrNo(rosin)} />
-        <InfoItem primary="Bow" secondary={yesOrNo(bow)} />
-        <InfoItem primary="Ready To Go" secondary={yesOrNo(readyToGo)} />
-        <InfoItem
-          primary="Should Rest/Rock Stop"
-          secondary={yesOrNo(shoulderRestEndpinRest)}
-        />
         <InfoItem primary="Gifted to Student" secondary={yesOrNo(giftedToStudent)} />
       </List>
       <Modal open={photoOpen} onClose={() => showPhoto(false)}>
@@ -109,10 +102,6 @@ InstrumentDisplay.propTypes = {
   quality: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   conditionNotes: PropTypes.string,
   maintenanceNotes: PropTypes.string,
-  rosin: PropTypes.bool,
-  bow: PropTypes.bool,
-  readyToGo: PropTypes.bool,
-  shoulderRestEndpinRest: PropTypes.bool,
   giftedToStudent: PropTypes.bool,
   instrumentHistory: PropTypes.arrayOf(PropTypes.string),
   thumbnailUrl: PropTypes.string,
