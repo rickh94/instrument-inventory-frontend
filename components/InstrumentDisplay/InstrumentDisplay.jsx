@@ -114,7 +114,7 @@ InstrumentDisplay.propTypes = {
   readyToGo: PropTypes.bool,
   shoulderRestEndpinRest: PropTypes.bool,
   giftedToStudent: PropTypes.bool,
-  instrumentHistory: PropTypes.string,
+  instrumentHistory: PropTypes.arrayOf(PropTypes.string),
   thumbnailUrl: PropTypes.string,
   fullPhotoUrl: PropTypes.string,
 }

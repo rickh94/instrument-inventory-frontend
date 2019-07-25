@@ -1,10 +1,3 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText
-} from '@material-ui/core'
 import { API } from 'aws-amplify'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
@@ -16,15 +9,16 @@ const Create = ({ schema, history, showAlert }) => {
 
   const handleSubmit = async body => {
     try {
+      setLoading(true)
       const response = await API.post('instrument-inventory', 'instruments', { body })
+      setLoading(false)
       history.push(`/instrument/${response.id}`)
       showAlert(`${response.item.type} ${response.item.number} created`)
     } catch (err) {
       setError(new Error(err))
+      setLoading(false)
     }
   }
-
-  const viewCreated = () => {}
 
   return (
     <React.Fragment>
@@ -45,7 +39,7 @@ const Create = ({ schema, history, showAlert }) => {
 Create.propTypes = {
   schema: PropTypes.object,
   history: PropTypes.object.isRequired,
-  showAlert: PropTypes.func.isRequired
+  showAlert: PropTypes.func.isRequired,
 }
 
 export default Create
