@@ -3,5 +3,10 @@
         "include": [
             "jest"
         ]
-    }
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".netlify"
+    ]
 }

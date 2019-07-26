@@ -37,6 +37,7 @@ import {
   RootPaper,
   InstrumentDisplay,
   InstrumentForm,
+  SchemaForm
 } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 import { titleCase } from '../../libs/titleCase'
@@ -82,29 +83,14 @@ class Single extends Component {
     super(props)
 
     this.state = {
-      number: '',
-      thumbnailUrl: '',
-      fullPhotoUrl: '',
-      instrumentType: '',
-      size: '',
-      location: '',
-      assignedTo: '',
-      condition: null,
-      quality: null,
-      conditionNotes: '',
-      maintenanceNotes: '',
-      rosin: true,
-      bow: true,
-      readyToGo: true,
-      shoulderRestEndpinRest: true,
-      giftedToStudent: true,
-      isLoading: false,
+      body: {},
       photo: null,
       photoFormOpen: false,
-      errors: {},
+      error: null,
       initialLoad: true,
       editing: false,
       confirmDelete: false,
+      isLoading: false,
     }
   }
 
@@ -120,97 +106,33 @@ class Single extends Component {
     this.setState({ isLoading: true })
     const { recId } = this.props.match.params
     try {
-      const record = await API.get('instrument-inventory', `instruments/${recId}`)
+      const body = await API.get('instrument-inventory', `instruments/${recId}`)
       this.setState({
-        instrumentType: record.type,
-        instrumentNumber: record.number,
-        size: record.size || '',
-        location: record.location || '',
-        assignedTo: record.assignedTo || '',
-        condition: record.condition || '',
-        quality: record.quality || '',
-        conditionNotes: record.conditionNotes || '',
-        maintenanceNotes: record.maintenanceNotes || '',
-        rosin: record.rosin || false,
-        bow: record.bow || false,
-        readyToGo: record.ready || false,
-        shoulderRestEndpinRest: record.shoulderRestEndpinRest || false,
-        giftedToStudent: record.gifted || false,
-        instrumentHistory: record.history || '',
+        body,
         isLoading: false,
         initialLoad: false,
       })
-      if (record.photoUrls) {
-        this.setState({
-          thumbnailUrl: record.photoUrls.thumbnail,
-          fullPhotoUrl: record.photoUrls.full,
-        })
-      }
     } catch (e) {
       console.error(e)
     }
   }
 
-  handleSubmit = async e => {
-    e.preventDefault()
-
-    if (!this.validateForm()) {
-      return
-    }
-
+  handleSubmit = async body => {
     this.setState({ isLoading: true })
-
-    let {
-      instrumentNumber,
-      instrumentType,
-      size,
-      location,
-      assignedTo,
-      maintenanceNotes,
-      conditionNotes,
-      condition,
-      quality,
-      rosin,
-      bow,
-      shoulderRestEndpinRest,
-      readyToGo,
-      gifted,
-      photo,
-    } = this.state
-
-    condition = parseInt(`${condition}`)
-    quality = parseInt(`${quality}`)
-
     try {
-      let fields = {
-        instrumentNumber,
-        instrumentType,
-        size,
-        location,
-        assignedTo,
-        maintenanceNotes,
-        conditionNotes,
-        condition,
-        quality,
-        rosin,
-        bow,
-        shoulderRestEndpinRest,
-        readyToGo,
-        gifted,
-      }
-
-      const response = await API.patch(
+      const response = await API.put(
         'instrument-inventory',
         `instruments/${this.props.match.params.recId}`,
         {
-          body: fields,
+          body,
         }
       )
       this.setState({ editing: false })
+      await this.getInstrument()
     } catch (err) {
       console.error(err)
       if (err.response.data.errors) {
-        this.setState({ errors: err.response.data.errors })
+        this.setState({ error: new Error(err.response.data.errors) })
       }
       console.error(err.response)
     }
@@ -226,36 +148,6 @@ class Single extends Component {
     this.setState({ [name]: value, ...this.state.errors })
   }
 
-  validateForm = () => {
-    if (!this.state.instrumentNumber) {
-      return false
-    }
-    if (!this.state.instrumentType) {
-      return false
-    }
-    if (!this.state.size) {
-      return false
-    }
-    if (!this.state.location) {
-      return false
-    }
-    if (this.state.errors.condition) {
-      return false
-    }
-    if (this.state.errors.quality) {
-      return false
-    }
-    return true
-  }
-
-  setValue = (name, value) => {
-    this.setState({ [name]: value })
-  }
-
-  showPhoto = () => {
-    this.setState({ viewPhoto: true })
-  }
-
   handlePhoto = event => {
     this.setState({ isLoading: true })
     processImage(event.target.files[0], this.setPhoto)
@@ -269,13 +161,12 @@ class Single extends Component {
     e.preventDefault()
 
     if (!this.state.photo) {
-      this.setState({ errors: { photo: 'Photo is required' } })
+      this.props.showAlert('Photo is required')
       return
     }
 
     if (this.state.photo.size > 5000000) {
       this.props.showAlert('Photo is too large')
-      // this.setState({ errors: { photo: 'Photo is too large. Choose Photo under 5MB' } })
       return
     }
 
@@ -300,13 +191,13 @@ class Single extends Component {
   }
 
   render() {
-    const { instrumentNumber } = this.state
+    const { body } = this.state
     const actions = {
       onRetrieve: () => {
-        this.props.history.push(`/retrieve-single/${instrumentNumber}`)
+        this.props.history.push(`/retrieve-single/${body.number}`)
       },
       onSignOut: () => {
-        this.props.history.push(`/sign-out/${instrumentNumber}`)
+        this.props.history.push(`/sign-out/${body.number}`)
       },
       onEdit: () => {
         this.setState({ editing: true })
@@ -319,18 +210,19 @@ class Single extends Component {
       },
     }
 
-    const { classes } = this.props
+    const { classes, schema, showAlert, history } = this.props
     const {
       actionsOpen,
       initialLoad,
       editing,
       photoFormOpen,
-      errors,
+      error,
       isLoading,
+      confirmDelete,
     } = this.state
     return (
       <React.Fragment>
-        {initialLoad ? (
+        {initialLoad || !schema ? (
           <LoadingScreen />
         ) : (
           <React.Fragment>
@@ -338,19 +230,17 @@ class Single extends Component {
               {editing ? (
                 <React.Fragment>
                   <LoadingHeader isLoading={isLoading} title="Edit Instrument" />
-                  <InstrumentForm
-                    {...this.state}
+                  <SchemaForm
+                    schema={schema.components.schemas.Instrument}
                     onSubmit={this.handleSubmit}
-                    setValue={this.setValue}
-                    setErrors={this.setErrors}
-                    validateForm={this.validateForm}
-                    onCancel={this.cancelEdit}
-                    buttonsLeft
+                    error={error}
+                    initialData={body}
                   />
                 </React.Fragment>
               ) : (
                 <InstrumentDisplay
-                  {...this.state}
+                  schema={schema.components.schemas.InstrumentOut}
+                  body={body}
                   isLoading={isLoading && !photoFormOpen}
                 />
               )}
@@ -375,15 +265,15 @@ class Single extends Component {
                 className={classes.fileInput}
                 onChange={this.handlePhoto}
               />
-              <FormControl fullWidth error={errors.photo ? true : false}>
+              <FormControl fullWidth>
                 <label htmlFor="upload-photo">
                   <Button variant="contained" component="span" color="primary">
                     Choose Photo
                   </Button>
                 </label>
-                {errors.photo && (
+                {/* {errors.photo && (
                   <FormHelperText id="photo-error">{errors.photo}</FormHelperText>
-                )}
+                )} */}
               </FormControl>
             </form>
           </DialogContent>
@@ -405,12 +295,12 @@ class Single extends Component {
         </Dialog>
         <DeleteDialog
           itemId={this.props.match.params.recId}
-          open={this.state.confirmDelete}
-          instrumentType={this.state.instrumentType}
-          instrumentNumber={instrumentNumber}
+          open={confirmDelete}
+          instrumentType={body.type}
+          instrumentNumber={body.number}
           setOpen={confirmDelete => this.setState({ confirmDelete })}
-          showAlert={this.props.showAlert}
-          history={this.props.history}
+          showAlert={showAlert}
+          history={history}
         />
       </React.Fragment>
     )
@@ -423,6 +313,7 @@ Single.propTypes = {
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   showAlert: PropTypes.func.isRequired,
+  schema: PropTypes.object,
 }
 
 export default withStyles(styles)(Single)

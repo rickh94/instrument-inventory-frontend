@@ -1,19 +1,19 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 
 import Ajv from 'ajv'
 import { JSONSchemaBridge } from 'uniforms-bridge-json-schema'
 import {
-  AutoForm,
+  AutoField,
   AutoFields,
+  AutoForm,
   ErrorsField,
   SubmitField,
   TextField,
-  AutoField
 } from 'uniforms-material'
-import { Typography } from '@material-ui/core'
-import SchemaScannerField from '../SchemaScannerField'
+
 import SchemaRatingField from '../SchemaRatingField'
+import SchemaScannerField from '../SchemaScannerField'
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true })
 
@@ -39,20 +39,31 @@ const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange
   }
   if (schema.properties.number) {
     schema.properties.number.uniforms = {
-      component: SchemaScannerField
+      component: SchemaScannerField,
     }
   }
   if (schema.properties.quality) {
     schema.properties.quality.uniforms = {
-      component: SchemaRatingField
+      component: SchemaRatingField,
     }
   }
   if (schema.properties.condition) {
     schema.properties.condition.uniforms = {
-      component: SchemaRatingField
+      component: SchemaRatingField,
     }
   }
 
+  if (initialData) {
+    Object.keys(schema.properties).forEach(key => {
+      if (initialData[key] === null || initialData[key] === undefined) {
+        if (schema.properties[key].type === 'string') {
+          initialData[key] = ''
+        } else if (schema.properties[key].type === 'integer') {
+          initialData[key] = 0
+        }
+      }
+    })
+  }
   return (
     <AutoForm
       schema={bridge}
@@ -80,7 +91,7 @@ SchemaForm.propTypes = {
   initialData: PropTypes.object,
   omitFields: PropTypes.arrayOf(PropTypes.string),
   onSubmit: PropTypes.func.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 }
 
 export default SchemaForm
