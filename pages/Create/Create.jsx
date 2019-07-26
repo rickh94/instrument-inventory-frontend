@@ -2,7 +2,7 @@ import { API } from 'aws-amplify'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { LoadingHeader, RootPaper, SchemaForm } from '../../components'
-import temporaryError from '../../libs/temporaryError';
+import temporaryError from '../../libs/temporaryError'
 
 const Create = ({ schema, history, showAlert }) => {
   const [isLoading, setLoading] = useState(false)
@@ -16,7 +16,7 @@ const Create = ({ schema, history, showAlert }) => {
       history.push(`/instrument/${response.id}`)
       showAlert(`${response.item.type} ${response.item.number} created`)
     } catch (err) {
-      temporaryError({setError, message: err})
+      temporaryError({ setError, message: err })
       setLoading(false)
     }
   }

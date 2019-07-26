@@ -50,24 +50,6 @@ const styles = theme => ({
   },
 })
 
-const emptyForm = {
-  instrumentNumber: '',
-  instrumentType: '',
-  size: '',
-  location: '',
-  assignedTo: '',
-  maintenanceNotes: '',
-  conditionNotes: '',
-  condition: '',
-  quality: '',
-  rosin: false,
-  bow: false,
-  shoulderRestRockStop: false,
-  readyToGo: false,
-  gifted: false,
-  photo: null,
-}
-
 function getModalStyle() {
   const top = 50 + rand()
   const left = 50 + rand()
