@@ -8,7 +8,6 @@ import Scanner from './Scanner'
 import SearchResultsList from './SearchResultsList'
 import UnauthenticatedRoute from './UnauthenticatedRoute'
 import Fields from './CustomFields'
-// import InstrumentForm from './InstrumentForm'
 import InstrumentDisplay from './InstrumentDisplay'
 import FindInstrument from './FindInstrument'
 import TodoList from './TodoList'
@@ -27,7 +26,6 @@ export {
   SearchResultsList,
   UnauthenticatedRoute,
   Fields,
-  // InstrumentForm,
   InstrumentDisplay,
   FindInstrument,
   TodoList,
