@@ -8,7 +8,7 @@ import {
   Button,
   Input,
   InputAdornment,
-  FormHelperText
+  FormHelperText,
 } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
@@ -62,6 +62,5 @@ const SchemaScannerField = ({ onChange, value, error, label, required }) => {
     </FormControl>
   )
 }
-
 
 export default connectField(SchemaScannerField)
