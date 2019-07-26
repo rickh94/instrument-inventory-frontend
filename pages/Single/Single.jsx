@@ -235,6 +235,7 @@ class Single extends Component {
                     onSubmit={this.handleSubmit}
                     error={error}
                     initialData={body}
+                    onCancel={this.cancelEdit}
                   />
                 </React.Fragment>
               ) : (
@@ -271,9 +272,6 @@ class Single extends Component {
                     Choose Photo
                   </Button>
                 </label>
-                {/* {errors.photo && (
-                  <FormHelperText id="photo-error">{errors.photo}</FormHelperText>
-                )} */}
               </FormControl>
             </form>
           </DialogContent>

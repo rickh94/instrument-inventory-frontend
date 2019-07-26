@@ -1,15 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import { BrowserRouter as Router } from 'react-router-dom'
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { indigo } from '@material-ui/core/colors'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import indigo from '@material-ui/core/colors/indigo'
-import deepPurple from '@material-ui/core/colors/deepPurple'
-
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import Amplify from 'aws-amplify'
-
+import { BrowserRouter as Router } from 'react-router-dom'
+import App from './App'
 import config from './config'
 
 Amplify.configure({
@@ -38,8 +35,10 @@ Amplify.configure({
 
 const theme = createMuiTheme({
   palette: {
-    primary: deepPurple,
-    secondary: indigo,
+    primary: indigo,
+    secondary: {
+      main: '#0A81D1',
+    },
   },
 })
 

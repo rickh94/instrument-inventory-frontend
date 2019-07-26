@@ -14,6 +14,8 @@ import {
 
 import SchemaRatingField from '../SchemaRatingField'
 import SchemaScannerField from '../SchemaScannerField'
+import { Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true })
 
@@ -28,7 +30,21 @@ const createValidator = schema => {
   }
 }
 
-const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange }) => {
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}))
+
+const SchemaForm = ({
+  schema,
+  initialData,
+  omitFields,
+  onSubmit,
+  error,
+  onChange,
+  onCancel,
+}) => {
   const schemaValidator = createValidator(schema)
   const bridge = new JSONSchemaBridge(schema, schemaValidator)
   if (schema.properties.password) {
@@ -64,6 +80,8 @@ const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange
       }
     })
   }
+
+  const classes = useStyles()
   return (
     <AutoForm
       schema={bridge}
@@ -81,7 +99,17 @@ const SchemaForm = ({ schema, initialData, omitFields, onSubmit, error, onChange
         <AutoField component={TextField} type="password" name="confirm_password" />
       )}
       <ErrorsField />
-      <SubmitField />
+      <SubmitField color="primary" className={classes.button} />
+      {onCancel && (
+        <Button
+          // color="secondary"
+          onClick={onCancel}
+          variant="outlined"
+          className={classes.button}
+        >
+          Cancel
+        </Button>
+      )}
     </AutoForm>
   )
 }
@@ -92,6 +120,7 @@ SchemaForm.propTypes = {
   omitFields: PropTypes.arrayOf(PropTypes.string),
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func,
+  onCancel: PropTypes.func,
 }
 
 export default SchemaForm
