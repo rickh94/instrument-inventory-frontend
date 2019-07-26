@@ -6,6 +6,7 @@ import {
   RootPaper,
   SchemaForm,
   SearchResultsList,
+  LoadingScreen,
 } from '../../components'
 
 const Filter = ({ history, schema, showAlert, filterResults, setFilterResults }) => {
@@ -39,12 +40,14 @@ const Filter = ({ history, schema, showAlert, filterResults, setFilterResults })
     <React.Fragment>
       <RootPaper>
         <LoadingHeader isLoading={isLoading} title="Filter Instruments" />
-        {schema && (
+        {schema ? (
           <SchemaForm
             schema={schema.components.schemas.InstrumentFilter}
             onSubmit={handleSubmit}
             error={error}
           />
+        ) : (
+          <LoadingScreen />
         )}
       </RootPaper>
       {filterResults.length > 0 && (

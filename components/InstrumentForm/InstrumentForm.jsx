@@ -269,4 +269,4 @@ InstrumentForm.propTypes = {
   photoField: PropTypes.bool,
 }
 
-export default InstrumentForm
+// export default InstrumentForm

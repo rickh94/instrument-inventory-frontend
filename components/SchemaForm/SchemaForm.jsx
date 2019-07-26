@@ -11,11 +11,13 @@ import {
   SubmitField,
   TextField,
 } from 'uniforms-material'
+import { Button, FormGroup } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
+import clsx from 'clsx'
 
 import SchemaRatingField from '../SchemaRatingField'
 import SchemaScannerField from '../SchemaScannerField'
-import { Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { lastButton } from '../../globalStyles'
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true })
 
@@ -34,6 +36,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
   },
+  lastButton,
 }))
 
 const SchemaForm = ({
@@ -99,23 +102,28 @@ const SchemaForm = ({
         <AutoField component={TextField} type="password" name="confirm_password" />
       )}
       <ErrorsField />
-      <SubmitField color="primary" className={classes.button} />
-      {onCancel && (
-        <Button
-          // color="secondary"
-          onClick={onCancel}
-          variant="outlined"
-          className={classes.button}
-        >
-          Cancel
-        </Button>
-      )}
+      <FormGroup row>
+        {onCancel && (
+          <Button
+            onClick={onCancel}
+            variant="text"
+            className={clsx(classes.button, classes.lastButton)}
+          >
+            Cancel
+          </Button>
+        )}
+        <SubmitField
+          color="primary"
+          variant="text"
+          className={clsx(classes.button, !onCancel && classes.lastButton)}
+        />
+      </FormGroup>
     </AutoForm>
   )
 }
 
 SchemaForm.propTypes = {
-  schema: PropTypes.object.isRequired,
+  schema: PropTypes.object,
   initialData: PropTypes.object,
   omitFields: PropTypes.arrayOf(PropTypes.string),
   onSubmit: PropTypes.func.isRequired,

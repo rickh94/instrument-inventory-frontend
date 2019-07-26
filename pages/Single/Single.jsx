@@ -37,11 +37,12 @@ import {
   RootPaper,
   InstrumentDisplay,
   InstrumentForm,
-  SchemaForm
+  SchemaForm,
 } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
 import { titleCase } from '../../libs/titleCase'
 import processImage from '../../libs/processImage'
+import temporaryError from '../../libs/temporaryError'
 
 const styles = theme => ({
   fileInput: {
@@ -132,7 +133,7 @@ class Single extends Component {
     } catch (err) {
       console.error(err)
       if (err.response.data.errors) {
-        this.setState({ error: new Error(err.response.data.errors) })
+        temporaryError({ setError: this.setError, message: err.response.data.errors })
       }
       console.error(err.response)
     }
@@ -144,8 +145,8 @@ class Single extends Component {
     this.setState({ editing: false })
   }
 
-  setErrors = (name, value) => {
-    this.setState({ [name]: value, ...this.state.errors })
+  setError = error => {
+    this.setState({ error })
   }
 
   handlePhoto = event => {
@@ -192,9 +193,22 @@ class Single extends Component {
 
   render() {
     const { body } = this.state
+    const { classes, schema, showAlert, history } = this.props
     const actions = {
-      onRetrieve: () => {
-        this.props.history.push(`/retrieve-single/${body.number}`)
+      onRetrieve: async () => {
+        this.setState({ isLoading: true })
+        try {
+          const response = await API.post('instrument-inventory', 'retrieve-single', {
+            body: { number: body.number },
+          })
+          showAlert(response.message)
+          await this.getInstrument()
+          this.setState({ isLoading: false })
+        } catch (err) {
+          this.setState({ isLoading: false })
+          showAlert(err)
+          console.error(err)
+        }
       },
       onSignOut: () => {
         this.props.history.push(`/sign-out/${body.number}`)
@@ -210,7 +224,6 @@ class Single extends Component {
       },
     }
 
-    const { classes, schema, showAlert, history } = this.props
     const {
       actionsOpen,
       initialLoad,
