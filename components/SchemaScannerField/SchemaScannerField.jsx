@@ -15,7 +15,7 @@ import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
 import { Scanner, TooltipIconButton } from '..'
 
-const SchemaScannerField = ({ onChange, value, error, label, required }) => {
+export const SchemaScannerField = ({ onChange, value, error, label, required }) => {
   const autoScan = JSON.parse(localStorage.getItem('autoScan', 'false'))
   const [scanning, setScanning] = useState(autoScan)
 

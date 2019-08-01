@@ -1,10 +1,12 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import InstrumentTable from './InstrumentTable';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { InstrumentTable } from './InstrumentTable'
 
 describe('<InstrumentTable />', () => {
   test('renders', () => {
-    const wrapper = shallow(<InstrumentTable />);
-    expect(wrapper).toMatchSnapshot();
-  });
-});
+    const { container } = render(
+      <InstrumentTable records={[{}]} history={{ push: jest.fn() }} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+})

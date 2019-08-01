@@ -6,7 +6,7 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
     class="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded WithStyles(ForwardRef(Paper))-root-1"
   >
     <svg
-      aria-labelledby="Loading interface..."
+      aria-label="Loading interface..."
       preserveAspectRatio="none"
       role="img"
       viewBox="0 0 400 130"
@@ -15,16 +15,16 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
         Loading interface...
       </title>
       <rect
-        clip-path="url(#s69uj1hsr3m)"
+        clip-path="url(#i61eh68dgac)"
         height="130"
-        style="fill: url(#xpyhejiw5mp);"
+        style="fill: url(#qknspd8ydkq);"
         width="400"
         x="0"
         y="0"
       />
       <defs>
         <clippath
-          id="s69uj1hsr3m"
+          id="i61eh68dgac"
         >
           <circle
             cx="10"
@@ -80,7 +80,7 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
           />
         </clippath>
         <lineargradient
-          id="xpyhejiw5mp"
+          id="qknspd8ydkq"
         >
           <stop
             offset="0%"

@@ -46,7 +46,7 @@ const SearchResultsList = ({ results }) => (
     </TableHead>
     <TableBody component="tbody">
       {results.map(item => (
-        <ResultRow item={item} key={item.id} />
+        <ResultRow item={item} key={item.id}/>
       ))}
     </TableBody>
   </Table>

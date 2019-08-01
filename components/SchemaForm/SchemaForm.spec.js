@@ -1,10 +1,18 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import SchemaForm from './SchemaForm';
+import React from 'react'
+import SchemaForm from './SchemaForm'
+import { render } from '@testing-library/react'
 
 describe('<SchemaForm />', () => {
   test('renders', () => {
-    const wrapper = shallow(<SchemaForm />);
-    expect(wrapper).toMatchSnapshot();
-  });
-});
+    const { container } = render(
+      <SchemaForm
+        schema={{}}
+        initialData={{}}
+        onSubmit={jest.fn()}
+        onChange={jest.fn()}
+        onCancel={jest.fn()}
+      />
+    )
+    expect(container).toMatchSnapshot()
+  })
+})

@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Create /> matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded WithStyles(ForwardRef(Paper))-root-1"
+  >
+    <div
+      class="makeStyles-heading-29"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Create a New Instrument
+      </h5>
+    </div>
+    <form
+      novalidate=""
+    >
+      <div />
+      <div
+        class="MuiFormGroup-root MuiFormGroup-row"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root makeStyles-button-61 makeStyles-lastButton-62 MuiButton-textPrimary MuiButton-text"
+          tabindex="0"
+          type="submit"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Submit
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;

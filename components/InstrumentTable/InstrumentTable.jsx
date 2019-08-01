@@ -184,7 +184,7 @@ const compareField = (field, a, b, sortDirection) => {
   return 0
 }
 
-const InstrumentTable = ({ records, history }) => {
+export const InstrumentTable = ({ records, history }) => {
   const [rows, setRows] = useState(records)
   const [sortedBy, setSortedBy] = useState('')
   const [sortDirection, setSortDirection] = useState(1)
@@ -230,14 +230,6 @@ const InstrumentTable = ({ records, history }) => {
           { width: 110, label: 'Quality', dataKey: 'quality' },
           // { width: 200, label: 'Maintenance Notes', dataKey: 'Maintenance Notes' },
           // { width: 200, label: 'Condition Notes', dataKey: 'Condition Notes' },
-          // { width: 80, label: 'Ready', dataKey: 'Ready To Go' },
-          // { width: 80, label: 'Rosin', dataKey: 'Rosin' },
-          // { width: 80, label: 'Bow', dataKey: 'Bow' },
-          // {
-          //   width: 80,
-          //   label: 'Shoulder Rest/EndpinRest',
-          //   dataKey: 'Shoulder Rest/EndpinRest',
-          // },
           { width: 100, label: 'Gifted', dataKey: 'gifted' },
           { width: 200, label: 'History', dataKey: 'history' },
         ]}

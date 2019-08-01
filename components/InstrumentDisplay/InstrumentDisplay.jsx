@@ -69,7 +69,7 @@ InstrumentDisplay.propTypes = {
   omitFields: PropTypes.array,
 }
 
-const InstrumentDisplayFields = ({ schema, body, omitFields }) => (
+export const InstrumentDisplayFields = ({ schema, body, omitFields = [] }) => (
   <List disablePadding component="ul">
     {Object.keys(schema.properties)
       .filter(field => (omitFields.includes(field) ? null : field))
@@ -90,7 +90,7 @@ InstrumentDisplayFields.propTypes = {
   omitFields: PropTypes.array,
 }
 
-const InfoItem = ({ title, data, type }) => {
+export const InfoItem = ({ title, data, type }) => {
   let text
   switch (type) {
     case 'array':

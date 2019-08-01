@@ -1,10 +1,12 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import SchemaScannerField from './SchemaScannerField';
+import React from 'react'
+import { SchemaScannerField } from './SchemaScannerField'
+import { render } from '@testing-library/react'
 
 describe('<SchemaScannerField />', () => {
-  test('renders', () => {
-    const wrapper = shallow(<SchemaScannerField />);
-    expect(wrapper).toMatchSnapshot();
-  });
-});
+  it('matches snapshot', () => {
+    const { container } = render(
+      <SchemaScannerField onChange={jest.fn()} value="" error={null} label="Test" />
+    )
+    expect(container).toMatchSnapshot()
+  })
+})

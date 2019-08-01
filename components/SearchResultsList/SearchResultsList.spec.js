@@ -6,24 +6,20 @@ import 'jest-dom/extend-expect'
 
 const testItem = {
   id: 'testid',
-  fields: {
-    'Instrument Type': 'test',
-    Size: '4/4',
-    'Assigned To': 'test person',
-    Location: 'test location',
-    Number: '1-001',
-  },
+  type: 'test',
+  size: '4/4',
+  assignedTo: 'test person',
+  location: 'test location',
+  number: '1-001',
 }
 
 const makeTestItem = id => ({
   id: id,
-  fields: {
-    'Instrument Type': 'test',
-    Size: '4/4',
-    'Assigned To': `test${id}`,
-    Location: 'test',
-    Number: '1-001',
-  },
+  type: 'test',
+  size: '4/4',
+  assignedTo: `test${id}`,
+  location: 'test',
+  number: '1-001',
 })
 
 describe('ResultRowInternal', () => {
