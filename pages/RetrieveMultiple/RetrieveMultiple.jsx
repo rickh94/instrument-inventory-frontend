@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
-  withStyles,
   Typography,
   FormControl,
   InputLabel,
@@ -21,6 +20,7 @@ import {
   DialogTitle,
   FormHelperText,
 } from '@material-ui/core'
+import {withStyles} from '@material-ui/styles'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

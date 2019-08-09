@@ -8,7 +8,6 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  withStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +20,8 @@ import {
   FormHelperText,
   Checkbox,
 } from '@material-ui/core'
+
+import {withStyles} from '@material-ui/styles'
 
 import EmailIcon from '@material-ui/icons/Email'
 
@@ -43,6 +44,11 @@ class Profile extends Component {
       autoScan: false,
       verifyEmail: false,
     }
+  }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    showAlert: PropTypes.func.isRequired,
   }
 
   async componentDidMount() {

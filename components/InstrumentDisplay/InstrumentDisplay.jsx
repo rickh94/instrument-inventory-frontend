@@ -6,9 +6,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  makeStyles,
   Modal,
 } from '@material-ui/core'
+import {makeStyles} from '@material-ui/styles'
 import ExifOrientationImg from 'react-exif-orientation-img'
 
 import { LoadingHeader } from '..'

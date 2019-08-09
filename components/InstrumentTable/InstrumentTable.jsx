@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { TableCell, withStyles, Typography } from '@material-ui/core'
+import { TableCell, Typography } from '@material-ui/core'
+import {withStyles} from '@material-ui/styles'
 import clsx from 'clsx'
 import { AutoSizer, Column, Table } from 'react-virtualized'
 import DownIcon from '@material-ui/icons/ArrowDropDown'

@@ -1,10 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<LoadingScreen /> matches snapshot 1`] = `
+exports[`<Everything /> matches snapshot 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded WithStyles(ForwardRef(Paper))-root-1"
+    class="makeStyles-root-1"
   >
+    <div
+      class="makeStyles-heading-3"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Everything
+      </h5>
+      <div
+        class="MuiCircularProgress-root MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate makeStyles-loader-4"
+        role="progressbar"
+        style="width: 40px; height: 40px;"
+      >
+        <svg
+          class="MuiCircularProgress-svg"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate"
+            cx="44"
+            cy="44"
+            fill="none"
+            r="20.2"
+            stroke-width="3.6"
+          />
+        </svg>
+      </div>
+    </div>
     <svg
       aria-label="Loading interface..."
       preserveAspectRatio="none"
@@ -15,72 +43,68 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
         Loading interface...
       </title>
       <rect
-        clip-path="url(#b1h3adfhrqd)"
+        clip-path="url(#2xzxnxrzktn)"
         height="130"
-        style="fill: url(#94dba0h0i2t);"
+        style="fill: url(#14pwyyg7xgi);"
         width="400"
         x="0"
         y="0"
       />
       <defs>
         <clippath
-          id="b1h3adfhrqd"
+          id="2xzxnxrzktn"
         >
-          <circle
-            cx="10"
-            cy="20"
-            r="8"
+          <rect
+            height="10"
+            rx="3"
+            ry="3"
+            width="250"
+            x="0"
+            y="0"
           />
           <rect
             height="10"
-            rx="5"
-            ry="5"
+            rx="3"
+            ry="3"
             width="220"
-            x="25"
-            y="15"
-          />
-          <circle
-            cx="10"
-            cy="50"
-            r="8"
+            x="20"
+            y="20"
           />
           <rect
             height="10"
-            rx="5"
-            ry="5"
-            width="220"
-            x="25"
-            y="45"
-          />
-          <circle
-            cx="10"
-            cy="80"
-            r="8"
+            rx="3"
+            ry="3"
+            width="170"
+            x="20"
+            y="40"
           />
           <rect
             height="10"
-            rx="5"
-            ry="5"
-            width="220"
-            x="25"
-            y="75"
-          />
-          <circle
-            cx="10"
-            cy="110"
-            r="8"
+            rx="3"
+            ry="3"
+            width="250"
+            x="0"
+            y="60"
           />
           <rect
             height="10"
-            rx="5"
-            ry="5"
-            width="220"
-            x="25"
-            y="105"
+            rx="3"
+            ry="3"
+            width="200"
+            x="20"
+            y="80"
+          />
+          <rect
+            height="10"
+            rx="3"
+            ry="3"
+            width="80"
+            x="20"
+            y="100"
           />
         </clippath>
         <lineargradient
-          id="94dba0h0i2t"
+          id="14pwyyg7xgi"
         >
           <stop
             offset="0%"

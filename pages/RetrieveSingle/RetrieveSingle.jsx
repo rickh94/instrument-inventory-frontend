@@ -8,6 +8,11 @@ import temporaryError from '../../libs/temporaryError'
 const RetrieveSingle = ({ history, schema, showAlert }) => {
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [current, setCurrent] = useState(0)
+
+  const handleChange = (event, newValue) => {
+    setCurrent(newValue)
+  }
 
   const handleSubmit = async body => {
     setLoading(true)
@@ -24,18 +29,20 @@ const RetrieveSingle = ({ history, schema, showAlert }) => {
   }
 
   return (
-    <RootPaper>
-      <LoadingHeader isLoading={isLoading} title="Retrieve an Instrument" />
-      {schema ? (
-        <SchemaForm
-          schema={schema.components.schemas.RetrieveSingle}
-          onSubmit={handleSubmit}
-          error={error}
-        />
-      ) : (
-        <LoadingScreen />
-      )}
-    </RootPaper>
+    <>
+      <RootPaper>
+        <LoadingHeader isLoading={isLoading} title="Retrieve an Instrument" />
+        {schema ? (
+          <SchemaForm
+            schema={schema.components.schemas.RetrieveSingle}
+            onSubmit={handleSubmit}
+            error={error}
+          />
+        ) : (
+          <LoadingScreen />
+        )}
+      </RootPaper>
+    </>
   )
 }
 

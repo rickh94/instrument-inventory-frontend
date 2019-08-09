@@ -1,10 +1,14 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import SignedOut from './SignedOut';
+import React from 'react'
+import { cleanup, render } from '@testing-library/react'
+import SignedOut from './SignedOut'
+import { API } from 'aws-amplify'
+
+afterEach(cleanup)
 
 describe('<SignedOut />', () => {
-  test('renders', () => {
-    const wrapper = shallow(<SignedOut />);
-    expect(wrapper).toMatchSnapshot();
-  });
-});
+  it('matches snapshot', () => {
+    API.get = jest.fn().mockImplementation(() => Promise.resolve([]))
+    const { container } = render(<SignedOut showAlert={jest.fn()} />)
+    expect(container).toMatchSnapshot()
+  })
+})

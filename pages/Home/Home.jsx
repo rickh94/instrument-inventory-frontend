@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import {
   Typography,
   ListItem,
-  makeStyles,
   Link,
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core'
+import {makeStyles} from '@material-ui/styles'
 import { withRouter } from 'react-router-dom'
 
 import { RootPaper, FindInstrument, TodoList } from '../../components'

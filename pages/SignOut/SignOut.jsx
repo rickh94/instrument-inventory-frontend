@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+// noinspection NpmUsedModulesInstalled
 import PropTypes from 'prop-types'
 
 import { API } from 'aws-amplify'
@@ -38,7 +39,7 @@ const SignOut = ({ match, history, schema, showAlert }) => {
 
 SignOut.propTypes = {
   schema: PropTypes.object,
-  match: PropTypes.object,
+  match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   showAlert: PropTypes.func.isRequired,
 }

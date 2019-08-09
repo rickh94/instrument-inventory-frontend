@@ -2,7 +2,6 @@ import React, { Component, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   Paper,
-  withStyles,
   FormControl,
   Input,
   List,
@@ -15,9 +14,9 @@ import {
   DialogContentText,
   Button,
   DialogActions,
-  makeStyles,
   DialogTitle,
 } from '@material-ui/core'
+import {withStyles, makeStyles} from '@material-ui/styles'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction'

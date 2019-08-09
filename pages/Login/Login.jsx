@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   FormGroup,
-  withStyles,
   Dialog,
   DialogTitle,
   DialogContentText,
@@ -22,6 +21,7 @@ import {
   CircularProgress,
   Link
 } from '@material-ui/core'
+import {withStyles} from '@material-ui/styles'
 import { Auth } from 'aws-amplify'
 
 import { root, lastButton, fullWidth } from '../../globalStyles'
