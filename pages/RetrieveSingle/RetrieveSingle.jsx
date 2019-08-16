@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { API } from 'aws-amplify'
 import { LoadingHeader, LoadingScreen, RootPaper, SchemaForm } from '../../components'
 import temporaryError from '../../libs/temporaryError'
+import { HelpersContext } from '../../contexts'
 
-const RetrieveSingle = ({ history, schema, showAlert }) => {
+const RetrieveSingle = ({ history, schema }) => {
+  const { showAlert } = useContext(HelpersContext)
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [current, setCurrent] = useState(0)
@@ -49,7 +51,6 @@ const RetrieveSingle = ({ history, schema, showAlert }) => {
 RetrieveSingle.propTypes = {
   history: PropTypes.object.isRequired,
   schema: PropTypes.object,
-  showAlert: PropTypes.func.isRequired,
 }
 
 export default RetrieveSingle

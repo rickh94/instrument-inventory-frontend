@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -7,10 +7,11 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@material-ui/styles'
 import { withRouter } from 'react-router-dom'
 
 import { RootPaper, FindInstrument, TodoList } from '../../components'
+import { HelpersContext } from '../../contexts'
 
 const useStyles = makeStyles({
   footer: {
@@ -29,9 +30,10 @@ const useStyles = makeStyles({
 
 function Home(props) {
   const classes = useStyles()
+  const { showAlert, setSearchResults } = useContext(HelpersContext)
 
   const showMultipleResults = results => {
-    props.setSearchResults(results)
+    setSearchResults(results)
     props.history.push('/search')
   }
 
@@ -40,11 +42,12 @@ function Home(props) {
       <RootPaper>
         <FindInstrument
           showMultipleResults={showMultipleResults}
-          showAlert={props.showAlert}
         />
       </RootPaper>
       <RootPaper>
-        <TodoList showAlert={props.showAlert} />
+        <TodoList
+          showAlert={showAlert}
+        />
       </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>

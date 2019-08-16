@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -19,18 +19,19 @@ import {
   Paper,
   Grid,
   CircularProgress,
-  Link
+  Link,
 } from '@material-ui/core'
-import {withStyles} from '@material-ui/styles'
+import { withStyles } from '@material-ui/styles'
 import { Auth } from 'aws-amplify'
 
 import { root, lastButton, fullWidth } from '../../globalStyles'
 import { LoadingHeader, RootPaper } from '../../components'
+import { HelpersContext } from '../../contexts'
 
 const styles = {
   root,
   lastButton,
-  buttons: fullWidth
+  buttons: fullWidth,
 }
 
 class Login extends Component {
@@ -48,13 +49,12 @@ class Login extends Component {
       newPassword2: '',
       loginError: null,
       isLoadingNewPassword: false,
-      forgotPassword: false
+      forgotPassword: false,
     }
   }
 
   static propTypes = {
     userHasAuthenticated: PropTypes.func.isRequired,
-    showAlert: PropTypes.func.isRequired
   }
 
   handleSubmit = async event => {
@@ -76,7 +76,7 @@ class Login extends Component {
         this.setState({ loginError: 'You need to reset your password' })
       } else if (err.code === 'NotAuthorizedException') {
         this.setState({
-          loginError: 'You are not authorized to perform this operation'
+          loginError: 'You are not authorized to perform this operation',
         })
       } else if (err.code === 'UserNotFoundException') {
         this.setState({ loginError: 'Could not find user' })
@@ -121,7 +121,7 @@ class Login extends Component {
   render() {
     const { classes } = this.props
     return (
-      <React.Fragment>
+      <>
         <RootPaper>
           <LoadingHeader isLoading={this.state.isLoading} title="Login" />
           <form onSubmit={this.handleSubmit}>
@@ -188,7 +188,6 @@ class Login extends Component {
           onSubmit={this.completeNewPassword}
           setOpen={completeNewPassword => this.setState({ completeNewPassword })}
           isLoading={this.state.isLoadingNewPassword}
-          showAlert={this.props.showAlert}
           errors={this.state.errors}
           setError={this.setError}
           open={this.state.completeNewPassword}
@@ -196,7 +195,6 @@ class Login extends Component {
         <ForgotPasswordDialog
           setOpen={forgotPassword => this.setState({ forgotPassword })}
           open={this.state.forgotPassword}
-          showAlert={this.props.showAlert}
           enteredEmail={this.state.email}
         />
         <Dialog
@@ -209,7 +207,7 @@ class Login extends Component {
             <Button onClick={() => this.setState({ loginError: null })}>Ok</Button>
           </DialogActions>
         </Dialog>
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -221,12 +219,12 @@ const NewPasswordDialog = ({
   setOpen,
   isLoading,
   onSubmit,
-  showAlert,
   errors,
-  setError
+  setError,
 }) => {
   const [newPassword1, setPassword1] = useState('')
   const [newPassword2, setPassword2] = useState('')
+  const { showAlert } = useContext(HelpersContext)
 
   const setFromEvent = setCallback => event => setCallback(event.target.value)
 
@@ -315,12 +313,11 @@ NewPasswordDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  showAlert: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  setError: PropTypes.func.isRequired
+  setError: PropTypes.func.isRequired,
 }
 
-const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
+const ForgotPasswordDialog = ({ open, setOpen, enteredEmail }) => {
   const [newPassword1, setPassword1] = useState('')
   const [newPassword2, setPassword2] = useState('')
   const [email, setEmail] = useState('')
@@ -330,6 +327,7 @@ const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
   const [isLoading, setLoading] = useState(false)
   const [password1Error, setPassword1Error] = useState('')
   const [password2Error, setPassword2Error] = useState('')
+  const { showAlert } = useContext(HelpersContext)
 
   const setFromEvent = setCallback => event => setCallback(event.target.value)
 
@@ -485,6 +483,5 @@ const ForgotPasswordDialog = ({ open, setOpen, showAlert, enteredEmail }) => {
 ForgotPasswordDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  showAlert: PropTypes.func.isRequired,
-  enteredEmail: PropTypes.string
+  enteredEmail: PropTypes.string,
 }

@@ -229,8 +229,6 @@ export const InstrumentTable = ({ records, history }) => {
           { width: 210, label: 'Location', dataKey: 'location' },
           { width: 120, label: 'Condition', dataKey: 'condition' },
           { width: 110, label: 'Quality', dataKey: 'quality' },
-          // { width: 200, label: 'Maintenance Notes', dataKey: 'Maintenance Notes' },
-          // { width: 200, label: 'Condition Notes', dataKey: 'Condition Notes' },
           { width: 100, label: 'Gifted', dataKey: 'gifted' },
           { width: 200, label: 'History', dataKey: 'history' },
         ]}

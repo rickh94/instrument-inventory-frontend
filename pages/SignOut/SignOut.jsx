@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 // noinspection NpmUsedModulesInstalled
 import PropTypes from 'prop-types'
 
 import { API } from 'aws-amplify'
 import { LoadingHeader, RootPaper, SchemaForm } from '../../components'
+import { HelpersContext } from '../../contexts';
 
-const SignOut = ({ match, history, schema, showAlert }) => {
+const SignOut = ({ match, history, schema }) => {
+  const { showAlert } = useContext(HelpersContext)
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const { number } = match.params
@@ -41,7 +43,6 @@ SignOut.propTypes = {
   schema: PropTypes.object,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  showAlert: PropTypes.func.isRequired,
 }
 
 export default SignOut

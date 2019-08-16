@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Paper,
@@ -16,7 +16,7 @@ import {
   DialogActions,
   DialogTitle,
 } from '@material-ui/core'
-import {withStyles, makeStyles} from '@material-ui/styles'
+import { withStyles, makeStyles } from '@material-ui/styles'
 import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
@@ -42,12 +42,13 @@ import { s3Upload } from '../../libs/awsLib'
 import { titleCase } from '../../libs/titleCase'
 import processImage from '../../libs/processImage'
 import temporaryError from '../../libs/temporaryError'
+import { HelpersContext, SchemaContext } from '../../contexts'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   fileInput: {
     display: 'none',
   },
-})
+}))
 
 function getModalStyle() {
   const top = 50 + rand()
@@ -60,7 +61,7 @@ function getModalStyle() {
   }
 }
 
-class Single extends Component {
+class SingleBase extends Component {
   constructor(props) {
     super(props)
 
@@ -291,7 +292,6 @@ class Single extends Component {
           instrumentType={body.type}
           instrumentNumber={body.number}
           setOpen={confirmDelete => this.setState({ confirmDelete })}
-          showAlert={showAlert}
           history={history}
         />
       </React.Fragment>
@@ -299,7 +299,7 @@ class Single extends Component {
   }
 }
 
-Single.propTypes = {
+SingleBase.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
@@ -308,7 +308,16 @@ Single.propTypes = {
   schema: PropTypes.object,
 }
 
-export default withStyles(styles)(Single)
+const Single = props => {
+  const { showAlert } = useContext(HelpersContext)
+  const schema = useContext(SchemaContext)
+  const classes = useStyles()
+  return (
+    <SingleBase {...props} schema={schema} showAlert={showAlert} classes={classes} />
+  )
+}
+
+export default Single
 
 const singleActionsStyles = makeStyles(theme => ({
   speedDial: {
@@ -385,9 +394,9 @@ const DeleteDialog = ({
   itemId,
   instrumentType,
   setOpen,
-  showAlert,
   history,
 }) => {
+  const { showAlert } = useContext(HelpersContext)
   const deleteItem = async () => {
     try {
       await API.del('instrument-inventory', `instruments/${itemId}`)
@@ -423,6 +432,5 @@ DeleteDialog.propTypes = {
   itemId: PropTypes.string.isRequired,
   instrumentType: PropTypes.string.isRequired,
   setOpen: PropTypes.func.isRequired,
-  showAlert: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 }

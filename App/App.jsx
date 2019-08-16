@@ -4,10 +4,11 @@ import Routes from '../Routes'
 import { Auth, API } from 'aws-amplify'
 import { withRouter } from 'react-router-dom'
 import { Snackbar } from '@material-ui/core'
-import {withStyles} from '@material-ui/styles'
+import { withStyles } from '@material-ui/styles'
 
 import { Nav } from '../components'
 import config from '../config'
+import { HelpersContext, SchemaContext } from '../contexts'
 
 const styles = {
   devMarker: {
@@ -16,17 +17,17 @@ const styles = {
     height: '20px',
     width: '100%',
     marginBottom: '10px',
-    position: 'fixed'
+    position: 'fixed',
   },
   devSpacer: {
-    height: 20
+    height: 20,
   },
   devTitle: {
     margin: '0 0 5px 0',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontFamily: '"Open Sans", sans-serif'
-  }
+    fontFamily: '"Open Sans", sans-serif',
+  },
 }
 
 class App extends Component {
@@ -39,7 +40,7 @@ class App extends Component {
       alert: false,
       alertMessage: '',
       searchResults: [],
-      filterResults: []
+      filterResults: [],
     }
   }
 
@@ -86,11 +87,11 @@ class App extends Component {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
-      showAlert: this.showAlert,
-      setSearchResults: this.setSearchResults,
-      setFilterResults: this.setFilterResults,
-      searchResults: this.state.searchResults,
-      filterResults: this.state.filterResults
+      // showAlert: this.showAlert,
+      // setSearchResults: this.setSearchResults,
+      // setFilterResults: this.setFilterResults,
+      // searchResults: this.state.searchResults,
+      // filterResults: this.state.filterResults,
     }
     return (
       <React.Fragment>
@@ -105,14 +106,26 @@ class App extends Component {
             <h4 className={classes.devTitle}>Development Mode</h4>
           </React.Fragment>
         )}
-        <Routes childProps={{ ...childProps, schema: this.state.schema }} />
-        <Snackbar
-          autoHideDuration={2000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={this.state.alert}
-          onClose={this.closeAlert}
-          message={this.state.alertMessage}
-        />
+        <HelpersContext.Provider
+          value={{
+            showAlert: this.showAlert,
+            setSearchResults: this.setSearchResults,
+            setFilterResults: this.setFilterResults,
+            searchResults: this.state.searchResults,
+            filterResults: this.state.filterResults,
+          }}
+        >
+          <SchemaContext.Provider value={this.state.schema}>
+            <Routes childProps={{ ...childProps, schema: this.state.schema }} />
+            <Snackbar
+              autoHideDuration={2000}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              open={this.state.alert}
+              onClose={this.closeAlert}
+              message={this.state.alertMessage}
+            />
+          </SchemaContext.Provider>
+        </HelpersContext.Provider>
       </React.Fragment>
     )
   }

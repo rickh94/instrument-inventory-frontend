@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { API } from 'aws-amplify'
 import { RootPaper, SearchResultsList, LoadingHeader } from '../../components'
+import { HelpersContext } from '../../contexts'
 
-const Gifted = ({ showAlert }) => {
+const Gifted = ({}) => {
   const [isLoading, setLoading] = useState(false)
   const [records, setRecords] = useState([])
+  const { showAlert } = useContext(HelpersContext)
+
   useEffect(() => {
     const getRecords = async () => {
       setLoading(true)
@@ -28,8 +31,6 @@ const Gifted = ({ showAlert }) => {
   )
 }
 
-Gifted.propTypes = {
-  showAlert: PropTypes.func.isRequired,
-}
+Gifted.propTypes = {}
 
 export default Gifted

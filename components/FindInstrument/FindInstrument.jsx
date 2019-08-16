@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { withRouter } from 'react-router-dom'
@@ -7,13 +7,15 @@ import { lastButton } from '../../globalStyles'
 import { API } from 'aws-amplify'
 import { LoadingHeader, Fields } from '..'
 import { Button, FormGroup } from '@material-ui/core'
+import { HelpersContext } from '../../contexts'
 
 export const getPath = input =>
   input.match(/\w?\d+-\d+/) ? 'search/number' : 'search/assigned-history'
 
 const useStyles = makeStyles({ lastButton })
 
-export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
+export const FindInstrument = ({ showMultipleResults, history }) => {
+  const { showAlert } = useContext(HelpersContext)
   const [isLoading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState('')
@@ -93,7 +95,6 @@ export const FindInstrument = ({ showMultipleResults, showAlert, history }) => {
 
 FindInstrument.propTypes = {
   showMultipleResults: PropTypes.func.isRequired,
-  showAlert: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 }
 

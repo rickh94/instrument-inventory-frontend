@@ -1,6 +1,6 @@
 import { API } from 'aws-amplify'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   LoadingHeader,
   RootPaper,
@@ -8,10 +8,14 @@ import {
   SearchResultsList,
   LoadingScreen,
 } from '../../components'
+import { HelpersContext, SchemaContext } from '../../contexts'
 
-const Filter = ({ history, schema, showAlert, filterResults, setFilterResults }) => {
+const Filter = ({ history}) => {
+  const { showAlert, filterResults, setFilterResults } = useContext(HelpersContext)
+  const schema = useContext(SchemaContext)
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
   const handleSubmit = async body => {
     try {
       setLoading(true)
@@ -60,11 +64,7 @@ const Filter = ({ history, schema, showAlert, filterResults, setFilterResults })
 }
 
 Filter.propTypes = {
-  schema: PropTypes.object,
   history: PropTypes.object.isRequired,
-  showAlert: PropTypes.func.isRequired,
-  filterResults: PropTypes.array,
-  setFilterResults: PropTypes.func.isRequired,
 }
 
 export default Filter

@@ -1,10 +1,14 @@
-import { API } from 'aws-amplify'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+
+import { API } from 'aws-amplify'
 import { LoadingHeader, RootPaper, SchemaForm } from '../../components'
 import temporaryError from '../../libs/temporaryError'
+import { HelpersContext, SchemaContext } from '../../contexts'
 
-const Create = ({ schema, history, showAlert }) => {
+const Create = ({ history }) => {
+  const { showAlert } = useContext(HelpersContext)
+  const schema = useContext(SchemaContext)
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -38,9 +42,7 @@ const Create = ({ schema, history, showAlert }) => {
 }
 
 Create.propTypes = {
-  schema: PropTypes.object,
   history: PropTypes.object.isRequired,
-  showAlert: PropTypes.func.isRequired,
 }
 
 export default Create

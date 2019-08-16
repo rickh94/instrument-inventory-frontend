@@ -20,7 +20,7 @@ import {
   DialogTitle,
   FormHelperText,
 } from '@material-ui/core'
-import {withStyles} from '@material-ui/styles'
+import { withStyles } from '@material-ui/styles'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { RootPaper, SearchResultsList, FindInstrument } from '../../components'
+import { HelpersContext } from '../../contexts'
 
-const Search = ({ searchResults, showAlert, setSearchResults }) => {
+const Search = ({}) => {
+  const { showAlert, searchResults, setSearchResults } = useContext(HelpersContext)
 
   return (
     <RootPaper>
@@ -14,9 +16,6 @@ const Search = ({ searchResults, showAlert, setSearchResults }) => {
 }
 
 Search.propTypes = {
-  setSearchResults: PropTypes.func.isRequired,
-  searchResults: PropTypes.array.isRequired,
-  showAlert: PropTypes.func.isRequired,
 }
 
 export default Search

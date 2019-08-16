@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Auth } from 'aws-amplify'
 import {
@@ -21,11 +21,12 @@ import {
   Checkbox,
 } from '@material-ui/core'
 
-import {withStyles} from '@material-ui/styles'
+import { withStyles } from '@material-ui/styles'
 
 import EmailIcon from '@material-ui/icons/Email'
 
 import { LoadingHeader, RootPaper } from '../../components'
+import { HelpersContext } from '../../contexts'
 
 const style = {}
 
@@ -48,13 +49,13 @@ class Profile extends Component {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    showAlert: PropTypes.func.isRequired,
   }
 
   async componentDidMount() {
     this.setState({ isLoading: true })
     try {
       const user = await Auth.currentAuthenticatedUser()
+      console.log(user)
       this.setState({ user })
     } catch (e) {
       console.error(e)
@@ -163,7 +164,9 @@ class Profile extends Component {
                 <Button onClick={() => this.setState({ changePassword: true })}>
                   Change Password
                 </Button>
-                <Button onClick={this.startVerification}>Verify Email</Button>
+                {!this.state.user.attributes.email_verified && (
+                  <Button onClick={this.startVerification}>Verify Email</Button>
+                )}
               </ListItem>
             </List>
           )}
@@ -171,7 +174,6 @@ class Profile extends Component {
         <VerifyEmailDialog
           open={this.state.verifyEmail}
           setOpen={verifyEmail => this.setState({ verifyEmail })}
-          showAlert={this.props.showAlert}
         />
         <Dialog open={this.state.changePassword} onClose={this.cancelChangePassword}>
           <DialogTitle>
@@ -287,7 +289,8 @@ class Profile extends Component {
 
 export default withStyles(style)(Profile)
 
-const VerifyEmailDialog = ({ open, setOpen, showAlert }) => {
+const VerifyEmailDialog = ({ open, setOpen }) => {
+  const { showAlert } = useContext(HelpersContext)
   const [code, setCode] = useState('')
   const [isLoading, setLoading] = useState(false)
 
@@ -347,5 +350,4 @@ const VerifyEmailDialog = ({ open, setOpen, showAlert }) => {
 VerifyEmailDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  showAlert: PropTypes.func.isRequired,
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import {
   Table,
@@ -19,8 +19,10 @@ import EditIcon from '@material-ui/icons/Edit'
 import { LoadingHeader } from '..'
 import { API } from 'aws-amplify'
 import TooltipIconButton from '../TooltipIconButton/TooltipIconButton'
+import { HelpersContext } from '../../contexts'
 
-const TodoList = ({ showAlert }) => {
+const TodoList = ({}) => {
+  const { showAlert } = useContext(HelpersContext)
   const [todoList, setTodoList] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [showCompleted, setShowCompleted] = useState(false)
@@ -63,6 +65,7 @@ const TodoList = ({ showAlert }) => {
       await API.post('instrument-inventory', 'todos', {
         body: data,
       })
+      showAlert('Todo Created')
     } catch (err) {
       showAlert(`Error: ${err}`)
     }
@@ -135,9 +138,7 @@ const TodoList = ({ showAlert }) => {
   )
 }
 
-TodoList.propTypes = {
-  showAlert: PropTypes.func.isRequired,
-}
+TodoList.propTypes = {}
 
 export default TodoList
 

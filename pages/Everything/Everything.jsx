@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { LoadingHeader, InstrumentTable } from '../../components'
 import { Paper } from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@material-ui/styles'
 import { API } from 'aws-amplify'
 import { List as TableLoader } from 'react-content-loader'
+import { HelpersContext } from '../../contexts'
 
 const useStyles = makeStyles({
   root: {
-    // margin: '0 10px',
-    // paddingRight: 10,
     paddingLeft: 10,
     paddingTop: 10,
     paddingBottom: 0,
     overflow: 'hidden',
     height: '90vh',
     width: '100%',
-    // width: '98vw',
   },
   tableWrapper: {
     height: '95%',
@@ -27,7 +25,8 @@ const useStyles = makeStyles({
   },
 })
 
-const Everything = ({ showAlert }) => {
+const Everything = ({}) => {
+  const { showAlert } = useContext(HelpersContext)
   const [isLoading, setLoading] = useState(false)
   const [records, setRecords] = useState([])
   useEffect(() => {
@@ -62,8 +61,6 @@ const Everything = ({ showAlert }) => {
   )
 }
 
-Everything.propTypes = {
-  showAlert: PropTypes.func.isRequired,
-}
+Everything.propTypes = {}
 
 export default Everything
