@@ -71,6 +71,7 @@ class Login extends Component {
       }
       this.props.userHasAuthenticated(true)
     } catch (err) {
+      console.log(err)
       if (err.code === 'UserNotConfirmedException') {
         this.setState({ loginError: 'Your user is not confirmed' })
       } else if (err.code === 'PasswordResetRequiredException') {
