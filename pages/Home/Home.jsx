@@ -70,8 +70,6 @@ function Home(props) {
 
 Home.propTypes = {
   history: PropTypes.object.isRequired,
-  showAlert: PropTypes.func.isRequired,
-  setSearchResults: PropTypes.func.isRequired,
 }
 
 export default Home
