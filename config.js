@@ -9,6 +9,8 @@ const dev = {
     USER_POOL_ID: 'us-east-1_E8bTuMdrD',
     APP_CLIENT_ID: '4uk5fpfv8tji91s1e1j86hvb35',
     IDENTITY_POOL_ID: 'us-east-1:c6ffd490-2cbf-4465-9c62-657ec10924b1',
+    DOMAIN: process.env.USER === 'rick' ? 'localhost' : '.netlify.com',
+    SECURE: false,
   },
   s3: {
     REGION: 'us-east-1',
@@ -27,6 +29,8 @@ const prod = {
     USER_POOL_ID: 'us-east-1_x5p2txsmA',
     APP_CLIENT_ID: '7rvmg6d2cklqe6jrt3mscbqba7',
     IDENTITY_POOL_ID: 'us-east-1:95a1e528-85e0-4e89-ac57-810a8f2219ae',
+    DOMAIN: 'instrument-inventory.netlify.com',
+    SECURE: true
   },
   s3: {
     REGION: 'us-east-1',
