@@ -10,7 +10,7 @@ const dev = {
     APP_CLIENT_ID: '4uk5fpfv8tji91s1e1j86hvb35',
     IDENTITY_POOL_ID: 'us-east-1:c6ffd490-2cbf-4465-9c62-657ec10924b1',
     DOMAIN: process.env.USER === 'rick' ? 'localhost' : process.env.DEPLOY_URL,
-    SECURE: process.env.USER === 'rick' ? false : true,
+    SECURE: false,
   },
   s3: {
     REGION: 'us-east-1',
