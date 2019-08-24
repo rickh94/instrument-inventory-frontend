@@ -59,6 +59,7 @@ class Login extends Component {
 
   handleSubmit = async event => {
     event.preventDefault()
+    console.log(await Auth.configure())
 
     this.setState({ isLoading: true })
 
