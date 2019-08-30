@@ -25,6 +25,7 @@ export const SchemaScannerField = ({ onChange, value, error, label, required }) 
       onChange(result.codeResult.code)
     }
   }
+
   return (
     <FormControl fullWidth error={error ? true : false}>
       <InputLabel htmlFor="scanner-field" required={required}>
@@ -33,7 +34,9 @@ export const SchemaScannerField = ({ onChange, value, error, label, required }) 
       {scanning ? (
         <React.Fragment>
           <Scanner onDetected={onDetected} />
-          <Button onClick={() => setScanning(false)}>Stop Scanning</Button>
+          <Button onClick={() => setScanning(false)} data-testid="stop-scanning-button">
+            Stop Scanning
+          </Button>
         </React.Fragment>
       ) : (
         <React.Fragment>
@@ -44,6 +47,7 @@ export const SchemaScannerField = ({ onChange, value, error, label, required }) 
             type="text"
             value={value}
             required={required}
+            data-testid="scanner-input"
             endAdornment={
               <InputAdornment position="end">
                 <TooltipIconButton
@@ -61,6 +65,14 @@ export const SchemaScannerField = ({ onChange, value, error, label, required }) 
       )}
     </FormControl>
   )
+}
+
+SchemaScannerField.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  error: PropTypes.object,
+  label: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 }
 
 export default connectField(SchemaScannerField)

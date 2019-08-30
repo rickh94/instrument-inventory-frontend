@@ -6,9 +6,6 @@ import './Scanner.scss'
 
 function Scanner(props) {
   useEffect(() => {
-    function _onDetected(result) {
-      props.onDetected(result)
-    }
     Quagga.init(
       {
         inputStream: {
@@ -32,19 +29,20 @@ function Scanner(props) {
       },
       err => {
         if (err) {
+          // eslint-disable-next-line no-console
           return console.error(err)
         }
         Quagga.start()
       }
     )
-    Quagga.onDetected(_onDetected)
+    Quagga.onDetected(props.onDetected)
     return function cleanup() {
-      Quagga.offDetected(_onDetected)
+      Quagga.offDetected(props.onDetected)
       Quagga.stop()
     }
   })
 
-  return <div id="interactive" className="viewport" />
+  return <div id="interactive" className="viewport" data-testid="scanner" />
 }
 
 Scanner.propTypes = {

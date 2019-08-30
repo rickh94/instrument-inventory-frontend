@@ -1,8 +1,10 @@
 import React from 'react'
 import { Nav, NavItemInternal } from './Nav'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, cleanup } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import 'jest-dom/extend-expect'
+
+afterEach(cleanup)
 
 describe('Nav', () => {
   it('matches snapshot', () => {
@@ -31,23 +33,23 @@ describe('Nav', () => {
 
   describe('renders the correct button based on isAuthenticated', () => {
     it('renders login if isAuthenticated is false', () => {
-      const { queryAllByText } = render(
+      const { queryByTestId } = render(
         <MemoryRouter>
           <Nav isAuthenticated={false} handleLogout={jest.fn()} />
         </MemoryRouter>
       )
-      expect(queryAllByText('Login').length).not.toBe(0)
-      expect(queryAllByText('Logout').length).toBe(0)
+      expect(queryByTestId('login-button')).toBeTruthy()
+      expect(queryByTestId('logout-button')).toBeFalsy()
     })
     it('renders logout if true', () => {
-      const { queryAllByText } = render(
+      const { queryByTestId } = render(
         <MemoryRouter>
           <Nav isAuthenticated={true} handleLogout={jest.fn()} />
         </MemoryRouter>
       )
 
-      expect(queryAllByText('Logout').length).not.toBe(0)
-      // for some reason it the login button is also rendered in tests but not in practice
+      expect(queryByTestId('logout-button')).toBeTruthy()
+      expect(queryByTestId('login-button')).toBeFalsy()
     })
   })
 

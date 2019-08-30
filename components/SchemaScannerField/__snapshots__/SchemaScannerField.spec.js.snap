@@ -14,6 +14,7 @@ exports[`<SchemaScannerField /> matches snapshot 1`] = `
     </label>
     <div
       class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+      data-testid="scanner-input"
     >
       <input
         aria-describedby="scanner-error"

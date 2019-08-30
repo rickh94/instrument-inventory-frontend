@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 const SchemaForm = ({
   schema,
   initialData,
-  omitFields,
+  omitFields = [],
   onSubmit,
   error,
   onChange,
@@ -129,6 +129,7 @@ SchemaForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onCancel: PropTypes.func,
+  error: PropTypes.object,
 }
 
 export default SchemaForm

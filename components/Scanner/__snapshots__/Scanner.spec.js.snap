@@ -4,6 +4,7 @@ exports[`<Scanner /> matches snapshot 1`] = `
 <div>
   <div
     class="viewport"
+    data-testid="scanner"
     id="interactive"
   />
 </div>

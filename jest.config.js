@@ -5,4 +5,5 @@ module.exports = {
     'typeface-*': 'jest-transform-stub',
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  // transformIgnorePatterns: [],
 }

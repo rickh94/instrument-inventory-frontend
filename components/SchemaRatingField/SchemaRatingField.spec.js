@@ -1,6 +1,8 @@
 import React from 'react'
 import { SchemaRatingField } from './SchemaRatingField'
-import { render } from '@testing-library/react'
+import { render, cleanup } from '@testing-library/react'
+
+afterEach(cleanup)
 
 describe('<SchemaRatingField />', () => {
   test('renders', () => {
@@ -21,5 +23,13 @@ describe('<SchemaRatingField />', () => {
       />
     )
     expect(getByText('Try again')).toBeTruthy()
+  })
+
+  it('renders a rating and a label', () => {
+    const { container, queryByText } = render(
+      <SchemaRatingField onChange={jest.fn()} value={0} label="Test" />
+    )
+    expect(container.querySelector('.Rating-root-93')).toBeTruthy()
+    expect(queryByText('Test')).toBeTruthy()
   })
 })

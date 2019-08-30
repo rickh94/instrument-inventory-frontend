@@ -63,7 +63,7 @@
   "scripts": {
     "test": "jest",
     "serve": "parcel index.html",
-    "build": "rm -rf dist/* && parcel build index.html",
+    "build": "rm -rf dist/* && BABEL_ENV=prod parcel build index.html",
     "crcf": "crcf"
   },
   "crcf": [
