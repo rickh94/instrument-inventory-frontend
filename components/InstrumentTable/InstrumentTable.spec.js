@@ -16,7 +16,7 @@ describe('<InstrumentTable />', () => {
   })
 
   test('renders correct headers', () => {
-    const { queryByText } = render(
+    const { container, queryByText } = render(
       <TestTheme>
         <InstrumentTable records={[{}]} history={{ push: jest.fn() }} />
       </TestTheme>
@@ -31,6 +31,8 @@ describe('<InstrumentTable />', () => {
     expect(queryByText('Quality')).toBeTruthy()
     expect(queryByText('Gifted')).toBeTruthy()
     expect(queryByText('History')).toBeTruthy()
+    expect(container.querySelector('.ReactVirtualized__Table')).toBeTruthy()
+    expect(container.querySelector('.ReactVirtualized__Table__Grid')).toBeTruthy()
   })
 })
 

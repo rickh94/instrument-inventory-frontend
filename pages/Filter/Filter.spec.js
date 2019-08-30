@@ -1,7 +1,7 @@
 import React from 'react'
 import Filter from './Filter'
 import { render } from '@testing-library/react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { TestTheme, TestEverything } from '../../testHelpers'
 
 const schema = {
   openapi: '3.0.2',
@@ -34,17 +34,11 @@ const schema = {
 }
 
 describe('<Filter />', () => {
-  it('matches snapshot', () => {
+  test('matches snapshot', () => {
     const { container } = render(
-      <MuiThemeProvider theme={createMuiTheme()}>
-        <Filter
-          history={{ push: jest.fn() }}
-          schema={schema}
-          showAlert={jest.fn()}
-          filterResults={[]}
-          setFilterResults={jest.fn()}
-        />
-      </MuiThemeProvider>
+      <TestEverything schema={schema}>
+        <Filter history={{ push: jest.fn() }} />
+      </TestEverything>
     )
     expect(container).toMatchSnapshot()
   })

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 
 import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core'
-import { titleCase } from '../../libs/titleCase'
+import { titleCase } from "../../libs/titleCase.1";
 
 export const ResultRowInternal = ({ item, history }) => (
   <TableRow

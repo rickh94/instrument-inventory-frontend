@@ -116,8 +116,4 @@ describe('<Everything />', () => {
     await flushPromises()
     expect(container).toMatchSnapshot()
   })
-
-  test('shows the correct columns', () => {
-
-  })
 })

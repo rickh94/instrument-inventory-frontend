@@ -39,7 +39,7 @@ import {
   SchemaForm,
 } from '../../components'
 import { s3Upload } from '../../libs/awsLib'
-import { titleCase } from '../../libs/titleCase'
+import { titleCase } from "../../libs/titleCase.1";
 import processImage from '../../libs/processImage'
 import temporaryError from '../../libs/temporaryError'
 import { HelpersContext, SchemaContext } from '../../contexts'
