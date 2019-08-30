@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 const LoadingHeader = ({ isLoading, title }) => {
   const classes = useStyles()
   return (
-    <div className={classes.heading}>
+    <div className={classes.heading} data-testid="loading-header">
       <Typography variant="h5" color="inherit">
         {title}
       </Typography>

@@ -1,10 +1,10 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import { FindInstrument, getSearchParameters } from './FindInstrument'
 import 'jest-dom/extend-expect'
 import { API } from 'aws-amplify'
 
+// eslint-disable-next-line no-undef
 const flushPromises = () => new Promise(setImmediate)
 
 describe('FindInstrument', () => {

@@ -73,10 +73,5 @@
     "spec",
     "proptypes"
   ],
-  "jest": {
-    "setupFiles": [
-      "./setupTests.js"
-    ]
-  },
   "compress": {}
 }

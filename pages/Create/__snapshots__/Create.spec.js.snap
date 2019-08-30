@@ -7,6 +7,7 @@ exports[`<Create /> matches snapshot 1`] = `
   >
     <div
       class="makeStyles-heading-29"
+      data-testid="loading-header"
     >
       <h5
         class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
@@ -15,6 +16,7 @@ exports[`<Create /> matches snapshot 1`] = `
       </h5>
     </div>
     <form
+      data-testid="schema-form"
       novalidate=""
     >
       <div>
@@ -30,6 +32,7 @@ exports[`<Create /> matches snapshot 1`] = `
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+            data-testid="scanner-input"
           >
             <input
               aria-describedby="scanner-error"

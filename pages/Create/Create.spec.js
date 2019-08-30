@@ -1,7 +1,15 @@
 import React from 'react'
 import Create from './Create'
-import { render } from '@testing-library/react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { render, cleanup, fireEvent } from '@testing-library/react'
+import {
+  TestHelpers,
+  TestTheme,
+  TestEverything,
+  flushPromises,
+} from '../../testHelpers'
+import { API } from 'aws-amplify'
+
+afterEach(cleanup)
 
 const schema = {
   components: {
@@ -104,13 +112,121 @@ const schema = {
 }
 
 describe('<Create />', () => {
-  it('matches snapshot', () => {
+  test('matches snapshot', () => {
     const { container } = render(
-      <MuiThemeProvider theme={createMuiTheme()}>
-        <Create schema={schema} history={{ push: jest.fn() }} showAlert={jest.fn()} />
-      </MuiThemeProvider>
+      <TestEverything schema={schema}>
+        <Create history={{ push: jest.fn() }} />
+      </TestEverything>
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('renders loading header', () => {
+    const { queryByTestId } = render(
+      <TestTheme>
+        <TestHelpers>
+          <Create history={{ push: jest.fn() }} />
+        </TestHelpers>
+      </TestTheme>
+    )
+
+    expect(queryByTestId('loading-header')).toBeTruthy()
+  })
+
+  test('renders schema form if schema is provided', () => {
+    const { queryByTestId } = render(
+      <TestEverything schema={schema}>
+        <Create history={{ push: jest.fn() }} />
+      </TestEverything>
+    )
+
+    expect(queryByTestId('schema-form')).toBeTruthy()
+  })
+
+  test('renders instrument from schema', () => {
+    const { queryByText } = render(
+      <TestEverything schema={schema}>
+        <Create history={{ push: jest.fn() }} />
+      </TestEverything>
+    )
+    expect(queryByText('Instrument Number')).toBeTruthy()
+    expect(queryByText('Instrument Size')).toBeTruthy()
+    expect(queryByText('Instrument Type')).toBeTruthy()
+    expect(queryByText('Instrument Location')).toBeTruthy()
+    expect(queryByText('Assigned To')).toBeTruthy()
+    expect(queryByText('Maintenance Notes')).toBeTruthy()
+    expect(queryByText('Condition Notes')).toBeTruthy()
+    expect(queryByText('Condition')).toBeTruthy()
+    expect(queryByText('Quality')).toBeTruthy()
+    expect(queryByText('Gifted To Student')).toBeTruthy()
+  })
+
+  test('api is called on submit', async () => {
+    const smallSchema = {
+      components: {
+        schemas: {
+          Instrument: {
+            type: 'object',
+            properties: {
+              assignedTo: {
+                title: 'Assigned To',
+                description: 'Who it is signed out to',
+                type: 'string',
+              },
+              maintenanceNotes: {
+                title: 'Maintenance Notes',
+                maxLength: 200,
+                type: 'string',
+              },
+              conditionNotes: {
+                title: 'Condition Notes',
+                maxLength: 200,
+                type: 'string',
+              },
+              gifted: {
+                title: 'Gifted to student',
+                type: 'boolean',
+              },
+            },
+          },
+        },
+      },
+    }
+    API.post = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({ id: 5, item: { number: '1-001', type: 'Violin' } }))
+    const push = jest.fn()
+    const showAlert = jest.fn()
+    const { container } = render(
+      <TestEverything schema={smallSchema} helpers={{ showAlert }}>
+        <Create history={{ push }} />
+      </TestEverything>
+    )
+    fireEvent.change(container.querySelector('input[name="assignedTo"]'), {
+      target: { value: 'assigned value' },
+    })
+    fireEvent.change(container.querySelector('input[name="maintenanceNotes"]'), {
+      target: { value: 'maintenance notes value' },
+    })
+    fireEvent.change(container.querySelector('input[name="conditionNotes"]'), {
+      target: { value: 'condition notes value' },
+    })
+
+    fireEvent.click(container.querySelector('button[type="submit"]'))
+
+    // eslint-disable-next-line no-undef
+    // await new Promise(resolve => process.nextTick(resolve))
+    await flushPromises()
+
+    expect(API.post).toHaveBeenCalledWith('instrument-inventory', 'instruments', {
+      body: {
+        assignedTo: 'assigned value',
+        maintenanceNotes: 'maintenance notes value',
+        conditionNotes: 'condition notes value',
+      },
+    })
+    expect(push).toHaveBeenCalledWith('/instrument/5')
+    expect(showAlert).toHaveBeenCalledWith('Violin 1-001 created')
   })
 })

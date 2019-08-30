@@ -93,6 +93,7 @@ const SchemaForm = ({
       showInlineError
       onChange={onChange}
       model={initialData}
+      data-testid="schema-form"
     >
       <AutoFields omitFields={omitFields} />
       {schema.properties.password && (
