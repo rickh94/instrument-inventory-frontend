@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
 })
 
-const Everything = ({}) => {
+const Everything = () => {
   const { showAlert } = useContext(HelpersContext)
   const [isLoading, setLoading] = useState(false)
   const [records, setRecords] = useState([])

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { TableCell, Typography } from '@material-ui/core'
-import {withStyles} from '@material-ui/styles'
+import { withStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { AutoSizer, Column, Table } from 'react-virtualized'
 import DownIcon from '@material-ui/icons/ArrowDropDown'
@@ -32,12 +32,63 @@ const styles = theme => ({
   icon: {
     position: 'relative',
     top: 2,
-    // width: theme.typography.subtitle1.fontSize,
-    // height: theme.typography.subtitle1.fontSize,
     width: 18,
     height: 18,
   },
 })
+
+export const InstrumentTableCell = ({
+  dataKey,
+  classes,
+  cellData,
+  onRowClick,
+  rowHeight,
+  columnIndex,
+  columns,
+}) => {
+  if (dataKey === 'condition' || dataKey === 'quality') {
+    cellData = stars(cellData)
+  } else if (
+    dataKey === 'ready' ||
+    dataKey === 'rosin' ||
+    dataKey === 'bow' ||
+    dataKey === 'shoulderRestEndpinRest' ||
+    dataKey === 'gifted'
+  ) {
+    cellData = yesOrNo(cellData)
+  } else if (dataKey === 'maintenanceNotes' || dataKey === 'conditionNotes') {
+    cellData = truncateText(cellData, 15)
+  } else if (dataKey === 'history' && cellData) {
+    cellData = truncateText(cellData.join(', '), 30)
+  }
+  return (
+    <TableCell
+      component="div"
+      className={clsx(classes.tableCell, classes.flexContainer, {
+        [classes.noClick]: onRowClick == null,
+      })}
+      variant="body"
+      style={{ height: rowHeight }}
+      align={
+        (columnIndex != null && columns[columnIndex].numeric) || false
+          ? 'right'
+          : 'left'
+      }
+    >
+      {cellData}
+    </TableCell>
+  )
+}
+
+InstrumentTableCell.propTypes = {
+  dataKey: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired,
+  cellData: PropTypes.any.isRequired,
+  onRowClick: PropTypes.func,
+  rowHeight: PropTypes.number.isRequired,
+  columnIndex: PropTypes.number,
+  columns: PropTypes.array.isRequired,
+}
 
 class MuiVirtualizedTable extends React.PureComponent {
   static defaultProps = {
@@ -54,37 +105,16 @@ class MuiVirtualizedTable extends React.PureComponent {
 
   cellRenderer = ({ cellData, columnIndex, dataKey, ...other }) => {
     const { columns, classes, rowHeight, onRowClick } = this.props
-    if (dataKey === 'condition' || dataKey === 'quality') {
-      cellData = stars(cellData)
-    } else if (
-      dataKey === 'ready' ||
-      dataKey === 'rosin' ||
-      dataKey === 'bow' ||
-      dataKey === 'shoulderRestEndpinRest' ||
-      dataKey === 'gifted'
-    ) {
-      cellData = yesOrNo(cellData)
-    } else if (dataKey === 'maintenanceNotes' || dataKey === 'conditionNotes') {
-      cellData = truncateText(cellData, 15)
-    } else if (dataKey === 'history' && cellData) {
-      cellData = truncateText(cellData.join(', '), 30)
-    }
     return (
-      <TableCell
-        component="div"
-        className={clsx(classes.tableCell, classes.flexContainer, {
-          [classes.noClick]: onRowClick == null,
-        })}
-        variant="body"
-        style={{ height: rowHeight }}
-        align={
-          (columnIndex != null && columns[columnIndex].numberic) || false
-            ? 'right'
-            : 'left'
-        }
-      >
-        {cellData}
-      </TableCell>
+      <InstrumentTableCell
+        dataKey={dataKey}
+        classes={classes}
+        onRowClick={onRowClick}
+        cellData={cellData}
+        rowHeight={rowHeight}
+        columnIndex={columnIndex}
+        columns={columns}
+      />
     )
   }
 

@@ -1,10 +1,8 @@
 import React from 'react'
 import Everything from './Everything'
 import { render, cleanup } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import { API } from 'aws-amplify'
-
-const flushPromises  = new Promise(setImmediate)
+import { flushPromises, TestRouter, TestHelpers } from '../../testHelpers'
 
 const mockInstruments = [
   {
@@ -106,13 +104,20 @@ const mockInstruments = [
 afterEach(cleanup)
 
 describe('<Everything />', () => {
-  it('matches snapshot', () => {
+  test('matches snapshot', async () => {
     API.get = jest.fn().mockImplementation(() => Promise.resolve(mockInstruments))
     const { container } = render(
-      <MemoryRouter>
-        <Everything showAlert={jest.fn()} />
-      </MemoryRouter>
+      <TestRouter>
+        <TestHelpers>
+          <Everything />
+        </TestHelpers>
+      </TestRouter>
     )
+    await flushPromises()
     expect(container).toMatchSnapshot()
+  })
+
+  test('shows the correct columns', () => {
+
   })
 })
