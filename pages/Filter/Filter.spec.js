@@ -1,7 +1,7 @@
 import React from 'react'
 import Filter from './Filter'
 import { render, cleanup } from '@testing-library/react'
-import { TestEverything } from '../../testHelpers'
+import { TestEverything } from '../../test-utils'
 
 const schema = {
   openapi: '3.0.2',

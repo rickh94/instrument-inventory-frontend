@@ -2,7 +2,7 @@ import React from 'react'
 import Home from './Home'
 import { render, cleanup } from '@testing-library/react'
 import { API } from 'aws-amplify'
-import { TestEverything } from '../../testHelpers'
+import { TestEverything } from '../../test-utils'
 
 beforeEach(cleanup)
 describe('<Home />', () => {

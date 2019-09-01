@@ -15,16 +15,16 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
         Loading interface...
       </title>
       <rect
-        clip-path="url(#c3scvie1n1b)"
+        clip-path="url(#7u2riwzj9fm)"
         height="130"
-        style="fill: url(#7jzy1qo3k3k);"
+        style="fill: url(#bmivyvaw9y5);"
         width="400"
         x="0"
         y="0"
       />
       <defs>
         <clippath
-          id="c3scvie1n1b"
+          id="7u2riwzj9fm"
         >
           <circle
             cx="10"
@@ -80,7 +80,7 @@ exports[`<LoadingScreen /> matches snapshot 1`] = `
           />
         </clippath>
         <lineargradient
-          id="7jzy1qo3k3k"
+          id="bmivyvaw9y5"
         >
           <stop
             offset="0%"

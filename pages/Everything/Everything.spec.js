@@ -2,7 +2,7 @@ import React from 'react'
 import Everything from './Everything'
 import { render, cleanup } from '@testing-library/react'
 import { API } from 'aws-amplify'
-import { flushPromises, TestRouter, TestHelpers } from '../../testHelpers'
+import { flushPromises, TestRouter, TestHelpers } from '../../test-utils'
 
 const mockInstruments = [
   {

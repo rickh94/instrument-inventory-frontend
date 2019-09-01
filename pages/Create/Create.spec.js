@@ -6,7 +6,7 @@ import {
   TestTheme,
   TestEverything,
   flushPromises,
-} from '../../testHelpers'
+} from '../../test-utils'
 import { API } from 'aws-amplify'
 
 afterEach(cleanup)

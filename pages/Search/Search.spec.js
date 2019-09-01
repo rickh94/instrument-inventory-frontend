@@ -2,7 +2,7 @@ import React from 'react'
 import Search from './Search'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { TestEverything } from '../../testHelpers'
+import { TestEverything } from '../../test-utils'
 
 describe('<Search />', () => {
   it('matches snapshot', () => {

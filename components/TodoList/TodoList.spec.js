@@ -2,7 +2,7 @@ import React from 'react'
 import TodoList from './TodoList'
 import { render as defaultRender, fireEvent, cleanup } from '@testing-library/react'
 import { API } from 'aws-amplify'
-import { TestEverything } from '../../testHelpers'
+import { TestEverything } from '../../test-utils'
 
 beforeEach(cleanup)
 const flushPromises = () => new Promise(setImmediate)

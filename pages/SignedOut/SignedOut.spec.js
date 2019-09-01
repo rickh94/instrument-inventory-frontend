@@ -2,7 +2,7 @@ import React from 'react'
 import { cleanup, render, act } from '@testing-library/react'
 import SignedOut from './SignedOut'
 import { API } from 'aws-amplify'
-import { TestEverything, flushPromises } from '../../testHelpers'
+import { TestEverything, flushPromises } from '../../test-utils'
 
 afterEach(cleanup)
 
@@ -11,12 +11,7 @@ describe('<SignedOut />', () => {
     API.get = jest.fn().mockImplementation(() => Promise.resolve([]))
     const { container } = render(<SignedOut />, { wrapper: TestEverything })
     expect(container).toMatchSnapshot()
-    await act(async () => {
-      await flushPromises()
-    })
-    expect(API.get).toHaveBeenCalledWith(
-      'instrument-inventory',
-      'filter/signed-out'
-    )
+    await flushPromises()
+    expect(API.get).toHaveBeenCalledWith('instrument-inventory', 'filter/signed-out')
   })
 })

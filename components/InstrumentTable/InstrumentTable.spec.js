@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, cleanup } from '@testing-library/react'
 import { InstrumentTable, InstrumentTableCell } from './InstrumentTable'
-import { TestTheme } from '../../testHelpers'
+import { TestTheme } from '../../test-utils'
 
 afterEach(cleanup)
 
