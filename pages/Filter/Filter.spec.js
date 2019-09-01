@@ -1,7 +1,7 @@
 import React from 'react'
 import Filter from './Filter'
-import { render } from '@testing-library/react'
-import { TestTheme, TestEverything } from '../../testHelpers'
+import { render, cleanup } from '@testing-library/react'
+import { TestEverything } from '../../testHelpers'
 
 const schema = {
   openapi: '3.0.2',
@@ -18,6 +18,7 @@ const schema = {
           notAssigned: {
             default: false,
             type: 'boolean',
+            title: 'Search only unassigned instruments'
           },
           size: {
             title: 'Size',
@@ -33,6 +34,8 @@ const schema = {
   },
 }
 
+afterEach(cleanup)
+
 describe('<Filter />', () => {
   test('matches snapshot', () => {
     const { container } = render(
@@ -41,5 +44,18 @@ describe('<Filter />', () => {
       </TestEverything>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('renders correct fields', () => {
+    const { queryByText } = render(
+      <TestEverything schema={schema}>
+        <Filter history={{ push: jest.fn() }} />
+      </TestEverything>
+    )
+    expect(queryByText('Location')).toBeTruthy()
+    expect(queryByText('Search only unassigned instruments')).toBeTruthy()
+    expect(queryByText('Size')).toBeTruthy()
+    expect(queryByText('Instrument Type')).toBeTruthy()
+
   })
 })

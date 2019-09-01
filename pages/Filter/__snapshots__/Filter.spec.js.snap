@@ -7,6 +7,7 @@ exports[`<Filter /> matches snapshot 1`] = `
   >
     <div
       class="makeStyles-heading-29"
+      data-testid="loading-header"
     >
       <h5
         class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
@@ -15,6 +16,7 @@ exports[`<Filter /> matches snapshot 1`] = `
       </h5>
     </div>
     <form
+      data-testid="schema-form"
       novalidate=""
     >
       <div>
@@ -109,7 +111,7 @@ exports[`<Filter /> matches snapshot 1`] = `
               <span
                 class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label"
               >
-                Not assigned
+                Search only unassigned instruments
               </span>
             </label>
           </div>
