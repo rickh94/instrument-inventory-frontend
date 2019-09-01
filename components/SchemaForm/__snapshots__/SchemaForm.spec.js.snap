@@ -3,6 +3,7 @@
 exports[`<SchemaForm /> renders 1`] = `
 <div>
   <form
+    data-testid="schema-form"
     novalidate=""
   >
     <div />

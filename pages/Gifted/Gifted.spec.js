@@ -1,13 +1,6 @@
 import React from 'react'
 import Gifted from './Gifted'
-import {
-  render,
-  cleanup,
-  act,
-  waitForElement,
-  waitForDomChange,
-  wait,
-} from '@testing-library/react'
+import { render, cleanup } from '@testing-library/react'
 import { API } from 'aws-amplify'
 import { flushPromises, TestEverything } from '../../testHelpers'
 
@@ -72,17 +65,21 @@ const mockInstruments = [
   },
 ]
 
-afterEach(cleanup)
+beforeEach(cleanup)
 
 describe('<Gifted />', () => {
   test('renders', async () => {
-    API.get = jest.fn()
-    const { container } = render(
-      <TestEverything>
-        <Gifted />
-      </TestEverything>
-    )
+    expect.assertions(6)
+    API.get = jest.fn().mockImplementation(() => Promise.resolve(mockInstruments))
+    const { container, findAllByText } = render(<Gifted />, { wrapper: TestEverything })
     expect(container).toMatchSnapshot()
+    await flushPromises()
     expect(API.get).toHaveBeenCalledWith('instrument-inventory', 'filter/gifted')
+    await flushPromises()
+    expect(findAllByText('Cello').length).not.toBe(0)
+    expect(findAllByText('Violin').length).not.toBe(0)
+    expect(findAllByText('C3-004').length).not.toBe(0)
+    expect(findAllByText('Test Name').length).not.toBe(0)
   })
+
 })

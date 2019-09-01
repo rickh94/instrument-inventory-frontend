@@ -4,6 +4,7 @@ exports[`<LoadingHeader /> matches snapshot 1`] = `
 <div>
   <div
     class="makeStyles-heading-1"
+    data-testid="loading-header"
   >
     <h5
       class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"

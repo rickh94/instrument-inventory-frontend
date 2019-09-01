@@ -46,22 +46,26 @@ exports[`Nav matches snapshot 1`] = `
         >
           Instrument Inventory
         </h6>
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
-          data-testid="logout-button"
-          id="#logout"
-          tabindex="0"
-          type="button"
+        <a
+          class="makeStyles-cleanLink-4"
+          href="/login"
         >
-          <span
-            class="MuiButton-label"
+          <button
+            class="MuiButtonBase-root MuiButton-root makeStyles-barText-3 MuiButton-text MuiButton-colorInherit"
+            data-testid="login-button"
+            tabindex="0"
+            type="button"
           >
-            Logout
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </button>
+            <span
+              class="MuiButton-label"
+            >
+              Login
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </a>
       </div>
     </header>
   </div>

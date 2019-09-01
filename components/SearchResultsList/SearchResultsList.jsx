@@ -11,7 +11,6 @@ export const ResultRowInternal = ({ item, history }) => (
     onClick={() => history.push(`/instrument/${item.id}`)}
     component="tr"
     data-testid="result-row"
-    id={`item-${id}`}
   >
     <TableCell component="td" data-testid="type-and-number">
       {titleCase(item.type)} {item.number}

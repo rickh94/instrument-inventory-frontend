@@ -30,6 +30,7 @@ exports[`Instrument Display components InstrumentDisplay matches snapshot 1`] = 
   >
     <div
       class="makeStyles-heading-106"
+      data-testid="loading-header"
     >
       <h5
         class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"

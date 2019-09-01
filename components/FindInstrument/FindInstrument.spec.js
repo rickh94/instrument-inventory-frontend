@@ -96,15 +96,3 @@ describe('FindInstrument', () => {
   })
 })
 
-describe('getSearchParameters', () => {
-  it('returns number if it is an instrument ', () => {
-    expect(getSearchParameters('1-201')).toEqual(['search/number', 'instrumentNumber'])
-  })
-
-  it('returns assigned to if it is a name', () => {
-    expect(getSearchParameters('random name')).toEqual([
-      'search/assigned',
-      'assignedTo',
-    ])
-  })
-})

@@ -5,8 +5,9 @@ import Quagga from 'quagga'
 
 describe('<Scanner />', () => {
   it('matches snapshot', () => {
-    Quagga.init = jest.fn().mockImplementation(() => {})
-    Quagga.onDetected = jest.fn().mockImplementation(() => {})
+    Quagga.init = jest.fn()
+    Quagga.onDetected = jest.fn()
+    Quagga.stop = jest.fn()
     const onDetectedMock = jest.fn()
     const { container } = render(<Scanner onDetected={onDetectedMock} />)
     expect(container).toMatchSnapshot()
