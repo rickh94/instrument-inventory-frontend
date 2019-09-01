@@ -1,10 +1,15 @@
 import React from 'react'
 import Gifted from './Gifted'
-import { render, cleanup } from '@testing-library/react'
+import {
+  render,
+  cleanup,
+  act,
+  waitForElement,
+  waitForDomChange,
+  wait,
+} from '@testing-library/react'
 import { API } from 'aws-amplify'
-import { MemoryRouter } from 'react-router-dom'
-
-const flushPromises = new Promise(setImmediate)
+import { flushPromises, TestEverything } from '../../testHelpers'
 
 const mockInstruments = [
   {
@@ -70,13 +75,14 @@ const mockInstruments = [
 afterEach(cleanup)
 
 describe('<Gifted />', () => {
-  test('renders', () => {
-    API.get = jest.fn().mockImplementation(() => Promise.resolve(mockInstruments))
+  test('renders', async () => {
+    API.get = jest.fn()
     const { container } = render(
-      <MemoryRouter>
-        <Gifted showAlert={jest.fn()} />
-      </MemoryRouter>
+      <TestEverything>
+        <Gifted />
+      </TestEverything>
     )
     expect(container).toMatchSnapshot()
+    expect(API.get).toHaveBeenCalledWith('instrument-inventory', 'filter/gifted')
   })
 })

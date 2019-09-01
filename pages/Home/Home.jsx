@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 
 function Home(props) {
   const classes = useStyles()
-  const { showAlert, setSearchResults } = useContext(HelpersContext)
+  const { setSearchResults } = useContext(HelpersContext)
 
   const showMultipleResults = results => {
     setSearchResults(results)
@@ -40,14 +40,10 @@ function Home(props) {
   return (
     <React.Fragment>
       <RootPaper>
-        <FindInstrument
-          showMultipleResults={showMultipleResults}
-        />
+        <FindInstrument showMultipleResults={showMultipleResults} />
       </RootPaper>
       <RootPaper>
-        <TodoList
-          showAlert={showAlert}
-        />
+        <TodoList />
       </RootPaper>
       <div className={classes.footer}>
         <Typography variant="body2" color="inherit" className={classes.footerItem}>
@@ -73,18 +69,3 @@ Home.propTypes = {
 }
 
 export default Home
-
-const ListOptionItem = withRouter(({ to, icon, text, history }) => {
-  return (
-    <ListItem button onClick={() => history.push(to)}>
-      <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText>{text}</ListItemText>
-    </ListItem>
-  )
-})
-
-ListOptionItem.propTypes = {
-  to: PropTypes.string.isRequired,
-  icon: PropTypes.element.isRequired,
-  text: PropTypes.string.isRequired,
-}

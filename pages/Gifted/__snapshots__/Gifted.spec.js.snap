@@ -7,6 +7,7 @@ exports[`<Gifted /> renders 1`] = `
   >
     <div
       class="makeStyles-heading-29"
+      data-testid="loading-header"
     >
       <h5
         class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"

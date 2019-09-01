@@ -21,7 +21,7 @@ import { API } from 'aws-amplify'
 import TooltipIconButton from '../TooltipIconButton/TooltipIconButton'
 import { HelpersContext } from '../../contexts'
 
-const TodoList = ({}) => {
+const TodoList = () => {
   const { showAlert } = useContext(HelpersContext)
   const [todoList, setTodoList] = useState([])
   const [isLoading, setLoading] = useState(false)
@@ -76,7 +76,7 @@ const TodoList = ({}) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <LoadingHeader isLoading={isLoading} title="Todo List" />
       <br />
       <Table component="table" size="small">
@@ -134,7 +134,7 @@ const TodoList = ({}) => {
           </TableRow>
         </TableBody>
       </Table>
-    </React.Fragment>
+    </>
   )
 }
 

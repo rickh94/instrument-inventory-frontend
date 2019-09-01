@@ -61,7 +61,7 @@ export const FindInstrument = ({ showMultipleResults, history }) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <LoadingHeader isLoading={isLoading} title="Find an Instrument" />
       <form onSubmit={onSubmit}>
         <Fields.Scanner
@@ -89,7 +89,7 @@ export const FindInstrument = ({ showMultipleResults, history }) => {
           </Button>
         </FormGroup>
       </form>
-    </React.Fragment>
+    </>
   )
 }
 

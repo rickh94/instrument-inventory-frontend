@@ -8,7 +8,6 @@ export const TestTheme = ({ children }) => (
   <MuiThemeProvider theme={createMuiTheme()}>{children}</MuiThemeProvider>
 )
 
-
 export const TestHelpers = ({
   children,
   showAlert = jest.fn(),
@@ -37,11 +36,13 @@ export const TestSchema = ({ children, schema = { components: { schemas: {} } } 
 )
 
 export const TestEverything = ({ children, schema, helpers }) => (
-  <TestTheme>
-    <TestHelpers {...helpers}>
-      <TestSchema schema={schema}>{children}</TestSchema>
-    </TestHelpers>
-  </TestTheme>
+  <TestRouter>
+    <TestTheme>
+      <TestHelpers {...helpers}>
+        <TestSchema schema={schema}>{children}</TestSchema>
+      </TestHelpers>
+    </TestTheme>
+  </TestRouter>
 )
 
 export const flushPromises = () => new Promise(setImmediate)
