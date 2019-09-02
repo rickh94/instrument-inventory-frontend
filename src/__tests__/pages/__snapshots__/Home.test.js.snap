@@ -1,0 +1,263 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Home /> matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 WithStyles(ForwardRef(Paper))-root-3 MuiPaper-rounded"
+  >
+    <div
+      class="makeStyles-heading-33"
+      data-testid="loading-header"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Find an Instrument
+      </h5>
+    </div>
+    <form>
+      <div
+        class="MuiFormControl-root MuiFormControl-fullWidth"
+      >
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          data-testid="label"
+          for="scanner-field"
+        >
+          Name or Number
+        </label>
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+          data-testid="input-field"
+          required=""
+        >
+          <input
+            aria-describedby="scanner-error"
+            aria-invalid="false"
+            class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
+            id="scanner-field"
+            required=""
+            type="text"
+            value=""
+          />
+          <div
+            class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+          >
+            <button
+              class="MuiButtonBase-root MuiIconButton-root"
+              data-testid="scan-button"
+              tabindex="0"
+              title="Scan Barcode"
+              type="button"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="svg-inline--fa fa-barcode fa-w-16 "
+                  data-icon="barcode"
+                  data-prefix="fas"
+                  focusable="false"
+                  role="img"
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 448V64h18v384H0zm26.857-.273V64H36v383.727h-9.143zm27.143 0V64h8.857v383.727H54zm44.857 0V64h8.857v383.727h-8.857zm36 0V64h17.714v383.727h-17.714zm44.857 0V64h8.857v383.727h-8.857zm18 0V64h8.857v383.727h-8.857zm18 0V64h8.857v383.727h-8.857zm35.715 0V64h18v383.727h-18zm44.857 0V64h18v383.727h-18zm35.999 0V64h18.001v383.727h-18.001zm36.001 0V64h18.001v383.727h-18.001zm26.857 0V64h18v383.727h-18zm45.143 0V64h26.857v383.727h-26.857zm35.714 0V64h9.143v383.727H476zm18 .273V64h18v384h-18z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span
+                  class="MuiTypography-root MuiTypography-srOnly"
+                  data-testid="sr-text"
+                >
+                  Scan Barcode
+                </span>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </div>
+        
+      </div>
+      <div
+        class="MuiFormGroup-root MuiFormGroup-row"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root makeStyles-lastButton-31 MuiButton-text"
+          data-testid="clear-button"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Clear
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root makeStyles-firstButton-32 MuiButton-text MuiButton-textPrimary Mui-disabled Mui-disabled"
+          data-testid="submit-button"
+          disabled=""
+          tabindex="-1"
+          type="submit"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Submit
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 WithStyles(ForwardRef(Paper))-root-3 MuiPaper-rounded"
+  >
+    <div
+      class="makeStyles-heading-33"
+      data-testid="loading-header"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Todo List
+      </h5>
+    </div>
+    <br />
+    <table
+      class="MuiTable-root"
+    >
+      <thead
+        class="MuiTableHead-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-head"
+        >
+          <th
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-head"
+            scope="col"
+          >
+            Status
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-head"
+            scope="col"
+          >
+            Task
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-head"
+            scope="col"
+          >
+            Instrument
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-head"
+            scope="col"
+          >
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-hover"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              style="margin-left: 3px;"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          >
+            Create Todo
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          />
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          />
+        </tr>
+        <tr
+          class="MuiTableRow-root MuiTableRow-hover"
+          data-testid="toggle-completed"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+              />
+            </svg>
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          >
+            Show 
+            Completed
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          />
+          <td
+            class="MuiTableCell-root MuiTableCell-sizeSmall MuiTableCell-body"
+          />
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    class="makeStyles-footer-1"
+  >
+    <p
+      class="MuiTypography-root makeStyles-footerItem-2 MuiTypography-body2 MuiTypography-colorInherit"
+    >
+      © Rick Henry 2019 |
+       
+    </p>
+    <a
+      class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+      href="http://chittagongit.com/icon/violin-icon-27.html"
+      rel="noopener"
+      target="_blank"
+    >
+      <p
+        class="MuiTypography-root makeStyles-footerItem-2 MuiTypography-body2 MuiTypography-colorInherit"
+      >
+         
+        Icon Credit
+      </p>
+    </a>
+  </div>
+</div>
+`;

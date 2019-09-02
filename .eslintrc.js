@@ -1,4 +1,5 @@
 module.exports = {
+  parser: 'babel-eslint',
   env: {
     browser: true,
     es6: true,
@@ -15,15 +16,15 @@ module.exports = {
   plugins: ['react'],
   rules: {
     indent: [
-      'error',
+      'warn',
       2,
       {
         SwitchCase: 1,
       },
     ],
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
-    semi: ['error', 'never'],
+    quotes: ['warn', 'single'],
+    semi: ['warn', 'never'],
   },
   settings: {
     react: {

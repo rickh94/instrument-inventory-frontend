@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SchemaForm /> renders 1`] = `
+<div>
+  <form
+    data-testid="schema-form"
+    novalidate=""
+  >
+    <div />
+    <div
+      class="MuiFormGroup-root MuiFormGroup-row"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root makeStyles-button-1 makeStyles-lastButton-2 MuiButton-text"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Cancel
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root makeStyles-button-1 makeStyles-firstButton-3 MuiButton-text MuiButton-textPrimary"
+        tabindex="0"
+        type="submit"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Submit
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </form>
+</div>
+`;

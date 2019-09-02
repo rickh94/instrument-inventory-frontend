@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Login /> matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 WithStyles(ForwardRef(Paper))-root-5 MuiPaper-rounded"
+  >
+    <div
+      class="makeStyles-heading-33"
+      data-testid="loading-header"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Login
+      </h5>
+    </div>
+    <form>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <li
+          class="MuiListItem-root MuiListItem-gutters"
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+              data-shrink="false"
+              for="email"
+            >
+              Email
+            </label>
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              required=""
+            >
+              <input
+                aria-describedby="email-error-text"
+                aria-invalid="false"
+                class="MuiInputBase-input MuiInput-input"
+                id="email"
+                required=""
+                type="email"
+                value=""
+              />
+            </div>
+          </div>
+        </li>
+        <li
+          class="MuiListItem-root MuiListItem-gutters"
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+              data-shrink="false"
+              for="password"
+            >
+              Password
+            </label>
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              required=""
+            >
+              <input
+                aria-describedby="password-error-text"
+                aria-invalid="false"
+                class="MuiInputBase-input MuiInput-input"
+                id="password"
+                required=""
+                type="password"
+                value=""
+              />
+            </div>
+          </div>
+        </li>
+        <li
+          class="MuiListItem-root MuiListItem-gutters"
+        >
+          <div
+            class="MuiFormGroup-root Login-buttons-3 MuiFormGroup-row"
+          >
+            <a
+              class="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary"
+              style="cursor: pointer;"
+            >
+              Forgot Password
+            </a>
+            <button
+              class="MuiButtonBase-root MuiButton-root Login-lastButton-2 MuiButton-text MuiButton-textSecondary"
+              tabindex="0"
+              type="reset"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Cancel
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+            <button
+              class="MuiButtonBase-root MuiButton-root Login-firstButton-4 MuiButton-text MuiButton-textPrimary Mui-disabled Mui-disabled"
+              disabled=""
+              tabindex="-1"
+              type="submit"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Login
+              </span>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </form>
+  </div>
+</div>
+`;

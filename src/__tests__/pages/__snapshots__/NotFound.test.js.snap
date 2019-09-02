@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NotFound /> matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 WithStyles(ForwardRef(Paper))-root-1 MuiPaper-rounded"
+  >
+    <h5
+      class="MuiTypography-root MuiTypography-h5"
+    >
+      Not Found
+    </h5>
+    <p
+      class="MuiTypography-root MuiTypography-body1"
+      varaint="body1"
+    >
+      Could not find the page you were looking for
+    </p>
+  </div>
+</div>
+`;

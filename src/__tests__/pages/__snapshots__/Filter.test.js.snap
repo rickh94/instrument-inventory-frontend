@@ -1,0 +1,222 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Filter /> matches snapshot 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation1 WithStyles(ForwardRef(Paper))-root-1 MuiPaper-rounded"
+  >
+    <div
+      class="makeStyles-heading-29"
+      data-testid="loading-header"
+    >
+      <h5
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorInherit"
+      >
+        Filter Instruments
+      </h5>
+    </div>
+    <form
+      data-testid="schema-form"
+      novalidate=""
+    >
+      <div>
+        <div
+          class="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense MuiFormControl-fullWidth"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense"
+            data-shrink="false"
+          >
+            Location
+          </label>
+          <div
+            appearance="checkbox"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense"
+          >
+            <div
+              aria-haspopup="listbox"
+              class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
+              id="select-location"
+              role="button"
+              tabindex="0"
+            >
+              <span>
+                ​
+              </span>
+            </div>
+            <input
+              id="uniforms-0000-0001"
+              name="location"
+              type="hidden"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </div>
+        </div>
+        <fieldset
+          class="MuiFormControl-root MuiFormControl-marginDense MuiFormControl-fullWidth"
+        >
+          <div
+            class="MuiFormGroup-root"
+          >
+            <label
+              class="MuiFormControlLabel-root"
+            >
+              <span
+                aria-disabled="false"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-151 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    role="presentation"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <input
+                    class="PrivateSwitchBase-input-154"
+                    data-indeterminate="false"
+                    id="uniforms-0000-0003"
+                    name="notAssigned"
+                    type="checkbox"
+                    value="notAssigned"
+                  />
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
+              <span
+                class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+              >
+                Search only unassigned instruments
+              </span>
+            </label>
+          </div>
+        </fieldset>
+        <div
+          class="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense MuiFormControl-fullWidth"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense"
+            data-shrink="false"
+          >
+            Size
+          </label>
+          <div
+            appearance="checkbox"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense"
+          >
+            <div
+              aria-haspopup="listbox"
+              class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
+              id="select-size"
+              role="button"
+              tabindex="0"
+            >
+              <span>
+                ​
+              </span>
+            </div>
+            <input
+              id="uniforms-0000-0005"
+              name="size"
+              type="hidden"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense MuiFormControl-fullWidth"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense"
+            data-shrink="false"
+          >
+            Instrument Type
+          </label>
+          <div
+            appearance="checkbox"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense"
+          >
+            <div
+              aria-haspopup="listbox"
+              class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
+              id="select-type"
+              role="button"
+              tabindex="0"
+            >
+              <span>
+                ​
+              </span>
+            </div>
+            <input
+              id="uniforms-0000-0007"
+              name="type"
+              type="hidden"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiFormGroup-root MuiFormGroup-row"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root makeStyles-button-61 makeStyles-firstButton-63 makeStyles-lastButton-62 MuiButton-text MuiButton-textPrimary"
+          tabindex="0"
+          type="submit"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Submit
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;

@@ -1,0 +1,25 @@
+repos:
+  - repo: http://github.com/pre-commit/mirrors-eslint
+    rev: 'v6.3.0'
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - eslint@6.3.0
+          - babel-eslint@10.0.3
+          - eslint-plugin-react@7.14.3
+  - repo: http://github.com/prettier/prettier
+    rev: 1.18.2
+    hooks:
+      - id: prettier
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.2.3
+    hooks:
+      - id: check-added-large-files
+      - id: check-builtin-literals
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-yaml
+      - id: check-case-conflict
+      - id: detect-aws-credentials
+      - id: detect-private-key
+      - id: end-of-file-fixer
