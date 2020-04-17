@@ -4,8 +4,7 @@
     "@babel/env"
   ],
   "plugins": [
-    "transform-class-properties",
-    "@babel/plugin-syntax-dynamic-import"
+    "transform-class-properties"
   ],
   "env": {
     "prod": {
