@@ -99,7 +99,7 @@ class RetrieveMultiple extends Component {
 
     try {
       const res = await API.post('instrument-inventory', 'retrieve-multiple', {
-        body: { instrumentNumbers: this.state.instrumentList },
+        body: { numbers: this.state.instrumentList },
       })
       const successList = res.instrumentsUpdated.join(', ')
       const failureList = []
