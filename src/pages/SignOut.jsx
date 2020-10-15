@@ -58,6 +58,7 @@ const SignOut = ({ match, history, schema }) => {
         setMultipleErrors(null)
       },
       header: true,
+      skipEmptyLines: true,
     })
   }
 

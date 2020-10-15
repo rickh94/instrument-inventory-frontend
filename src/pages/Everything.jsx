@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/styles'
 import { API } from 'aws-amplify'
 import { List as TableLoader } from 'react-content-loader'
 import { HelpersContext } from '../contexts'
+import Grid from '@material-ui/core/Grid'
+import { Button } from '@material-ui/core'
+import Papa from 'papaparse'
 
 const useStyles = makeStyles({
   root: {
@@ -42,11 +45,26 @@ const Everything = () => {
     getRecords()
   }, [])
 
+  const handleDownloadCsv = () => {
+    const csvData = Papa.unparse(records, {
+      skipEmptyLines: true,
+      header: true,
+    })
+    const csvDownload = document.createElement('a')
+    csvDownload.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData))
+    csvDownload.setAttribute('download', 'instruments-' + (new Date()).toLocaleString() + '.csv')
+
+    csvDownload.click()
+  }
   const classes = useStyles()
   return (
     <React.Fragment>
       <div className={classes.root}>
-        <LoadingHeader isLoading={isLoading} title="Everything" />
+        <Grid container direction="row" justify="space-between">
+          <LoadingHeader isLoading={isLoading} title="Everything" />
+          <Button variant="contained" color="primary" style={{ marginLeft: '1rem' }} onClick={handleDownloadCsv}>Download
+            CSV</Button>
+        </Grid>
         {isLoading ? (
           <TableLoader />
         ) : (
