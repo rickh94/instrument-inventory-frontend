@@ -46,7 +46,25 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      this.setState({ schema: await API.get('instrument-inventory', 'schema') })
+      const schema = await API.get('instrument-inventory', 'schema')
+      // This unbelievable spaghetti replaces references to enums with their values in the
+      // options field...hopefully.
+      for (let comp in schema.components.schemas) {
+        for (let prop in schema.components.schemas[comp].properties) {
+          let ref = schema.components.schemas[comp].properties[prop].$ref
+          if ( ref !== undefined) {
+            const optionsEnum = ref.split('/').pop()
+            schema.components.schemas[comp].properties[prop].title = schema.components.schemas[optionsEnum].title.replace('OptionalEnum', '')
+            schema.components.schemas[comp].properties[prop].type = schema.components.schemas[optionsEnum].type
+            schema.components.schemas[comp].properties[prop].options = schema.components.schemas[optionsEnum].enum
+              .filter(opt => opt !== null)
+              .map(option => ({label: option, value: option}))
+            schema.components.schemas[comp].properties[prop].$ref = undefined
+          }
+        }
+      }
+      // this.setState({ schema: await API.get('instrument-inventory', 'schema') })
+      this.setState({schema})
       await Auth.currentSession()
       this.userHasAuthenticated(true)
     } catch (e) {
