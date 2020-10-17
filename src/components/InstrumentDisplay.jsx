@@ -26,6 +26,7 @@ const useStyles = makeStyles({
 const InstrumentDisplay = ({ isLoading, schema, body, omitFields = [] }) => {
   const [showPhoto, setShowPhoto] = useState(false)
   const classes = useStyles()
+  console.log(schema)
   return (
     <React.Fragment>
       <Grid container direction="row">
