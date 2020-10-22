@@ -60,11 +60,11 @@ const Everything = () => {
   return (
     <React.Fragment>
       <div className={classes.root}>
-        <Grid container direction="row" justify="space-between">
+        {/*<Grid container direction="row" justify="space-between">*/}
           <LoadingHeader isLoading={isLoading} title="Everything" />
-          <Button variant="contained" color="primary" style={{ marginLeft: '1rem' }} onClick={handleDownloadCsv}>Download
-            CSV</Button>
-        </Grid>
+          {/*<Button variant="contained" color="primary" style={{ marginLeft: '1rem' }} onClick={handleDownloadCsv}>Download*/}
+          {/*  CSV</Button>*/}
+        {/*</Grid>*/}
         {isLoading ? (
           <TableLoader />
         ) : (
