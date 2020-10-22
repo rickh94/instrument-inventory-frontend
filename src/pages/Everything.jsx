@@ -35,9 +35,13 @@ const Everything = () => {
       setLoading(true)
       try {
         const res = await API.get('instrument-inventory', 'instruments/all', {})
-        setRecords(res)
+        console.log(res)
+        setRecords(res.instruments)
+        if (res.instrumentsFailed.length > 0) {
+          console.error(res.instrumentsFailed)
+        }
       } catch (err) {
-        showAlert(err)
+        showAlert(err.toString())
       }
       setLoading(false)
     }
