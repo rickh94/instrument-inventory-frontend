@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBarcode } from '@fortawesome/free-solid-svg-icons'
 
 const ScannerField = ({ error, value, setValue, label, submitCallback }) => {
-  const autoScan = JSON.parse(localStorage.getItem('autoScan', 'false'))
+  const autoScan = JSON.parse(localStorage.getItem('autoScan')) || false
   const [scanning, setScanning] = useState(autoScan)
 
   const onDetected = result => {
