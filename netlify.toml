@@ -1,16 +1,16 @@
 [build]
 base = ''
 publish = 'dist'
-command = 'REACT_APP_STAGE=dev yarn run build'
+command = 'STAGE=dev npm run build'
 
 [context.production]
-command = 'REACT_APP_STAGE=prod yarn run build'
+command = 'STAGE=prod npm run build'
 
 [context.deploy-preview]
-command = 'REACT_APP_STAGE=dev yarn run build'
+command = 'STAGE=dev npm run build'
 
 [context.branch-deploy]
-command = 'REACT_APP_STAGE=dev yarn run build'
+command = 'STAGE=dev npm run build'
 
 [[redirects]]
     from = "/*"

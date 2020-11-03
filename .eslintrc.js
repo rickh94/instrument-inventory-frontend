@@ -1,37 +1,29 @@
 module.exports = {
-  parser: 'babel-eslint',
+  root: true,
   env: {
-    browser: true,
-    es6: true,
-    jest: true,
+    node: true
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  'extends': [
+    'plugin:vue/essential',
+    'eslint:recommended',
+    '@vue/prettier'
+  ],
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 2018,
-    sourceType: 'module',
+    parser: 'babel-eslint'
   },
-  plugins: ['react'],
   rules: {
-    indent: [
-      'warn',
-      2,
-      {
-        SwitchCase: 1,
-      },
-    ],
-    'linebreak-style': ['error', 'unix'],
-    quotes: ['warn', 'single'],
-    semi: ['warn', 'never'],
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
   },
-  settings: {
-    react: {
-      createClass: 'createReactClass',
-      pragma: 'React',
-      version: '16.7.0',
-      flowVersion: '0.53',
-    },
-  },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 }
