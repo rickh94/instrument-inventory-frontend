@@ -4,8 +4,10 @@ import router from './router'
 import store from './store'
 import Amplify from 'aws-amplify'
 import '@aws-amplify/ui-vue'
+import VueQuagga from 'vue-quaggajs'
 import config from './config'
 
+Vue.use(VueQuagga)
 Vue.config.productionTip = false
 
 Amplify.configure({

@@ -25,6 +25,17 @@ module.exports = {
           ...colors.gray,
         },
       },
+      spacing: {
+        '72': '18rem',
+        '76': '19rem',
+        '80': '20rem',
+        '84': '21rem',
+        '88': '22rem',
+        '96': '24rem',
+        '104': '26rem',
+        '108': '27rem',
+        '140': '35rem',
+      },
     },
   },
   variants: {

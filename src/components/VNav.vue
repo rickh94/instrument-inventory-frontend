@@ -42,9 +42,6 @@
 <script>
 export default {
   name: 'VNav',
-  created() {
-    console.log(this.$route)
-  }
 }
 </script>
 

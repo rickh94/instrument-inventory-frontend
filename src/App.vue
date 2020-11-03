@@ -3,9 +3,11 @@
   <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
     <div id="app">
       <v-nav></v-nav>
-      <router-view/>
+      <div class="max-w-4xl mx-auto">
+        <router-view/>
+      </div>
     </div>
-    <amplify-sign-out></amplify-sign-out>
+    <amplify-sign-out button-text="Log Out"></amplify-sign-out>
   </amplify-authenticator>
 </template>
 
