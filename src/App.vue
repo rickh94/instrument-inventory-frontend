@@ -7,7 +7,9 @@
         <router-view/>
       </div>
     </div>
-    <amplify-sign-out button-text="Log Out"></amplify-sign-out>
+    <div class="flex justify-center">
+      <amplify-sign-out button-text="Log Out"></amplify-sign-out>
+    </div>
   </amplify-authenticator>
 </template>
 
