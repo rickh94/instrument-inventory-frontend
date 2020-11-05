@@ -5,6 +5,7 @@ import store from './store'
 import Amplify from 'aws-amplify'
 import '@aws-amplify/ui-vue'
 import VueQuagga from 'vue-quaggajs'
+import Toasted from 'vue-toasted'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faBarcode} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
@@ -13,6 +14,8 @@ import config from './config'
 library.add(faBarcode)
 
 Vue.use(VueQuagga)
+Vue.use(Toasted)
+
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 

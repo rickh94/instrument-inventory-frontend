@@ -10,14 +10,17 @@
     <div class="flex justify-center">
       <amplify-sign-out button-text="Log Out"></amplify-sign-out>
     </div>
+    <instrument-display />
   </amplify-authenticator>
 </template>
 
 <script>
-import VNav from '@/components/VNav'
-export default {
+  import VNav from '@/components/VNav'
+  import InstrumentDisplay from '@/components/InstrumentDisplay'
+
+  export default {
   name: 'App',
-  components: { VNav },
+  components: { InstrumentDisplay, VNav },
   data() {
     return {
     }
