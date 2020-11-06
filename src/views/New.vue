@@ -1,10 +1,13 @@
 <template>
-<div>New</div>
+  <div>New</div>
 </template>
 
 <script>
 export default {
-name: "New"
+  name: 'New',
+  created() {
+    console.log(this.$store.state.newInstrumentNumber)
+  },
 }
 </script>
 

@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     searchResults: [],
     currentInstrument: null,
+    newInstrumentNumber: '',
   },
   mutations: {
     setSearchResults(state, instruments) {
@@ -20,6 +21,12 @@ export default new Vuex.Store({
     },
     clearCurrentInstrument(state) {
       state.currentInstrument = null
+    },
+    setNewInstrumentNumber(state, number) {
+      state.newInstrumentNumber = number
+    },
+    clearNewInstrumentNumber(state) {
+      state.newInstrumentNumber = ''
     },
   },
   modules: {},
