@@ -9,6 +9,7 @@
                  id="number"
                  class="appearance-none bg-transparent border-none w-full text-gray-800 mr-3 py-1 leading-tight focus:outline-none"
                  v-model="searchTerm"
+                 @keyup.enter="onSubmit"
           >
           <button class="appearance-none" title="Scan Barcode" @click="scanner = true">
             <font-awesome-icon icon="barcode" class="mr-4"></font-awesome-icon>
@@ -24,8 +25,19 @@
       </div>
       <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
     </div>
-    <multiple-results v-show="$store.state.searchResults.length > 1"/>
-<!--  TODO: add not found options  -->
+    <multiple-results v-show="$store.state.searchResults.length > 1" />
+    <v-modal v-if="showNotFound" @close="showNotFound = false">
+      <h6 class="text-xl font-bold text-gray-900">Not Found</h6>
+      <p class="text-gray-900">Could not find instrument {{ searchTerm }}. Would you like to create a new
+        instrument?</p>
+      <div class="flex justify-end mt-2 flex-row">
+        <button class="mx-1 appearance-none bg-red-600 text-white px-4 py-1 shadow rounded hover:bg-red-800 hover:shadow-lg"
+                @click="showNotFound = false">
+          Close
+        </button>
+        <button class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">Create</button>
+      </div>
+    </v-modal>
   </div>
 </template>
 
@@ -34,6 +46,7 @@
   import { API } from 'aws-amplify'
   import { mapMutations } from 'vuex'
   import MultipleResults from '@/components/MultipleResults'
+  import VModal from '@/components/VModal'
 
   function getPath(input) {
     // This regex will match the instrument number format and search for an instrument number.
@@ -43,7 +56,7 @@
 
   export default {
     name: 'Home',
-    components: { MultipleResults, VScanner },
+    components: { VModal, MultipleResults, VScanner },
     data() {
       return {
         scanner: false,

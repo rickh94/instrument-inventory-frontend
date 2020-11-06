@@ -1,7 +1,9 @@
 <template>
-  <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center" v-if="$store.state.currentInstrument">
-    <div class="absolute w-full h-full bg-gray-900 opacity-50 z-10" @click="clearCurrentInstrument"></div>
-    <div class="p-3 shadow bg-white opacity-100 z-50 flex flex-col rounded max-w-lg">
+<!--  <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center" v-if="$store.state.currentInstrument">-->
+<!--    <div class="absolute w-full h-full bg-gray-900 opacity-50 z-10" @click="clearCurrentInstrument"></div>-->
+
+<!--    <div class="p-3 shadow bg-white opacity-100 z-50 flex flex-col rounded max-w-lg">-->
+  <v-modal v-if="$store.state.currentInstrument" @close="clearCurrentInstrument">
       <div class="flex justify-between mb-4">
         <h6 class="text-xl font-bold text-gray-900">
           {{ $store.state.currentInstrument.size }} {{ $store.state.currentInstrument.type }} {{
@@ -41,7 +43,7 @@
         }}
       </div>
       <div class="flex justify-start mt-2 flex-row-reverse">
-        <button class="mx-1 cursor-pointer appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
+        <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
                 @click="console.log('clicked')">Edit
         </button>
         <button class="mx-1 appearance-none bg-blue-600 text-white px-4 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
@@ -54,13 +56,16 @@
           Delete
         </button>
       </div>
-    </div>
-  </div>
+    </v-modal>
+<!--    </div>-->
+<!--  </div>-->
 </template>
 <script>
   import {mapMutations} from 'vuex'
+  import VModal from '@/components/VModal'
   export default {
     name: 'InstrumentDisplay',
+    components: { VModal },
     methods: {
       ...mapMutations(['clearCurrentInstrument']),
     }
