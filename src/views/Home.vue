@@ -14,7 +14,8 @@
           <button class="appearance-none" title="Scan Barcode" @click="scanner = true">
             <font-awesome-icon icon="barcode" class="mr-4"></font-awesome-icon>
           </button>
-          <button @click="onSubmit"
+          <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+          <button v-else @click="onSubmit"
                   class="appearance-none ml-4 text-white font-bold px-4 py-1"
                   :class="searchTerm.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
                   :disabled="searchTerm.length === 0"
@@ -25,7 +26,7 @@
       </div>
       <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
     </div>
-    <multiple-results v-show="$store.state.searchResults.length > 1" />
+    <multiple-results v-show="searchResults.length > 1" />
     <v-modal v-if="showNotFound" @close="showNotFound = false">
       <h6 class="text-xl font-bold text-gray-900">Not Found</h6>
       <p class="text-gray-900">Could not find instrument {{ searchTerm }}. Would you like to create a new
@@ -46,7 +47,7 @@
 <script>
 import VScanner from '@/components/VScanner'
 import { API } from 'aws-amplify'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import MultipleResults from '@/components/MultipleResults'
 import VModal from '@/components/VModal'
 
@@ -65,6 +66,7 @@ export default {
       searchTerm: '',
       showNotFound: false,
       dialogOptions: {},
+      loading: false,
     }
   },
   methods: {
@@ -79,17 +81,19 @@ export default {
     async onSubmit() {
       const path = getPath(this.searchTerm)
       try {
+        this.loading = true
         const response = await API.post('instrument-inventory', path, { body: { term: this.searchTerm } })
+        this.loading = false
         this.setSearchResults(response)
-        console.log(this.$store.state.searchResults)
-        if (this.$store.state.searchResults.length === 1) {
+        if (this.searchResults.length === 1) {
           this.$toasted.show('Instrument Found')
           this.showDialog = true
-          this.setCurrentInstrument(this.$store.state.searchResults[0])
+          this.setCurrentInstrument(this.searchResults[0])
         } else {
           this.$toasted.show('Multiple Instruments Found')
         }
       } catch (e) {
+        this.loading = false
         if (e.response.status === 404) {
           if (path === 'search/number') {
             this.showNotFound = true
@@ -107,6 +111,7 @@ export default {
       this.$router.push('/new')
     },
   },
+  computed: mapState(['searchResults']),
 }
 </script>
 
