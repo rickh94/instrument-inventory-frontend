@@ -1,8 +1,10 @@
 <template>
-  <div class="m-5 shadow p-3 rounded">
+  <div class="w-full">
     <div class="flex justify-between mb-2">
-      <h4 class="text-2xl font-bold text-gray-800">Creating {{ newInstrumentNumber }}</h4>
-      <button class="font-bold text-purple-600 hover:underline text-lg" @click="clearNewInstrumentNumber()">Change
+      <h4 v-if="mode === 'creating'" class="text-2xl font-bold text-gray-800">Create {{ newInstrumentNumber }}</h4>
+      <h4 v-else-if="mode === 'editing'" class="text-2xl font-bold text-gray-800">Edit {{ data.number }}</h4>
+      <h4 v-else class="text-2xl font-bold text-red-800">Invalid Mode</h4>
+      <button v-if="mode === 'creating'" class="font-bold text-purple-600 hover:underline text-lg" @click="clearNewInstrumentNumber()">Change
         Number
       </button>
     </div>
@@ -14,7 +16,6 @@
         <v-autocomplete id="type" v-model="data.type" :options="types"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Location" label-for="location">
-
         <v-autocomplete id="location" :options="locations" v-model="data.location"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Assigned To" label-for="assigned-to">
@@ -59,8 +60,14 @@
         </div>
       </v-form-control>
       <div class="flex justify-around w-full mt-5">
+        <button v-if="mode = 'editing'" @click="$emit('cancel')" class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded"
+        >Cancel
+        </button>
         <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-        <button v-else class="bg-purple-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded" type="submit">Save</button>
+        <button v-else
+                class="bg-purple-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
+                type="submit">Save
+        </button>
       </div>
     </form>
   </div>
@@ -73,15 +80,15 @@ import { mapMutations, mapState } from 'vuex'
 import VFormControl from '@/components/VFormControl'
 
 export default {
-  name: 'VNewForm',
+  name: 'VInstrumentForm',
   components: { VFormControl, VAutocomplete },
   data() {
     return {
+      mode: 'creating',
       locations: [],
       types: [],
       sizes: [],
       loading: false,
-      showCreatedDialog: false,
       data: {
         size: '',
         type: '',
@@ -95,20 +102,27 @@ export default {
     }
   },
   async created() {
-    if (this.newInstrumentNumber[0] === 'C') {
-      this.data.type = 'Cello'
-      this.guessSize(1)
-    } else if (this.newInstrumentNumber[0] === 'V') {
-      this.data.type = 'Viola'
-      this.guessSize(1)
-    } else if (this.newInstrumentNumber[0] === 'B') {
-      this.data.type = 'Bass'
-      this.guessSize(1)
+    if (this.newInstrumentNumber.length > 0) {
+      if (this.newInstrumentNumber[0] === 'C') {
+        this.data.type = 'Cello'
+        this.guessSize(1)
+      } else if (this.newInstrumentNumber[0] === 'V') {
+        this.data.type = 'Viola'
+        this.guessSize(1)
+      } else if (this.newInstrumentNumber[0] === 'B') {
+        this.data.type = 'Bass'
+        this.guessSize(1)
+      } else {
+        this.data.type = 'Violin'
+        this.guessSize(0)
+      }
+      this.data.conditionNotes = `Tagged in on ${(new Date()).toLocaleDateString()}`
+    } else if (this.currentInstrument) {
+      this.mode = 'editing'
+      this.data = { ...this.currentInstrument }
     } else {
-      this.data.type = 'Violin'
-      this.guessSize(0)
+      this.$toasted.show('Error: must have either current instrument or new instrument')
     }
-    this.data.conditionNotes = `Tagged in on ${(new Date()).toLocaleDateString()}`
     if (this.locations.length === 0) {
       try {
         const { locations, types, sizes } = await API.get('instrument-inventory', 'schema/ac-options', {})
@@ -121,7 +135,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['clearNewInstrumentNumber']),
+    ...mapMutations(['clearNewInstrumentNumber', 'setCurrentInstrument']),
     async searchLocations(input) {
       if (input.length < 1) {
         return []
@@ -131,18 +145,41 @@ export default {
     },
     async onSubmit() {
       this.loading = true
+      if (this.mode === 'creating') {
+        await this.submitCreate()
+      } else if (this.mode === 'editing') {
+        await this.submitEdit()
+      }
+    },
+    async submitCreate() {
       try {
         const response = await API.post('instrument-inventory', 'instruments', {
           body: {
             ...this.data,
             number: this.newInstrumentNumber,
-          }
+          },
         })
         this.loading = false
         this.$toasted.show(`Instrument ${response.item.number} created`)
         this.clearNewInstrumentNumber()
+        this.setCurrentInstrument(response.item)
+        // this.$emit('instrumentCreated', response)
       } catch (e) {
         this.$toasted.show(e.response.data)
+      }
+    },
+    async submitEdit() {
+      try {
+        const response = await API.put('instrument-inventory', `instruments/${this.data.id}`, {
+          body: {
+            ...this.data,
+          },
+        })
+        this.setCurrentInstrument(response.item)
+        this.$emit('editSuccess', response.item)
+      } catch (e) {
+        console.error(e)
+        this.$toasted.show(`Error: ${e.response.data}`)
       }
     },
     guessSize(idx) {
@@ -190,7 +227,7 @@ export default {
       }
     },
   },
-  computed: mapState(['newInstrumentNumber']),
+  computed: mapState(['newInstrumentNumber', 'currentInstrument']),
 }
 </script>
 

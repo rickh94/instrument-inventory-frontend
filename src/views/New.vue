@@ -1,20 +1,22 @@
 <template>
-  <div>
-    <v-new-form v-if="newInstrumentNumber"></v-new-form>
+  <div  class="m-5 shadow p-3 rounded">
+    <v-instrument-form v-if="newInstrumentNumber" ></v-instrument-form>
     <v-new-number v-else></v-new-number>
   </div>
 </template>
 
 <script>
-import VNewForm from '@/components/VNewForm'
+import VInstrumentForm from '@/components/VInstrumentForm'
 import VNewNumber from '@/components/VNewNumber'
 import { mapState } from 'vuex'
 
 export default {
   name: 'New',
-  components: { VNewForm, VNewNumber },
-  created() {
-    console.log(this.$store.state.newInstrumentNumber)
+  components: { VInstrumentForm, VNewNumber },
+  data() {
+    return {
+      createdInstrument: null,
+    }
   },
   computed: mapState(['newInstrumentNumber']),
 }

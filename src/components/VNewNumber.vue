@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 shadow p-3 h-auto">
+  <div>
     <label for="number" class="text-gray-800 font-bold text-xl mb-1">New Instrument Number</label>
     <div class="flex items-start justify-between mt-2 mb-1">
       <div class="border-b focus-within:border-purple-300 border-gray-800 w-24 flex-grow flex items-center space-between">
