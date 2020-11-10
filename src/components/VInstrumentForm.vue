@@ -60,7 +60,7 @@
         </div>
       </v-form-control>
       <div class="flex justify-around w-full mt-5">
-        <button v-if="mode = 'editing'" @click="$emit('cancel')" class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded"
+        <button v-if="mode === 'editing'" @click="$emit('cancel')" class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded"
         >Cancel
         </button>
         <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
@@ -102,7 +102,9 @@ export default {
     }
   },
   async created() {
+    console.log(this.newInstrumentNumber.length)
     if (this.newInstrumentNumber.length > 0) {
+      this.mode = 'creating'
       if (this.newInstrumentNumber[0] === 'C') {
         this.data.type = 'Cello'
         this.guessSize(1)
@@ -136,13 +138,6 @@ export default {
   },
   methods: {
     ...mapMutations(['clearNewInstrumentNumber', 'setCurrentInstrument']),
-    async searchLocations(input) {
-      if (input.length < 1) {
-        return []
-      }
-      console.log(input)
-      return this.locations
-    },
     async onSubmit() {
       this.loading = true
       if (this.mode === 'creating') {

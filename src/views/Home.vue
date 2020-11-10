@@ -27,7 +27,7 @@
       <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
     </div>
     <multiple-results v-show="searchResults.length > 1" />
-    <v-modal v-if="showNotFound" @close="showNotFound = false">
+    <v-modal v-if="showNotFound" @close="showNotFound = false" width-class="sm:max-w-lg">
       <h6 class="text-xl font-bold text-gray-900">Not Found</h6>
       <p class="text-gray-900">Could not find instrument {{ searchTerm }}. Would you like to create a new
         instrument?</p>
@@ -45,73 +45,73 @@
 </template>
 
 <script>
-import VScanner from '@/components/VScanner'
-import { API } from 'aws-amplify'
-import { mapMutations, mapState } from 'vuex'
-import MultipleResults from '@/components/MultipleResults'
-import VModal from '@/components/VModal'
+  import VScanner from '@/components/VScanner'
+  import { API } from 'aws-amplify'
+  import { mapMutations, mapState } from 'vuex'
+  import MultipleResults from '@/components/MultipleResults'
+  import VModal from '@/components/VModal'
 
-function getPath(input) {
-  // This regex will match the instrument number format and search for an instrument number.
-  // If it does not match, it is assumed to be a name and searches in assigned and history.
-  return input.match(/\w?\d+-\d+/) ? 'search/number' : 'search/assigned-history'
-}
+  function getPath(input) {
+    // This regex will match the instrument number format and search for an instrument number.
+    // If it does not match, it is assumed to be a name and searches in assigned and history.
+    return input.match(/\w?\d+-\d+/) ? 'search/number' : 'search/assigned-history'
+  }
 
-export default {
-  name: 'Home',
-  components: { VModal, MultipleResults, VScanner },
-  data() {
-    return {
-      scanner: false,
-      searchTerm: '',
-      showNotFound: false,
-      dialogOptions: {},
-      loading: false,
-    }
-  },
-  methods: {
-    ...mapMutations(['setSearchResults', 'setCurrentInstrument', 'setNewInstrumentNumber']),
-    detected(result) {
-      if (result.codeResult.code !== this.searchTerm) {
-        this.searchTerm = result.codeResult.code
-        this.scanner = false
+  export default {
+    name: 'Home',
+    components: { VModal, MultipleResults, VScanner },
+    data() {
+      return {
+        scanner: false,
+        searchTerm: '',
+        showNotFound: false,
+        dialogOptions: {},
+        loading: false,
       }
-      this.onSubmit()
     },
-    async onSubmit() {
-      const path = getPath(this.searchTerm)
-      try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', path, { body: { term: this.searchTerm } })
-        this.loading = false
-        this.setSearchResults(response)
-        if (this.searchResults.length === 1) {
-          this.$toasted.show('Instrument Found')
-          this.showDialog = true
-          this.setCurrentInstrument(this.searchResults[0])
-        } else {
-          this.$toasted.show('Multiple Instruments Found')
+    methods: {
+      ...mapMutations(['setSearchResults', 'setCurrentInstrument', 'setNewInstrumentNumber']),
+      detected(result) {
+        if (result.codeResult.code !== this.searchTerm) {
+          this.searchTerm = result.codeResult.code
+          this.scanner = false
         }
-      } catch (e) {
-        this.loading = false
-        if (e.response.status === 404) {
-          if (path === 'search/number') {
-            this.showNotFound = true
+        this.onSubmit()
+      },
+      async onSubmit() {
+        const path = getPath(this.searchTerm)
+        try {
+          this.loading = true
+          const response = await API.post('instrument-inventory', path, { body: { term: this.searchTerm } })
+          this.loading = false
+          this.setSearchResults(response)
+          if (this.searchResults.length === 1) {
+            this.$toasted.show('Instrument Found')
+            this.showDialog = true
+            this.setCurrentInstrument(this.searchResults[0])
           } else {
-            // TODO: configure toasted so it doesn't suck
-            this.$toasted.show(`Could not find instrument assigned to ${this.searchTerm}`)
+            this.$toasted.show('Multiple Instruments Found')
           }
-        } else {
-          this.$toasted.show(`Error: ${e.response.data}`)
+        } catch (e) {
+          this.loading = false
+          if (e.response.status === 404) {
+            if (path === 'search/number') {
+              this.showNotFound = true
+            } else {
+              // TODO: configure toasted so it doesn't suck
+              this.$toasted.show(`Could not find instrument assigned to ${this.searchTerm}`)
+            }
+          } else {
+            this.$toasted.show(`Error: ${e.response.data}`)
+          }
         }
-      }
+      },
+      beginCreateInstrument() {
+        this.setNewInstrumentNumber(this.searchTerm)
+        this.$router.push('/new')
+      },
     },
-    beginCreateInstrument() {
-      this.setNewInstrumentNumber(this.searchTerm)
-      this.$router.push('/new')
-    },
-  },
-  computed: mapState(['searchResults']),
-}
+    computed: mapState(['searchResults']),
+  }
 </script>
 
