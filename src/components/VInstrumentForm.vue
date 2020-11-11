@@ -4,7 +4,9 @@
       <h4 v-if="mode === 'creating'" class="text-2xl font-bold text-gray-800">Create {{ newInstrumentNumber }}</h4>
       <h4 v-else-if="mode === 'editing'" class="text-2xl font-bold text-gray-800">Edit {{ data.number }}</h4>
       <h4 v-else class="text-2xl font-bold text-red-800">Invalid Mode</h4>
-      <button v-if="mode === 'creating'" class="font-bold text-purple-600 hover:underline text-lg" @click="clearNewInstrumentNumber()">Change
+      <button v-if="mode === 'creating'"
+              class="font-bold text-purple-600 hover:underline text-lg"
+              @click="clearNewInstrumentNumber()">Change
         Number
       </button>
     </div>
@@ -59,14 +61,16 @@
                  class="appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight"> / 5
         </div>
       </v-form-control>
-      <div class="flex justify-around w-full mt-5">
-        <button v-if="mode === 'editing'" @click="$emit('cancel')" class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded"
+      <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+      <div v-else class="flex justify-around w-full mt-5">
+        <button v-if="mode === 'editing'"
+                @click="$emit('cancel')"
+                class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded"
         >Cancel
         </button>
-        <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-        <button v-else
-                class="bg-purple-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
-                type="submit">Save
+        <button
+          class="bg-purple-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
+          type="submit">Save
         </button>
       </div>
     </form>
@@ -123,7 +127,7 @@ export default {
       this.mode = 'editing'
       this.data = { ...this.currentInstrument }
     } else {
-      this.$toasted.show('Error: must have either current instrument or new instrument')
+      this.$toasted.error('Error: must have either current instrument or new instrument', { duration: 2000 })
     }
     if (this.locations.length === 0) {
       try {
@@ -132,12 +136,12 @@ export default {
         this.types = types
         this.sizes = sizes
       } catch (e) {
-        this.$toasted.show(`Error ${e.response.data}`)
+        this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 })
       }
     }
   },
   methods: {
-    ...mapMutations(['clearNewInstrumentNumber', 'setCurrentInstrument']),
+    ...mapMutations(['clearNewInstrumentNumber', 'setCurrentInstrument', 'updateCurrentInstrument']),
     async onSubmit() {
       this.loading = true
       if (this.mode === 'creating') {
@@ -155,12 +159,12 @@ export default {
           },
         })
         this.loading = false
-        this.$toasted.show(`Instrument ${response.item.number} created`)
+        this.$toasted.info(`Instrument ${response.item.number} created`, { duration: 2000 })
         this.clearNewInstrumentNumber()
         this.setCurrentInstrument(response.item)
         // this.$emit('instrumentCreated', response)
       } catch (e) {
-        this.$toasted.show(e.response.data)
+        this.$toasted.info(e.response.data, { duration: 2000 })
       }
     },
     async submitEdit() {
@@ -170,7 +174,7 @@ export default {
             ...this.data,
           },
         })
-        this.setCurrentInstrument(response.item)
+        this.updateCurrentInstrument(response.item)
         this.$emit('editSuccess', response.item)
       } catch (e) {
         console.error(e)

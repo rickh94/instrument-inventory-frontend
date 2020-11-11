@@ -19,6 +19,13 @@ export default new Vuex.Store({
     setCurrentInstrument(state, instrument) {
       state.currentInstrument = instrument
     },
+    updateCurrentInstrument(state, instrument) {
+      state.searchResults = [
+        instrument,
+        ...state.searchResults.filter(el => el.id !== instrument.id),
+      ]
+      state.currentInstrument = instrument
+    },
     clearCurrentInstrument(state) {
       state.currentInstrument = null
     },

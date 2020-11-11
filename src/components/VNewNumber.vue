@@ -30,7 +30,7 @@
 <script>
 import VScanner from '@/components/VScanner'
 import { API } from 'aws-amplify'
-import {mapMutations} from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default {
   components: { VScanner },
@@ -48,12 +48,12 @@ export default {
       this.loading = true
       try {
         await API.post('instrument-inventory', 'search/number', { body: { term: this.number } })
-        this.$toasted.show("This number is already taken")
+        this.$toasted.info('This number is already taken', { duration: 2000 })
       } catch (e) {
         if (e.response.status === 404) {
           this.setNewInstrumentNumber(this.number)
         } else {
-          this.$toasted.show("Error: Something has gone wrong")
+          this.$toasted.error('Error: Something has gone wrong', { duration: 2000 })
         }
       }
       this.loading = false
@@ -65,7 +65,7 @@ export default {
       }
       this.onSubmit()
     },
-  }
+  },
 }
 </script>
 
