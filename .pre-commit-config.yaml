@@ -7,10 +7,6 @@ repos:
           - eslint@6.3.0
           - babel-eslint@10.0.3
           - eslint-plugin-react@7.14.3
-  - repo: http://github.com/prettier/prettier
-    rev: 1.18.2
-    hooks:
-      - id: prettier
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.2.3
     hooks:
