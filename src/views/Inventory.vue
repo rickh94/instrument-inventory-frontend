@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto mb-20 mt-4 shadow p-4">
+  <div class="lg:mx-4 mx-auto mb-20 mt-4 shadow p-4">
     <div class="flex mx-auto items-end justify-center">
       <button class="appearance-none text-lg border-b px-4 py-1 font-bold  hover:text-purple-500"
               :class="tab === 'v-inventory-instruments' ? 'border-purple-600 text-purple-600' : 'border-gray-800 text-gray-800'"

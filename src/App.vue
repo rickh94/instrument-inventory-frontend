@@ -3,7 +3,7 @@
   <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
     <div id="app">
       <v-nav></v-nav>
-      <div class="max-w-4xl mx-auto">
+      <div class="mx-auto">
         <router-view/>
       </div>
     </div>

@@ -8,8 +8,15 @@ export default new Vuex.Store({
     searchResults: [],
     currentInstrument: null,
     newInstrumentNumber: '',
+    allInstruments: [],
   },
   mutations: {
+    setAllInstruments(state, instruments) {
+      state.allInstruments = instruments
+    },
+    clearAllInstruments(state) {
+      state.allInstruments = []
+    },
     setSearchResults(state, instruments) {
       state.searchResults = instruments
     },
@@ -20,10 +27,18 @@ export default new Vuex.Store({
       state.currentInstrument = instrument
     },
     updateCurrentInstrument(state, instrument) {
-      state.searchResults = [
-        instrument,
-        ...state.searchResults.filter(el => el.id !== instrument.id),
-      ]
+      if (state.allInstruments.length > 0) {
+        state.allInstruments = [
+          instrument,
+          ...state.allInstruments.filter(el => el.id !== instrument.id),
+        ]
+      }
+      if (state.searchResults.length > 0) {
+        state.searchResults = [
+          instrument,
+          ...state.searchResults.filter(el => el.id !== instrument.id),
+        ]
+      }
       state.currentInstrument = instrument
     },
     clearCurrentInstrument(state) {

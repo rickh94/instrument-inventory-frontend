@@ -8,12 +8,14 @@ import VueQuagga from 'vue-quaggajs'
 import Toasted from 'vue-toasted'
 import VueSimpleSpinner from 'vue-simple-spinner'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBarcode, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBarcode, faTrash, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import config from './config'
 
 library.add(faBarcode)
 library.add(faTrash)
+library.add(faChevronDown)
+library.add(faChevronUp)
 
 Vue.use(VueQuagga)
 Vue.use(Toasted)

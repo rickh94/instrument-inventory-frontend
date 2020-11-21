@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 shadow p-3">
+  <div class="max-w-4xl m-5 shadow p-3">
     <h4 class="text-xl font-bold text-gray-900">Sign Out Instrument</h4>
     <form @submit.prevent="onSubmit">
       <v-form-control label="Instrument Number" label-for="number">

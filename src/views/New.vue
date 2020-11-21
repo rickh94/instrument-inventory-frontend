@@ -1,6 +1,6 @@
 <template>
-  <div  class="m-5 shadow p-3 rounded">
-    <v-instrument-form v-if="newInstrumentNumber" ></v-instrument-form>
+  <div class="max-w-4xl m-5 shadow p-3 rounded">
+    <v-instrument-form v-if="newInstrumentNumber"></v-instrument-form>
     <v-new-number v-else></v-new-number>
   </div>
 </template>

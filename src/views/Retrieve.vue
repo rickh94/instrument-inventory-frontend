@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow p-3 m-5">
+  <div class="max-w-4xl shadow p-3 m-5">
     <h4 class="text-gray-800 font-bold text-xl mb-1">Retrieve Multiple Instruments</h4>
     <form @submit.prevent="onSubmit" autocomplete="off">
       <label for="number" class="text-sm text-gray-800 mb-2">Instrument Number</label>

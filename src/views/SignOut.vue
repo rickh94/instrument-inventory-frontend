@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-w-4xl">
     <v-sign-out-single />
     <v-sign-out-multiple />
   </div>
