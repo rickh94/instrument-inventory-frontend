@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-between">
+    <div class="flex justify-between mt-2">
       <h4 class="text-xl font-bold">All Instruments</h4>
       <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white"
               @click="getCsv">Download
@@ -20,23 +20,21 @@
              id="filter-type"
              class="mx-2 py-1 appearance-none focus:outline-none border-b border-gray-700 placeholder-gray-700"
              v-model="type">
-      <div class="flex justify-start mt-2">
-        <div class="lg:hidden">
-          <label for="sortBy" class="text-gray-600 text-sm">Sort By</label>
-          <select name="sortBy"
-                  id="sortBy"
-                  v-model="sortBy"
-                  class="appearance-none mx-2 px-2 py-1 bg-transparent text-gray-600">
-            <option value="" disabled>Select to sort</option>
-            <option value="number">Number</option>
-          </select>
-          <font-awesome-icon icon="chevron-down"></font-awesome-icon>
-        </div>
-        <button class="px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
+      <div class="flex justify-start mt-2 flex-wrap">
+        <div class="text-gray-600 mr-2 flex items-center lg:hidden">Sort By:</div>
+        <v-select class="mt-2 lg:hidden mr-2" placeholder="Sort By"
+                  :options="sortColumns"
+                  v-model="sortBy"></v-select>
+        <div class="text-gray-600 flex items-center mr-2 lg:hidden">Sort Direction:</div>
+        <v-select class="mt-2 lg:hidden mr-2"
+                  placeholder="Sort Direction"
+                  :options="[{value: 1, text: 'Ascending'}, {value: -1, text: 'Descending'}]"
+                  v-model="sortDirection"></v-select>
+        <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
                 @click.prevent="showArchived = !showArchived">
           {{ showArchived ? 'Hide Archived' : 'Show Archived' }}
         </button>
-        <button class="px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
+        <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
                 @click.prevent="onlyUnassigned = !onlyUnassigned">
           {{ onlyUnassigned ? 'Show All' : 'Show Unassigned Only' }}
         </button>
@@ -119,10 +117,12 @@
 import { mapState, mapMutations } from 'vuex'
 import { API } from 'aws-amplify'
 import VTableHeader from '@/components/VTableHeader'
+import VSelect from '@/components/VSelect'
+import Papa from 'papaparse'
 
 export default {
   name: 'VInventoryInstruments',
-  components: { VTableHeader },
+  components: { VSelect, VTableHeader },
   data() {
     return {
       size: '',
@@ -132,6 +132,16 @@ export default {
       loading: false,
       sortBy: 'number',
       sortDirection: 1,
+      sortColumns: [
+        { value: 'size', text: 'Size' },
+        { value: 'type', text: 'Type' },
+        { value: 'number', text: 'Number' },
+        { value: 'location', text: 'Location' },
+        { value: 'assignedTo', text: 'Assigned To' },
+        { value: 'condition', text: 'Condition' },
+        { value: 'quality', text: 'Quality' },
+        { value: 'history', text: 'History' },
+      ],
     }
   },
   async created() {
@@ -156,7 +166,15 @@ export default {
   methods: {
     ...mapMutations(['setAllInstruments', 'setCurrentInstrument']),
     getCsv() {
+      const csvData = Papa.unparse(this.displayInstruments, {
+        skipEmptyLines: true,
+        header: true
+      })
+      const csvDownload = document.createElement('a')
+      csvDownload.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData))
+      csvDownload.setAttribute('download', 'instruments-' + (new Date().toLocaleString()) + '.csv')
 
+      csvDownload.click()
     },
     changeSort(newSortAttribute) {
       if (this.sortBy === newSortAttribute) {
