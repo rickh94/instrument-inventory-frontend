@@ -25,8 +25,7 @@ export default {
       required: true,
     },
     value: {
-      type: String,
-      default: '',
+      required: true,
     },
     options: {
       type: Array,
