@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="flex flex-col md:flex-row items-center md:items-start flex-wrap justify-around mt-4">
+    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div v-else class="flex flex-col md:flex-row items-center md:items-start flex-wrap justify-around mt-4">
       <v-bows-table :bows="violinBows" instrument="Violin"></v-bows-table>
       <v-bows-table :bows="violaBows" instrument="Viola"></v-bows-table>
       <v-bows-table :bows="celloBows" instrument="Cello"></v-bows-table>
@@ -19,7 +20,7 @@
       </button>
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
-      <div :is="formComponent"></div>
+      <div :is="formComponent" @close="formComponent = null" @updated="handleUpdate"></div>
     </v-modal>
   </div>
 </template>
@@ -45,6 +46,11 @@ export default {
       this.bows = response.bows
     } catch (e) {
       this.$toasted.error(e.response.data, { duration: 2000 })
+    }
+  },
+  methods: {
+    handleUpdate({updatedIds, updatedItems}) {
+      this.bows = [...this.bows.filter(({id}) => !updatedIds.includes(id)), ...updatedItems]
     }
   },
   computed: {
