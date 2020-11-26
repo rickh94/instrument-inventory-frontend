@@ -1,5 +1,5 @@
 <template>
-<table class="table table-auto">
+<table class="table table-auto mx-4">
   <thead>
   <tr class="border-b border-black text-xl">
     <th class="pr-4">{{ instrument }}</th>

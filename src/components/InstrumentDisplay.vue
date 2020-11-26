@@ -75,8 +75,8 @@
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex'
-import VModal from '@/components/VModal'
-import VInstrumentForm from '@/components/VInstrumentForm'
+import VModal from '@/components/UI/VModal'
+import VInstrumentForm from '@/components/createComponents/VInstrumentForm'
 import { API } from 'aws-amplify'
 
 export default {

@@ -37,9 +37,9 @@
   </div>
 </template>
 <script>
-import VAutocomplete from '@/components/VAutocomplete'
-import VFormControl from '@/components/VFormControl'
-import VScanner from '@/components/VScanner'
+import VAutocomplete from '@/components/UI/VAutocomplete'
+import VFormControl from '@/components/UI/VFormControl'
+import VScanner from '@/components/UI/VScanner'
 import { mapMutations } from 'vuex'
 import { API } from 'aws-amplify'
 

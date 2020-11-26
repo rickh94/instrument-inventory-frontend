@@ -79,9 +79,9 @@
 
 <script>
 import { API } from 'aws-amplify'
-import VAutocomplete from '@/components/VAutocomplete'
+import VAutocomplete from '@/components/UI/VAutocomplete'
 import { mapMutations, mapState } from 'vuex'
-import VFormControl from '@/components/VFormControl'
+import VFormControl from '@/components/UI/VFormControl'
 
 export default {
   name: 'VInstrumentForm',

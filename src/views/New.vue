@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import VInstrumentForm from '@/components/VInstrumentForm'
-import VNewNumber from '@/components/VNewNumber'
+import VInstrumentForm from '@/components/createComponents/VInstrumentForm'
+import VNewNumber from '@/components/createComponents/VNewNumber'
 import { mapState } from 'vuex'
 
 export default {

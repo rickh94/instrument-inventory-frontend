@@ -116,8 +116,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { API } from 'aws-amplify'
-import VTableHeader from '@/components/VTableHeader'
-import VSelect from '@/components/VSelect'
+import VTableHeader from '@/components/UI/VTableHeader'
+import VSelect from '@/components/UI/VSelect'
 import Papa from 'papaparse'
 
 export default {

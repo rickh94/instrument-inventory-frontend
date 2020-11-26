@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import VFormControl from '@/components/VFormControl'
+import VFormControl from '@/components/UI/VFormControl'
 import { mapMutations } from 'vuex'
 import Papa from 'papaparse'
 import { API } from 'aws-amplify'
@@ -39,7 +39,7 @@ export default {
             this.$toasted.error('Error: Invalid CSV file', { duration: 2000 })
             return
           }
-          this.multipleData = results.data.filter(item => item.number.length > 3 && item.assignedTo.length > 0 && item.location.length > 0)
+          this.multipleData = results.data.filter(item => item.number && item.number.length > 3 && item.assignedTo && item.assignedTo.length > 2 && item.location && item.location.length > 0)
         },
         header: true,
         skipEmptyLines: true,
@@ -54,7 +54,7 @@ export default {
           },
         })
         this.loading = false
-        this.$toasted.info(`Signed out ${response.updated}`, {duration: 2000})
+        this.$toasted.info(`Signed out ${response.updated}`, { duration: 2000 })
         this.clearSearchResults()
       } catch (e) {
         this.loading = false

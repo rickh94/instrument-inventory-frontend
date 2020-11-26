@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import VFormControl from '@/components/VFormControl'
-import VAutocomplete from '@/components/VAutocomplete'
+import VFormControl from '@/components/UI/VFormControl'
+import VAutocomplete from '@/components/UI/VAutocomplete'
 import { API } from 'aws-amplify'
 
 export default {
@@ -73,7 +73,7 @@ export default {
             ...this.data,
           },
         })
-        this.$emit('updated', { ids: [response.item.id], items: [response.item] })
+        this.$emit('updated', { updatedIds: [response.item.id], updatedItems: [response.item] })
         this.$toasted.show(response.message, { duration: 2000 })
         this.loading = false
         this.$emit('close')

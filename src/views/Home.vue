@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import VScanner from '@/components/VScanner'
+import VScanner from '@/components/UI/VScanner'
 import { API } from 'aws-amplify'
 import { mapMutations, mapState } from 'vuex'
 import MultipleResults from '@/components/MultipleResults'
-import VModal from '@/components/VModal'
+import VModal from '@/components/UI/VModal'
 
 function getPath(input) {
   // This regex will match the instrument number format and search for an instrument number.

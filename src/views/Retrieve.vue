@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import VScanner from '@/components/VScanner'
+import VScanner from '@/components/UI/VScanner'
 import { API } from 'aws-amplify'
 
 export default {

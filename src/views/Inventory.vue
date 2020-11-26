@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import VInventoryInstruments from '@/components/VInventoryInstruments'
-import VInventoryBows from '@/components/VInventoryBows'
-import VInventoryStrings from '@/components/VInventoryStrings'
-import VInventoryOther from '@/components/VInventoryOther'
+import VInventoryInstruments from '@/components/inventoryComponents/VInventoryInstruments'
+import VInventoryBows from '@/components/inventoryComponents/bows/VInventoryBows'
+import VInventoryStrings from '@/components/inventoryComponents/strings/VInventoryStrings'
+import VInventoryOther from '@/components/inventoryComponents/VInventoryOther'
 
 export default {
   components: {VInventoryInstruments, VInventoryBows, VInventoryStrings, VInventoryOther},

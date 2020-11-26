@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import VScanner from '@/components/VScanner'
+import VScanner from '@/components/UI/VScanner'
 import { API } from 'aws-amplify'
 import { mapMutations } from 'vuex'
 
@@ -47,6 +47,7 @@ export default {
     async onSubmit() {
       this.loading = true
       try {
+
         await API.post('instrument-inventory', 'search/number', { body: { term: this.number } })
         this.$toasted.info('This number is already taken', { duration: 2000 })
       } catch (e) {
