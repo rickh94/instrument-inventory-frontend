@@ -119,6 +119,7 @@ import { API } from 'aws-amplify'
 import VTableHeader from '@/components/UI/VTableHeader'
 import VSelect from '@/components/UI/VSelect'
 import Papa from 'papaparse'
+import { sortBySize } from '@/mixins/computedBows'
 
 export default {
   name: 'VInventoryInstruments',
@@ -197,6 +198,9 @@ export default {
       return this.showArchived || !instrument.archived
     },
     sortInstruments(a, b) {
+      if (this.sortBy === 'size') {
+        return this.sortDirection * -sortBySize(a, b)
+      }
       const aSort = a[this.sortBy] || ''
       const bSort = b[this.sortBy] || ''
       if (aSort < bSort) {
