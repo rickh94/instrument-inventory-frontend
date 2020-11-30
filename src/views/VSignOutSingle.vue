@@ -40,7 +40,7 @@
 import VAutocomplete from '@/components/UI/VAutocomplete'
 import VFormControl from '@/components/UI/VFormControl'
 import VScanner from '@/components/UI/VScanner'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { API } from 'aws-amplify'
 
 export default {
@@ -111,5 +111,6 @@ export default {
       this.assignedTo = ''
     },
   },
+  computed: mapState(['currentInstrument']),
 }
 </script>

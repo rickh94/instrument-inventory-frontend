@@ -40,6 +40,7 @@
         </button>
       </div>
     </div>
+    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
     <div class="flex flex-col items-center justify-center mt-2 mb-1 lg:hidden">
       <div v-for="instrument in displayInstruments"
            class="flex flex-col m-2 border border-purple-300 p-2 w-full"
@@ -149,6 +150,7 @@ export default {
     try {
       this.loading = true
       const res = await API.get('instrument-inventory', 'instruments/all', {})
+      this.loading = false
       this.setAllInstruments(res.instruments)
       if (res.instrumentsFailed.length > 0) {
         this.$toasted.error('Some instruments failed to load', { duration: 2000 })

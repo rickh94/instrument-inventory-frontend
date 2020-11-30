@@ -57,8 +57,10 @@
         <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
                 @click="editing = true">Edit
         </button>
-        <router-link to="/sign-out"
-                class="mx-1 appearance-none bg-blue-600 text-white px-4 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
+        <router-link
+          v-if="$route.path !== '/sign-out'"
+          to="/sign-out"
+          class="mx-1 appearance-none bg-blue-600 text-white px-4 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
           Sign Out
         </router-link>
         <button @click="retrieve"
@@ -117,7 +119,7 @@ export default {
         this.$toasted.info(response.message, { duration: 2000 })
         this.loading = false
       } catch (e) {
-        this.$toasted.error(e.response.data, {duration: 2000})
+        this.$toasted.error(e.response.data, { duration: 2000 })
         console.log(e)
         this.loading = false
       }

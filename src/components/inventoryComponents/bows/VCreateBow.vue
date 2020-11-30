@@ -78,6 +78,7 @@ export default {
         this.loading = false
         this.$emit('close')
       } catch (err) {
+        this.loading = false
         if (err.response.data) {
           this.$toasted.error(err.response.data, { duration: 2000 })
         } else {
