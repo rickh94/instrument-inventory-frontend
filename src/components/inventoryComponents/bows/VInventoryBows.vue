@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <v-spinner v-if="loading" line-fg-color="#805ad5" class="my-2"></v-spinner>
     <div v-else class="flex items-start flex-wrap justify-around mt-4">
       <v-bows-table :bows="violinBows" instrument="Violin"></v-bows-table>
       <v-bows-table :bows="violaBows" instrument="Viola"></v-bows-table>

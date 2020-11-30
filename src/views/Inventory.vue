@@ -1,6 +1,6 @@
 <template>
   <div class="mx-4 mb-20 mt-4 shadow p-4">
-    <div class="flex mx-auto items-end justify-center">
+    <div class="flex items-end justify-center">
       <button class="appearance-none text-lg border-b px-4 py-1 font-bold  hover:text-purple-500"
               :class="tab === 'v-inventory-instruments' ? 'border-purple-600 text-purple-600' : 'border-gray-800 text-gray-800'"
               @click="tab = 'v-inventory-instruments'">
