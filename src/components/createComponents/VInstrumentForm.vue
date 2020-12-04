@@ -164,6 +164,7 @@ export default {
         this.setCurrentInstrument(response.item)
         // this.$emit('instrumentCreated', response)
       } catch (e) {
+        this.loading = false
         this.$toasted.info(e.response.data, { duration: 2000 })
       }
     },
@@ -176,7 +177,9 @@ export default {
         })
         this.updateCurrentInstrument(response.item)
         this.$emit('editSuccess', response.item)
+        this.loading = false
       } catch (e) {
+        this.loading = false
         console.error(e)
         this.$toasted.show(`Error: ${e.response.data}`)
       }
