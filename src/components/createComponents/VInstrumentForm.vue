@@ -198,7 +198,7 @@ export default {
           this.data.size = '3/4'
           break
         case '4':
-          this.data.size = '4/4'
+          this.data.size = '1/4'
           break
         case '8':
           this.data.size = '1/8'
