@@ -58,8 +58,13 @@ export default {
         this.loading = false
         this.locations = locations
       } catch (e) {
+        this.loading = false
         console.error(e)
-        this.$toasted.error(`Error: ${e.response.data}`)
+        if (e.response.data) {
+          this.$toasted.error(`Error: ${e.response.data}`)
+        } else {
+          this.$toasted.error(e.toString())
+        }
       }
     }
   },
