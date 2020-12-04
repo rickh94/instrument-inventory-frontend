@@ -75,8 +75,8 @@ export default {
       if (result.codeResult.code !== this.searchTerm) {
         this.searchTerm = result.codeResult.code
         this.scanner = false
+        this.onSubmit()
       }
-      this.onSubmit()
     },
     async onSubmit() {
       const path = getPath(this.searchTerm)

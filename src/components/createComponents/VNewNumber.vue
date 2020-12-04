@@ -45,9 +45,8 @@ export default {
   methods: {
     ...mapMutations(["setNewInstrumentNumber"]),
     async onSubmit() {
-      this.loading = true;
       try {
-
+        this.loading = true;
         await API.post("instrument-inventory", "search/number", { body: { term: this.number } });
         this.$toasted.info("This number is already taken", { duration: 2000 });
       } catch (e) {
@@ -62,10 +61,10 @@ export default {
       this.loading = false;
     },
     detected(result) {
-      if (result.codeResult.code !== this.searchTerm) {
-        this.searchTerm = result.codeResult.code;
+      if (result.codeResult.code !== this.number) {
+        this.number = result.codeResult.code;
         this.scanner = false;
-        setTimeout(this.onSubmit, 500);
+        this.onSubmit()
       }
     }
   }
