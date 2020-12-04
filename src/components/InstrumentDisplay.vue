@@ -43,10 +43,10 @@
       </div>
       <div>
         <span class="font-bold text-gray-700 mb-2">Gifted To Student: </span>{{ currentInstrument.gifted ?
-        'Yes' : 'No' }}
+        "Yes" : "No" }}
       </div>
       <div v-if="currentInstrument.history">
-        <span class="font-bold text-gray-700 mb-2">History: </span>{{ currentInstrument.history.join(', ')
+        <span class="font-bold text-gray-700 mb-2">History: </span>{{ currentInstrument.history.join(", ")
         }}
       </div>
       <div class="font-bold text-gray-700" v-else>
@@ -55,7 +55,7 @@
       <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
       <div class="flex justify-start mt-2 flex-row-reverse" v-else>
         <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
-                @click="editing = true">Edit
+                @click="edit">Edit
         </button>
         <router-link
           v-if="$route.path !== '/sign-out'"
@@ -76,60 +76,64 @@
   </v-modal>
 </template>
 <script>
-import { mapMutations, mapState } from 'vuex'
-import VModal from '@/components/UI/VModal'
-import VInstrumentForm from '@/components/createComponents/VInstrumentForm'
-import { API } from 'aws-amplify'
+import { mapMutations, mapState } from "vuex";
+import VModal from "@/components/UI/VModal";
+import VInstrumentForm from "@/components/createComponents/VInstrumentForm";
+import { API } from "aws-amplify";
 
 export default {
-  name: 'InstrumentDisplay',
+  name: "InstrumentDisplay",
   data() {
     return {
       editing: false,
-      loading: false,
-    }
+      loading: false
+    };
   },
   components: { VInstrumentForm, VModal },
   methods: {
-    ...mapMutations(['clearCurrentInstrument', 'setCurrentInstrument', 'updateCurrentInstrument']),
+    ...mapMutations(["clearCurrentInstrument", "setCurrentInstrument", "updateCurrentInstrument", "clearNewInstrumentNumber"]),
     async archive() {
       try {
-        this.loading = true
-        const response = await API.put('instrument-inventory', `instruments/${this.currentInstrument.id}`, {
+        this.loading = true;
+        const response = await API.put("instrument-inventory", `instruments/${this.currentInstrument.id}`, {
           body: {
             ...this.currentInstrument,
-            archived: true,
-          },
-        })
-        this.loading = false
-        this.$toasted.info(`Instrument ${response.item.number} archived`, { duration: 2000 })
-        this.updateCurrentInstrument(response.item)
+            archived: true
+          }
+        });
+        this.loading = false;
+        this.$toasted.info(`Instrument ${response.item.number} archived`, { duration: 2000 });
+        this.updateCurrentInstrument(response.item);
       } catch (e) {
-        this.loading = false
-        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 })
+        this.loading = false;
+        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 });
       }
     },
     async retrieve() {
-      this.loading = true
+      this.loading = true;
       try {
-        const response = await API.post('instrument-inventory', 'retrieve-single',
-          { body: { number: this.currentInstrument.number } })
-        console.log(response)
-        this.updateCurrentInstrument(response.item)
-        this.$toasted.info(response.message, { duration: 2000 })
-        this.loading = false
+        const response = await API.post("instrument-inventory", "retrieve-single",
+          { body: { number: this.currentInstrument.number } });
+        console.log(response);
+        this.updateCurrentInstrument(response.item);
+        this.$toasted.info(response.message, { duration: 2000 });
+        this.loading = false;
       } catch (e) {
-        this.$toasted.error(e.response.data, { duration: 2000 })
-        console.log(e)
-        this.loading = false
+        this.$toasted.error(e.response.data, { duration: 2000 });
+        console.log(e);
+        this.loading = false;
       }
 
     },
     async handleEditSuccess() {
-      this.editing = false
-      this.$emit('instrumentUpdated', this.currentInstrument.id)
+      this.editing = false;
+      this.$emit("instrumentUpdated", this.currentInstrument.id);
     },
+    edit() {
+      this.clearNewInstrumentNumber();
+      this.editing = true;
+    }
   },
-  computed: mapState(['currentInstrument']),
-}
+  computed: mapState(["currentInstrument"])
+};
 </script>
