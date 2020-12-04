@@ -18,7 +18,9 @@ export default {
   name: 'VScanner',
   methods: {
     detected(result) {
-      this.$emit('detected', result)
+      if (result.codeResult.code.match(/\w?\d+-\d+/)) {
+        this.$emit('detected', result)
+      }
     },
   },
 }
