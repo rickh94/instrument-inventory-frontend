@@ -28,46 +28,48 @@
 </template>
 
 <script>
-import VScanner from '@/components/UI/VScanner'
-import { API } from 'aws-amplify'
-import { mapMutations } from 'vuex'
+import VScanner from "@/components/UI/VScanner";
+import { API } from "aws-amplify";
+import { mapMutations } from "vuex";
 
 export default {
   components: { VScanner },
-  name: 'VNewNumber',
+  name: "VNewNumber",
   data() {
     return {
-      number: '',
+      number: "",
       scanner: false,
-      loading: false,
-    }
+      loading: false
+    };
   },
   methods: {
-    ...mapMutations(['setNewInstrumentNumber']),
+    ...mapMutations(["setNewInstrumentNumber"]),
     async onSubmit() {
-      this.loading = true
+      this.loading = true;
       try {
 
-        await API.post('instrument-inventory', 'search/number', { body: { term: this.number } })
-        this.$toasted.info('This number is already taken', { duration: 2000 })
+        await API.post("instrument-inventory", "search/number", { body: { term: this.number } });
+        this.$toasted.info("This number is already taken", { duration: 2000 });
       } catch (e) {
         if (e.response.status === 404) {
-          this.setNewInstrumentNumber(this.number)
+          this.setNewInstrumentNumber(this.number);
+        } else if (e.response.data) {
+          this.$toasted.error(e.response.data);
         } else {
-          this.$toasted.error('Error: Something has gone wrong', { duration: 2000 })
+          this.$toasted.error("Error: Something has gone wrong", { duration: 2000 });
         }
       }
-      this.loading = false
+      this.loading = false;
     },
     detected(result) {
       if (result.codeResult.code !== this.searchTerm) {
-        this.searchTerm = result.codeResult.code
-        this.scanner = false
+        this.searchTerm = result.codeResult.code;
+        this.scanner = false;
+        setTimeout(this.onSubmit, 500);
       }
-      this.onSubmit()
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>
