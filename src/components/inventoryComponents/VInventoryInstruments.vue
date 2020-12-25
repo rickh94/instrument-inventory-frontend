@@ -32,11 +32,11 @@
                   v-model="sortDirection"></v-select>
         <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
                 @click.prevent="showArchived = !showArchived">
-          {{ showArchived ? 'Hide Archived' : 'Show Archived' }}
+          {{ showArchived ? "Hide Archived" : "Show Archived" }}
         </button>
         <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
                 @click.prevent="onlyUnassigned = !onlyUnassigned">
-          {{ onlyUnassigned ? 'Show All' : 'Show Unassigned Only' }}
+          {{ onlyUnassigned ? "Show All" : "Show Unassigned Only" }}
         </button>
       </div>
     </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="text-gray-700" v-else>Unassigned at {{ instrument.location }}</div>
         <div class="text-gray-700">Condition: {{ instrument.condition }}, Quality: {{ instrument.quality }}</div>
-        <div class="text-gray-500" v-if="instrument.history">{{ instrument.history.join(', ') }}</div>
+        <div class="text-gray-500" v-if="instrument.history">{{ instrument.history.join(", ") }}</div>
         <div class="text-gray-500" v-else>No History</div>
       </div>
     </div>
@@ -115,123 +115,133 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { API } from 'aws-amplify'
-import VTableHeader from '@/components/UI/VTableHeader'
-import VSelect from '@/components/UI/VSelect'
-import Papa from 'papaparse'
-import { sortBySize } from '@/mixins/computedBows'
+import { mapState, mapMutations } from "vuex";
+import { API } from "aws-amplify";
+import VTableHeader from "@/components/UI/VTableHeader";
+import VSelect from "@/components/UI/VSelect";
+import Papa from "papaparse";
+import { sortBySize } from "@/mixins/computedBows";
+import VFormControl from "@/components/UI/VFormControl";
 
 export default {
-  name: 'VInventoryInstruments',
-  components: { VSelect, VTableHeader },
+  name: "VInventoryInstruments",
+  components: { VFormControl, VSelect, VTableHeader },
   data() {
     return {
-      size: '',
-      type: '',
+      size: "",
+      type: "",
       onlyUnassigned: false,
       showArchived: false,
       loading: false,
-      sortBy: 'number',
+      sortBy: "number",
       sortDirection: 1,
+      sizes: [],
+      types: [],
       sortColumns: [
-        { value: 'size', text: 'Size' },
-        { value: 'type', text: 'Type' },
-        { value: 'number', text: 'Number' },
-        { value: 'location', text: 'Location' },
-        { value: 'assignedTo', text: 'Assigned To' },
-        { value: 'condition', text: 'Condition' },
-        { value: 'quality', text: 'Quality' },
-        { value: 'history', text: 'History' },
-      ],
-    }
+        { value: "size", text: "Size" },
+        { value: "type", text: "Type" },
+        { value: "number", text: "Number" },
+        { value: "location", text: "Location" },
+        { value: "assignedTo", text: "Assigned To" },
+        { value: "condition", text: "Condition" },
+        { value: "quality", text: "Quality" },
+        { value: "history", text: "History" }
+      ]
+    };
   },
   async created() {
     try {
-      this.loading = true
-      const res = await API.get('instrument-inventory', 'instruments/all', {})
-      this.loading = false
-      this.setAllInstruments(res.instruments)
+      this.loading = true;
+      const res = await API.get("instrument-inventory", "instruments/all", {});
+      this.loading = false;
+      this.setAllInstruments(res.instruments);
       if (res.instrumentsFailed.length > 0) {
-        this.$toasted.error('Some instruments failed to load', { duration: 2000 })
-        console.log(res.instrumentsFailed)
+        this.$toasted.error("Some instruments failed to load", { duration: 2000 });
+        console.log(res.instrumentsFailed);
       }
     } catch (err) {
-      this.loading = false
+      this.loading = false;
       if (err.response.data) {
-        this.$toasted.error(err.response.data, { duration: 3000 })
+        this.$toasted.error(err.response.data, { duration: 3000 });
       } else {
-        this.$toasted.error(err.toString())
+        this.$toasted.error(err.toString());
       }
-      console.error(err)
+      console.error(err);
+    }
+    try {
+      const { sizes, types } = await API.get("instrument-inventory", "schema/ac-options", {});
+      this.sizes = sizes
+      this.types = types
+    } catch (err) {
+      this.$toasted.error("Failed to load types and sizes");
     }
   },
   methods: {
-    ...mapMutations(['setAllInstruments', 'setCurrentInstrument']),
+    ...mapMutations(["setAllInstruments", "setCurrentInstrument"]),
     getCsv() {
       const csvData = Papa.unparse(this.displayInstruments, {
         skipEmptyLines: true,
         header: true
-      })
-      const csvDownload = document.createElement('a')
-      csvDownload.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData))
-      csvDownload.setAttribute('download', 'instruments-' + (new Date().toLocaleString()) + '.csv')
+      });
+      const csvDownload = document.createElement("a");
+      csvDownload.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csvData));
+      csvDownload.setAttribute("download", "instruments-" + (new Date().toLocaleString()) + ".csv");
 
-      csvDownload.click()
+      csvDownload.click();
     },
     changeSort(newSortAttribute) {
       if (this.sortBy === newSortAttribute) {
-        this.sortDirection *= -1
+        this.sortDirection *= -1;
       } else {
-        this.sortBy = newSortAttribute
-        this.sortDirection = 1
+        this.sortBy = newSortAttribute;
+        this.sortDirection = 1;
       }
     },
     displayInstrument(instrument) {
       if (this.onlyUnassigned && instrument.assignedTo) {
-        return false
+        return false;
       }
       if (this.size && !instrument.size.startsWith(this.size)) {
-        return false
+        return false;
       }
       if (this.type && !instrument.type.toLowerCase().includes(this.type.toLowerCase())) {
-        return false
+        return false;
       }
-      return this.showArchived || !instrument.archived
+      return this.showArchived || !instrument.archived;
     },
     sortInstruments(a, b) {
-      if (this.sortBy === 'size') {
-        return this.sortDirection * -sortBySize(a, b)
+      if (this.sortBy === "size") {
+        return this.sortDirection * -sortBySize(a, b);
       }
-      const aSort = a[this.sortBy] || ''
-      const bSort = b[this.sortBy] || ''
+      const aSort = a[this.sortBy] || "";
+      const bSort = b[this.sortBy] || "";
       if (aSort < bSort) {
-        return -this.sortDirection
+        return -this.sortDirection;
       } else if (aSort > bSort) {
-        return this.sortDirection
+        return this.sortDirection;
       }
-      return 0
-    },
+      return 0;
+    }
   },
   computed: {
-    ...mapState(['allInstruments']),
+    ...mapState(["allInstruments"]),
     displayInstruments() {
-      let tmpInstruments = this.allInstruments.filter(ins => this.displayInstrument(ins))
-      return tmpInstruments.sort(this.sortInstruments)
-    },
+      let tmpInstruments = this.allInstruments.filter(ins => this.displayInstrument(ins));
+      return tmpInstruments.sort(this.sortInstruments);
+    }
   },
   filters: {
     abbreviateHistory(history) {
       if (!history || history.length < 1) {
-        return ''
+        return "";
       } else if (history.length > 3) {
-        return history.slice(0, 3).join(', ') + '...'
+        return history.slice(0, 3).join(", ") + "...";
       } else {
-        return history.join(', ')
+        return history.join(", ");
       }
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>
