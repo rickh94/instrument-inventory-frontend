@@ -120,7 +120,7 @@ import { API } from 'aws-amplify'
 import VTableHeader from '@/components/UI/VTableHeader'
 import VSelect from '@/components/UI/VSelect'
 import Papa from 'papaparse'
-import { sortBySize } from '@/mixins/computedBows'
+import { sortBySize } from '@/mixins/ordering'
 
 export default {
   name: 'VInventoryInstruments',
