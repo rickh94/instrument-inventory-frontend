@@ -54,8 +54,13 @@ export default {
       this.bows = response.bows
       this.loading = false
     } catch (e) {
-      this.$toasted.error(e.response.data, { duration: 2000 })
       this.loading = false
+      if (e.response) {
+        this.$toasted.error(e.response.data, { duration: 2000 })
+      } else {
+        this.$toasted.error(e.toString(), {duration: 2000})
+        console.error(e)
+      }
     }
   },
   methods: {
