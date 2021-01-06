@@ -1,171 +1,171 @@
 <template>
-  <form @submit.prevent='handleSubmit'>
-    <div class='flex flex-wrap items-start sm:flex-row justify-around'>
-      <table class='table table-auto mx-4'>
+  <form @submit.prevent="handleSubmit">
+    <div class="flex flex-wrap items-start sm:flex-row justify-around overflow-auto">
+      <table class="table table-auto mx-4">
         <thead>
-        <tr class='border-b border-black text-xl'>
-          <th class='pr-4'>Violin</th>
+        <tr class="border-b border-black text-xl">
+          <th class="pr-4">Violin</th>
           <th>{{ updateText }}</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for='item in violinStrings' :key='item.id'>
-          <td class='pr-4'>{{ item.size }} {{ item.string }}</td>
-          <td class='flex justify-end'><input type='number'
-                                              :name='`${item.id}-updates`'
-                                              :id='`${item.id}-updates`'
-                                              class='w-12 border-b border-gray-800'
-                                              min='0'
-                                              v-model='items[item.id]'
+        <tr v-for="item in violinStrings" :key="item.id">
+          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
+          <td class="flex justify-end"><input type="number"
+                                              :name="`${item.id}-updates`"
+                                              :id="`${item.id}-updates`"
+                                              class="w-12 border-b border-gray-800"
+                                              min="0"
+                                              v-model="items[item.id]"
           ></td>
         </tr>
         </tbody>
       </table>
-      <table class='table table-auto mx-4'>
+      <table class="table table-auto mx-4">
         <thead>
-        <tr class='border-b border-black text-xl'>
-          <th class='pr-4'>Viola</th>
+        <tr class="border-b border-black text-xl">
+          <th class="pr-4">Viola</th>
           <th>{{ updateText }}</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for='item in violaStrings' :key='item.id'>
-          <td class='pr-4'>{{ item.size }} {{ item.string }}</td>
-          <td class='flex justify-end'><input type='number'
-                                              :name='`${item.id}-updates`'
-                                              :id='`${item.id}-updates`'
-                                              class='w-12 border-b border-gray-800'
-                                              min='0'
-                                              v-model='items[item.id]'
+        <tr v-for="item in violaStrings" :key="item.id">
+          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
+          <td class="flex justify-end"><input type="number"
+                                              :name="`${item.id}-updates`"
+                                              :id="`${item.id}-updates`"
+                                              class="w-12 border-b border-gray-800"
+                                              min="0"
+                                              v-model="items[item.id]"
           ></td>
         </tr>
         </tbody>
       </table>
-      <table class='table table-auto mx-4'>
+      <table class="table table-auto mx-4">
         <thead>
-        <tr class='border-b border-black text-xl'>
-          <th class='pr-4'>Cello</th>
+        <tr class="border-b border-black text-xl">
+          <th class="pr-4">Cello</th>
           <th>{{ updateText }}</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for='item in celloStrings' :key='item.id'>
-          <td class='pr-4'>{{ item.size }} {{ item.string }}</td>
-          <td class='flex justify-end'><input type='number'
-                                              :name='`${item.id}-updates`'
-                                              :id='`${item.id}-updates`'
-                                              class='w-12 border-b border-gray-800'
-                                              min='0'
-                                              v-model='items[item.id]'
+        <tr v-for="item in celloStrings" :key="item.id">
+          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
+          <td class="flex justify-end"><input type="number"
+                                              :name="`${item.id}-updates`"
+                                              :id="`${item.id}-updates`"
+                                              class="w-12 border-b border-gray-800"
+                                              min="0"
+                                              v-model="items[item.id]"
           ></td>
         </tr>
         </tbody>
       </table>
-      <table class='table table-auto mx-4'>
+      <table class="table table-auto mx-4">
         <thead>
-        <tr class='border-b border-black text-xl'>
-          <th class='pr-4'>Bass</th>
+        <tr class="border-b border-black text-xl">
+          <th class="pr-4">Bass</th>
           <th>{{ updateText }}</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for='item in bassStrings' :key='item.id'>
-          <td class='pr-4'>{{ item.size }} {{ item.string }}</td>
-          <td class='flex justify-end'><input type='number'
-                                              :name='`${item.id}-updates`'
-                                              :id='`${item.id}-updates`'
-                                              class='w-12 border-b border-gray-800'
-                                              min='0'
-                                              v-model='items[item.id]'
+        <tr v-for="item in bassStrings" :key="item.id">
+          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
+          <td class="flex justify-end"><input type="number"
+                                              :name="`${item.id}-updates`"
+                                              :id="`${item.id}-updates`"
+                                              class="w-12 border-b border-gray-800"
+                                              min="0"
+                                              v-model="items[item.id]"
           ></td>
         </tr>
         </tbody>
       </table>
     </div>
-    <v-spinner v-if='loading' line-fg-color='#805ad5'></v-spinner>
-    <div v-else class='flex justify-end mt-4'>
+    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div v-else class="flex justify-end mt-4">
       <button @click.prevent="$emit('close')"
-              class='bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg'>Close
+              class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
       </button>
-      <button type='submit'
-              class='bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg'>Submit
+      <button type="submit"
+              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
       </button>
     </div>
   </form>
 </template>
 
 <script>
-import { API } from 'aws-amplify'
-import computedStrings from '@/mixins/computedStrings'
+import { API } from "aws-amplify";
+import computedStrings from "@/mixins/computedStrings";
 
 export default {
-  name: 'VUpdateStringsForm',
+  name: "VUpdateStringsForm",
   mixins: [computedStrings],
   props: {
     strings: {
       type: Array,
-      required: true,
+      required: true
     },
     updateText: {
       type: String,
-      required: true,
+      required: true
     },
     submitPath: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       items: {},
-      loading: false,
-    }
+      loading: false
+    };
   },
   created() {
-    this.initializeItems()
+    this.initializeItems();
   },
   methods: {
     async handleSubmit() {
-      const updated = []
+      const updated = [];
       for (const [id, amount] of Object.entries(this.items)) {
         if (amount !== 0) {
           updated.push({
-            id, amount,
-          })
+            id, amount
+          });
         }
       }
       try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', this.submitPath, {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", this.submitPath, {
           body: {
-            string_updates: updated,
-          },
-        })
-        this.$emit('updated', { updatedIds: response.updated, updatedItems: response.updatedItems })
-        this.loading = false
+            string_updates: updated
+          }
+        });
+        this.$emit("updated", { updatedIds: response.updated, updatedItems: response.updatedItems });
+        this.loading = false;
         if (response.failed.length > 0) {
-          this.$toasted.error(`Updates failed: ${response.failed.join(', ')}`, { duration: 2000 })
+          this.$toasted.error(`Updates failed: ${response.failed.join(", ")}`, { duration: 2000 });
         }
-        this.$emit('close')
+        this.$emit("close");
       } catch (e) {
-        this.loading = false
+        this.loading = false;
         if (e.response.data) {
-          this.$toasted.error(e.response.data, { duration: 2000 })
+          this.$toasted.error(e.response.data, { duration: 2000 });
         } else {
-          this.$toasted.error(e.toString(), { duration: 2000 })
+          this.$toasted.error(e.toString(), { duration: 2000 });
         }
       }
     },
     initializeItems() {
       for (const string of this.strings) {
-        this.items[string.id] = 0
+        this.items[string.id] = 0;
       }
     },
     handleUpdate(id, e) {
-      this.items[id] = parseInt(e.target.value)
-    },
-  },
-}
+      this.items[id] = parseInt(e.target.value);
+    }
+  }
+};
 </script>
 
 <style scoped>
