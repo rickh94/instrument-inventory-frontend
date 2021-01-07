@@ -30,3 +30,22 @@ export function sortBySize(a, b) {
 export function sortByString(a, b) {
   return stringOrder[a.string] - stringOrder[b.string]
 }
+
+export function groupByStringName(strings) {
+  let stringsByStringName = {}
+  for (let string of strings) {
+    if (!(string.string in stringsByStringName)) {
+      stringsByStringName[string.string] = []
+    }
+    stringsByStringName[string.string].push(string)
+  }
+  return stringsByStringName
+}
+
+export function groupBySize(strings) {
+  let stringsBySize = {}
+  for (let string of strings) {
+    stringsBySize[string.size] = string
+  }
+  return stringsBySize
+}
