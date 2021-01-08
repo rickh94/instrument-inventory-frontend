@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import VUpdateStringsForm from '@/components/inventoryComponents/strings/VUpdateStringsForm'
+import VUpdateStringsForm from '@/components/inventoryComponents/strings/layout/VUpdateStringsForm'
 
 export default {
   name: 'VAddStrings',

@@ -37,7 +37,7 @@
 <script>
 import { API } from "aws-amplify";
 import computedStrings from "@/mixins/computedStrings";
-import VStringsInputTable from "@/components/inventoryComponents/strings/VStringsInputTable";
+import VStringsInputTable from "@/components/inventoryComponents/strings/layout/VStringsInputTable";
 
 export default {
   name: "VUpdateStringsForm",

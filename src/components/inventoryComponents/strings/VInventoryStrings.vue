@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import VStringsTable from '@/components/inventoryComponents/strings/VStringsTable'
-import VCreateString from '@/components/inventoryComponents/strings/VCreateString'
-import VUseStrings from '@/components/inventoryComponents/strings/VUseStrings'
-import VAddStrings from '@/components/inventoryComponents/strings/VAddStrings'
+import VStringsTable from '@/components/inventoryComponents/strings/layout/VStringsDisplayTable'
+import VCreateString from '@/components/inventoryComponents/strings/functions/VCreateString'
+import VUseStrings from '@/components/inventoryComponents/strings/functions/VUseStrings'
+import VAddStrings from '@/components/inventoryComponents/strings/functions/VAddStrings'
 import computedStrings from '@/mixins/computedStrings'
 import { API } from 'aws-amplify'
 import VModal from '@/components/UI/VModal'

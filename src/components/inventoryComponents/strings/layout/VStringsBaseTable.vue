@@ -9,8 +9,8 @@
     <tbody>
     <tr v-for="(stringList, stringName) in stringsByStringBySize" :key="stringName">
       <td class="text-center pr-4">{{ stringName }}</td>
-      <td v-for="size in sizes" :key="`${stringName}-${size}`" class="text-center">{{ stringList[size] | getStringInfo
-        }}
+      <td v-for="size in sizes" :key="`${stringName}-${size}`" class="text-center">
+        <slot :item="stringList[size]"></slot>
       </td>
     </tr>
     </tbody>
@@ -21,7 +21,7 @@
 import stringTableMixin from "@/mixins/stringTableMixin";
 
 export default {
-  name: "VStringsTable",
+  name: "VStringsBaseTable",
   mixins: [stringTableMixin],
   props: {
     strings: {
