@@ -1,86 +1,26 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="flex flex-wrap items-start sm:flex-row justify-around overflow-auto">
-      <table class="table table-auto mx-4">
-        <thead>
-        <tr class="border-b border-black text-xl">
-          <th class="pr-4">Violin</th>
-          <th>{{ updateText }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in violinStrings" :key="item.id">
-          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
-          ></td>
-        </tr>
-        </tbody>
-      </table>
-      <table class="table table-auto mx-4">
-        <thead>
-        <tr class="border-b border-black text-xl">
-          <th class="pr-4">Viola</th>
-          <th>{{ updateText }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in violaStrings" :key="item.id">
-          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
-          ></td>
-        </tr>
-        </tbody>
-      </table>
-      <table class="table table-auto mx-4">
-        <thead>
-        <tr class="border-b border-black text-xl">
-          <th class="pr-4">Cello</th>
-          <th>{{ updateText }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in celloStrings" :key="item.id">
-          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
-          ></td>
-        </tr>
-        </tbody>
-      </table>
-      <table class="table table-auto mx-4">
-        <thead>
-        <tr class="border-b border-black text-xl">
-          <th class="pr-4">Bass</th>
-          <th>{{ updateText }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in bassStrings" :key="item.id">
-          <td class="pr-4">{{ item.size }} {{ item.string }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
-          ></td>
-        </tr>
-        </tbody>
-      </table>
+      <v-strings-input-table
+        instrument="Violin"
+        :strings="violinStrings"
+        :items="items"
+        @change="handleChange"></v-strings-input-table>
+      <v-strings-input-table
+        instrument="Viola"
+        :strings="violaStrings"
+        :items="items"
+        @change="handleChange"></v-strings-input-table>
+      <v-strings-input-table
+        instrument="Cello"
+        :strings="celloStrings"
+        :items="items"
+        @change="handleChange"></v-strings-input-table>
+      <v-strings-input-table
+        instrument="Bass"
+        :strings="bassStrings"
+        :items="items"
+        @change="handleChange"></v-strings-input-table>
     </div>
     <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
     <div v-else class="flex justify-end mt-4">
@@ -97,9 +37,11 @@
 <script>
 import { API } from "aws-amplify";
 import computedStrings from "@/mixins/computedStrings";
+import VStringsInputTable from "@/components/inventoryComponents/strings/VStringsInputTable";
 
 export default {
   name: "VUpdateStringsForm",
+  components: { VStringsInputTable },
   mixins: [computedStrings],
   props: {
     strings: {
@@ -161,8 +103,8 @@ export default {
         this.items[string.id] = 0;
       }
     },
-    handleUpdate(id, e) {
-      this.items[id] = parseInt(e.target.value);
+    handleChange({ id, value }) {
+      this.items[id] = value;
     }
   }
 };
