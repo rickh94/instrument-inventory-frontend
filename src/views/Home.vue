@@ -87,8 +87,9 @@ export default {
         this.setSearchResults(response.filter(item => !item.archived))
         if (this.searchResults.length === 1) {
           this.$toasted.info('Instrument Found', { duration: 2000 })
-          this.showDialog = true
           this.setCurrentInstrument(this.searchResults[0])
+        } else if (this.searchResults.length < 1) {
+          this.$toasted.info("Only archived instruments found")
         } else {
           this.$toasted.info('Multiple Instruments Found', { duration: 2000 })
         }

@@ -52,6 +52,9 @@
       <div class="font-bold text-gray-700" v-else>
         No Instrument History
       </div>
+      <div>
+        <span class="font-bold text-gray-700 mb-2">Archived</span> {{ currentInstrument.archived ? "Yes" : "No" }}
+      </div>
       <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
       <div class="flex justify-start mt-2 flex-row-reverse" v-else>
         <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
@@ -67,9 +70,9 @@
                 class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">
           Retrieve
         </button>
-        <button @click="archive"
+        <button @click="toggleArchived"
                 class="mx-1 appearance-none bg-orange-600 text-white px-4 py-1 shadow rounded hover:bg-orange-800 hover:shadow-lg">
-          Archive
+          {{ currentInstrument.archived ? "Un-archive" : "Archive" }}
         </button>
       </div>
     </div>
@@ -92,13 +95,13 @@ export default {
   components: { VInstrumentForm, VModal },
   methods: {
     ...mapMutations(["clearCurrentInstrument", "setCurrentInstrument", "updateCurrentInstrument", "clearNewInstrumentNumber"]),
-    async archive() {
+    async toggleArchived() {
       try {
         this.loading = true;
         const response = await API.put("instrument-inventory", `instruments/${this.currentInstrument.id}`, {
           body: {
             ...this.currentInstrument,
-            archived: true
+            archived: !this.currentInstrument.archived
           }
         });
         this.loading = false;
