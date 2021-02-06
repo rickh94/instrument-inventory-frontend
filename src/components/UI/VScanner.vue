@@ -4,7 +4,7 @@
       <div class="relative w-96 h-64 sm:w-104 sm:h-76 md:w-140 md:h-104 overflow-hidden">
         <v-quagga :onDetected="detected"
                   class="w-96 sm:w-104 md:w-140"
-                  :readerTypes="['code_128_reader', 'code_39_reader']"></v-quagga>
+                  :readerTypes="['code_39_reader']"></v-quagga>
       </div>
     </div>
     <button class="appearance-none font-bold text-purple-800 text-lg py-2 px-4"
