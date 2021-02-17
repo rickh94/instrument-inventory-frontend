@@ -54,7 +54,7 @@ export default {
           },
         })
         this.loading = false
-        this.$toasted.info(`Signed out ${response.updated}`, { duration: 2000 })
+        this.$toasted.info(`Signed out ${response.updated.join(', ')}`, { duration: 2000 })
         this.clearSearchResults()
       } catch (e) {
         this.loading = false
