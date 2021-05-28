@@ -23,8 +23,11 @@
 </template>
 
 <script>
+import checkAdmin from "@/mixins/checkAdmin";
+
 export default {
-name: "VInventoryOther"
+name: "VInventoryOther",
+  mixins: [checkAdmin]
 }
 </script>
 
