@@ -20,6 +20,12 @@
              id="filter-type"
              class="mx-2 py-1 appearance-none focus:outline-none border-b border-gray-700 placeholder-gray-700"
              v-model="type">
+      <input type="text"
+             name="filter-location"
+             placeholder="Filter instrument location"
+             id="filter-location"
+             class="mx-2 py-1 appearance-none focus:outline-none border-b border-gray-700 placeholder-gray-700"
+             v-model="location">
       <div class="flex justify-start mt-2 flex-wrap">
         <div class="text-gray-600 mr-2 flex items-center lg:hidden">Sort By:</div>
         <v-select class="mt-2 lg:hidden mr-2" placeholder="Sort By"
@@ -129,6 +135,7 @@ export default {
     return {
       size: "",
       type: "",
+      location: "",
       onlyUnassigned: false,
       showArchived: false,
       loading: false,
@@ -204,6 +211,9 @@ export default {
         return false;
       }
       if (this.type && !instrument.type.toLowerCase().includes(this.type.toLowerCase())) {
+        return false;
+      }
+      if (this.location && !instrument.location.toLowerCase().includes(this.location.toLowerCase())) {
         return false;
       }
       return this.showArchived || !instrument.archived;

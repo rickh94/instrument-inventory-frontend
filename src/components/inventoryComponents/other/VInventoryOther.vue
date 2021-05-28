@@ -6,7 +6,7 @@
     <div class="flex justify-around max-w-lg mx-auto mt-2">
       <div class="flex justify-around max-w-lg mx-auto mt-2">
         <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white"
-                @click.prevent="formComponent = 'v-create-item'">
+                @click.prevent="formComponent = 'v-create-item'" v-if="isAdmin">
           Create Item
         </button>
         <button @click.prevent="formComponent = 'v-use-items'"

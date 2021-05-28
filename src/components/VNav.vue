@@ -6,8 +6,8 @@
       </router-link>
     </div>
     <ul class="flex text-sm md:text-lg">
-<!--      <li class="pr-1 rounded-t border-b border-purple-300" :class="$route.name === 'New' && 'active'">-->
-      <li class="nav-item" :class="$route.name === 'New' ?  'active' : 'inactive'">
+      <!--      <li class="pr-1 rounded-t border-b border-purple-300" :class="$route.name === 'New' && 'active'">-->
+      <li class="nav-item" :class="$route.name === 'New' ?  'active' : 'inactive'" v-if="isAdmin">
         <router-link to="/new"
                      class="nav-link"
                      :class="$route.name === 'New' ? 'active': 'inactive'"
@@ -18,21 +18,21 @@
         <router-link to="/retrieve"
                      class="nav-link"
                      :class="$route.name === 'Retrieve' ? 'active': 'inactive'"
-          >Retrieve
+        >Retrieve
         </router-link>
       </li>
       <li class="nav-item" :class="$route.name === 'SignOut' ? 'active' : 'inactive'">
         <router-link to="/sign-out"
                      class="nav-link"
                      :class="$route.name === 'SignOut' ? 'active': 'inactive'"
-          >Sign Out
+        >Sign Out
         </router-link>
       </li>
       <li class="nav-item" :class="$route.name === 'Inventory' ? 'active' : 'inactive'">
         <router-link to="/inventory"
                      class="nav-link"
                      :class="$route.name === 'Inventory' ? 'active': 'inactive'"
-         >Inventory
+        >Inventory
         </router-link>
       </li>
     </ul>
@@ -40,9 +40,12 @@
 </template>
 
 <script>
+import checkAdmin from "@/mixins/checkAdmin";
+
 export default {
-  name: 'VNav',
-}
+  name: "VNav",
+  mixins: [checkAdmin],
+};
 </script>
 
 <style scoped>

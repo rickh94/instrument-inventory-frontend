@@ -9,7 +9,7 @@
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
       <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white"
-              @click.prevent="formComponent = 'v-create-string'">
+              @click.prevent="formComponent = 'v-create-string'" v-if="isAdmin">
         Create String
       </button>
       <button @click.prevent="formComponent = 'v-use-strings'"

@@ -26,10 +26,10 @@
       <div v-else class="flex justify-around mt-5">
         <button @click.prevent="clear"
                 type="reset"
-                class="mx-2 bg-yellow-600 w-full md:w-auto px-8 text-white py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded">
+                class="mx-2 bg-yellow-600 px-8 flex-grow text-white md:flex-grow-0 py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded">
           Clear
         </button>
-        <button class="bg-purple-600 px-8 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
+        <button class="bg-purple-600 px-8 text-white py-2 flex-grow md:flex-grow-0 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
                 type="submit">Submit
         </button>
       </div>

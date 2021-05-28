@@ -1,10 +1,10 @@
 <template>
-<!--  TODO: Create custom sign in component -->
+  <!--  TODO: Create custom sign in component -->
   <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
     <div id="app">
       <v-nav></v-nav>
       <div class="w-full">
-        <router-view class="mx-auto"/>
+        <router-view class="mx-auto" />
       </div>
     </div>
     <div class="flex justify-center">
@@ -15,17 +15,30 @@
 </template>
 
 <script>
-  import VNav from '@/components/VNav'
-  import InstrumentDisplay from '@/components/InstrumentDisplay'
+import VNav from "@/components/VNav";
+import InstrumentDisplay from "@/components/InstrumentDisplay";
+import { onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { USER_ROLES } from "@/store";
+import { mapState, mapMutations } from "vuex";
 
-  export default {
-  name: 'App',
+export default {
+  name: "App",
   components: { InstrumentDisplay, VNav },
   data() {
-    return {
-    }
-  }
-}
+    return {};
+  },
+  created() {
+    onAuthUIStateChange((nextAuthState, authData) => {
+      if (nextAuthState === "signedin") {
+        this.logIn(USER_ROLES[authData.attributes["custom:USER_ROLE"]]);
+      } else if (nextAuthState === "signedout") {
+        this.logOut();
+      }
+    });
+  },
+  methods: mapMutations(["logIn", "logOut"]),
+  computed: mapState(["userRole"])
+};
 </script>
 
 <style>

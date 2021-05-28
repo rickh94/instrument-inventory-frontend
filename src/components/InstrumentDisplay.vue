@@ -58,7 +58,7 @@
       <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
       <div class="flex justify-start mt-2 flex-row-reverse" v-else>
         <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
-                @click="edit">Edit
+                @click="edit" v-if="isAdmin">Edit
         </button>
         <router-link
           v-if="$route.path !== '/sign-out'"
@@ -70,7 +70,7 @@
                 class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">
           Retrieve
         </button>
-        <button @click="toggleArchived"
+        <button v-if="isAdmin" @click="toggleArchived"
                 class="mx-1 appearance-none bg-orange-600 text-white px-4 py-1 shadow rounded hover:bg-orange-800 hover:shadow-lg">
           {{ currentInstrument.archived ? "Un-archive" : "Archive" }}
         </button>
@@ -83,9 +83,11 @@ import { mapMutations, mapState } from "vuex";
 import VModal from "@/components/UI/VModal";
 import VInstrumentForm from "@/components/createComponents/VInstrumentForm";
 import { API } from "aws-amplify";
+import checkAdmin from "@/mixins/checkAdmin";
 
 export default {
   name: "InstrumentDisplay",
+  mixins: [checkAdmin],
   data() {
     return {
       editing: false,

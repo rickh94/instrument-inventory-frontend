@@ -3,12 +3,19 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+export const USER_ROLES = {
+  unauthenticated: Symbol('unauthenticated'),
+  STAFF: Symbol('staff'),
+  ADMIN: Symbol('admin'),
+}
+
 export default new Vuex.Store({
   state: {
     searchResults: [],
     currentInstrument: null,
     newInstrumentNumber: '',
     allInstruments: [],
+    userRole: USER_ROLES.unauthenticated,
   },
   mutations: {
     setAllInstruments(state, instruments) {
@@ -49,6 +56,12 @@ export default new Vuex.Store({
     },
     clearNewInstrumentNumber(state) {
       state.newInstrumentNumber = ''
+    },
+    logIn(state, nextRole) {
+      state.userRole = nextRole
+    },
+    logOut(state) {
+      state.userRole = USER_ROLES.unauthenticated
     },
   },
   modules: {},
