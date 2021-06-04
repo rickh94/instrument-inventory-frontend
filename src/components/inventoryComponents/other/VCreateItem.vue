@@ -1,5 +1,5 @@
 <template>
-  <form @submit="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <div class="flex">
       <h4 class="text-xl text-gray-900 font-bold mb-2">Create New Item Type</h4>
     </div>
@@ -40,10 +40,13 @@
 
 <script>
 import VFormControl from "@/components/UI/VFormControl";
+import errorHandler from "@/mixins/errorHandler";
+import { API } from "aws-amplify";
 
 export default {
   name: "VCreateItem",
   components: { VFormControl },
+  mixins: [errorHandler],
   data() {
     return {
       data: {
@@ -56,12 +59,26 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
+      try {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", "other/create", {
+          body: {
+            ...this.data
+          }
+        });
+        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
+        this.$toasted.show(response.message, {duration: 2000})
+        this.loading = false
+        this.$emit('close')
+      } catch (err) {
+        this.handleError(err);
+      }
 
     },
     handleCancel() {
-      this.data = {name: "", count: 0, num_out: 0, signed_out_to: [], notes: ""}
-      this.$emit('close')
+      this.data = { name: "", count: 0, num_out: 0, signed_out_to: [], notes: "" };
+      this.$emit("close");
     }
   }
 };

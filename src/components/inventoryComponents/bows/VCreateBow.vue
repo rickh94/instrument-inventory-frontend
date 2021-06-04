@@ -1,3 +1,4 @@
+<script src="../../../mixins/computedStrings.js"></script>
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="flex">
@@ -33,6 +34,7 @@
 import VFormControl from '@/components/UI/VFormControl'
 import VAutocomplete from '@/components/UI/VAutocomplete'
 import { API } from 'aws-amplify'
+import errorHandler from "@/mixins/errorHandler";
 
 export default {
   data() {
@@ -60,6 +62,7 @@ export default {
   },
   name: 'VCreateBow',
   components: { VAutocomplete, VFormControl },
+  mixins: [errorHandler],
   methods: {
     handleCancel() {
       this.data = { type: '', size: '', count: '' }
@@ -78,12 +81,7 @@ export default {
         this.loading = false
         this.$emit('close')
       } catch (err) {
-        this.loading = false
-        if (err.response.data) {
-          this.$toasted.error(err.response.data, { duration: 2000 })
-        } else {
-          this.$toasted.error(err)
-        }
+        this.handleError(err)
       }
     },
   },
