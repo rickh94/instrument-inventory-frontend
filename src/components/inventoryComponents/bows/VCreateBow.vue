@@ -1,4 +1,3 @@
-<script src="../../../mixins/computedStrings.js"></script>
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="flex">

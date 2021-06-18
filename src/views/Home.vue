@@ -24,6 +24,12 @@
           </button>
         </div>
       </div>
+      <div v-if="isAdmin">
+        <label class="inline-flex items-center">
+          <input type="checkbox" class="form-checkbox" v-model="showArchived">
+          <span class="ml-2">Include Archived Instruments</span>
+        </label>
+      </div>
       <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
     </div>
     <multiple-results v-show="searchResults.length > 1" />
@@ -45,74 +51,86 @@
 </template>
 
 <script>
-import VScanner from '@/components/UI/VScanner'
-import { API } from 'aws-amplify'
-import { mapMutations, mapState } from 'vuex'
-import MultipleResults from '@/components/MultipleResults'
-import VModal from '@/components/UI/VModal'
+import VScanner from "@/components/UI/VScanner";
+import { API } from "aws-amplify";
+import { mapMutations, mapState } from "vuex";
+import MultipleResults from "@/components/MultipleResults";
+import VModal from "@/components/UI/VModal";
+import checkAdmin from "@/mixins/checkAdmin";
 
 function getPath(input) {
   // This regex will match the instrument number format and search for an instrument number.
   // If it does not match, it is assumed to be a name and searches in assigned and history.
-  return input.match(/\w?\d+-\d+/) ? 'search/number' : 'search/assigned-history'
+  return input.match(/\w?\d+-\d+/) ? "search/number" : "search/assigned-history";
 }
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: { VModal, MultipleResults, VScanner },
+  mixins: [checkAdmin],
   data() {
     return {
       scanner: false,
-      searchTerm: '',
+      searchTerm: "",
       showNotFound: false,
       dialogOptions: {},
       loading: false,
-    }
+      showArchived: false,
+    };
   },
   methods: {
-    ...mapMutations(['setSearchResults', 'setCurrentInstrument', 'setNewInstrumentNumber']),
+    ...mapMutations(["setSearchResults", "setCurrentInstrument", "setNewInstrumentNumber"]),
     detected(result) {
       if (result.codeResult.code !== this.searchTerm) {
-        this.searchTerm = result.codeResult.code
-        this.scanner = false
-        this.onSubmit()
+        this.searchTerm = result.codeResult.code;
+        this.scanner = false;
+        this.onSubmit();
       }
     },
     async onSubmit() {
-      const path = getPath(this.searchTerm)
+      const path = getPath(this.searchTerm);
       try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', path, { body: { term: this.searchTerm } })
-        this.loading = false
-        this.setSearchResults(response.filter(item => !item.archived))
-        if (this.searchResults.length === 1) {
-          this.$toasted.info('Instrument Found', { duration: 2000 })
-          this.setCurrentInstrument(this.searchResults[0])
-        } else if (this.searchResults.length < 1) {
-          this.$toasted.info("Only archived instruments found")
+        this.loading = true;
+        const response = await API.post("instrument-inventory", path, { body: { term: this.searchTerm } });
+        this.loading = false;
+        if (path === 'search/number' || this.showArchived) {
+          this.setSearchResults(response)
         } else {
-          this.$toasted.info('Multiple Instruments Found', { duration: 2000 })
+          this.setSearchResults(response.filter(item => !item.archived));
+        }
+        if (this.searchResults.length === 1) {
+          this.$toasted.info("Instrument Found", { duration: 2000 });
+          this.setCurrentInstrument(this.searchResults[0]);
+        } else if (this.searchResults.length < 1) {
+          this.$toasted.info("Only archived instruments found", {
+            duration: 2000
+          });
+        } else {
+          this.$toasted.info("Multiple Instruments Found", { duration: 2000 });
         }
       } catch (e) {
-        this.loading = false
+        this.loading = false;
         if (e.response.status === 404) {
-          if (path === 'search/number') {
-            this.showNotFound = true
+          if (path === "search/number") {
+            this.showNotFound = true;
           } else {
             // TODO: configure toasted so it doesn't suck
-            this.$toasted.error(`Could not find instrument assigned to ${this.searchTerm}`, { duration: 2000 })
+            this.$toasted.error(`Could not find instrument assigned to ${this.searchTerm}`, { duration: 2000 });
           }
         } else {
-          this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 })
+          this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 });
         }
       }
     },
     beginCreateInstrument() {
-      this.setNewInstrumentNumber(this.searchTerm)
-      this.$router.push('/new')
+      this.setNewInstrumentNumber(this.searchTerm);
+      this.$router.push("/new");
     },
+    showArchivedResults(results) {
+      this.setSearchResults(results);
+    }
   },
-  computed: mapState(['searchResults']),
-}
+  computed: mapState(["searchResults"])
+};
 </script>
 
