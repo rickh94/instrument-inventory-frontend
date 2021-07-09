@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-center md:justify-between flex-wrap bg-purple-600 p-4 shadow-lg">
+  <nav class="flex items-center justify-center md:justify-between flex-wrap bg-purple-600 px-6 py-2 shadow-lg">
     <div class="flex items-center flex-shrink-0 text-white mr-6 font-bold text-xl">
       <router-link to="/">
         Instrument Inventory

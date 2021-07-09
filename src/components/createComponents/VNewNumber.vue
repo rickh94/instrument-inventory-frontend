@@ -13,15 +13,15 @@
         <button class="appearance-none" title="Scan Barcode" @click="scanner = true">
           <font-awesome-icon icon="barcode" class="mr-4"></font-awesome-icon>
         </button>
-        <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-        <button v-else @click="onSubmit"
-                class="appearance-none ml-4 text-white font-bold px-4 py-1"
-                :class="number.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
-                :disabled="number.length === 0"
-        >
-          Check
-        </button>
       </div>
+      <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+      <button v-else @click="onSubmit"
+              class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
+              :class="number.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
+              :disabled="number.length === 0"
+      >
+        Check
+      </button>
     </div>
     <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
   </div>

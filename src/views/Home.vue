@@ -14,15 +14,15 @@
           <button class="appearance-none" title="Scan Barcode" @click="scanner = true">
             <font-awesome-icon icon="barcode" class="mx-2"></font-awesome-icon>
           </button>
-          <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-          <button v-else @click="onSubmit"
-                  class="appearance-none ml-4 text-white font-bold px-4 py-1"
-                  :class="searchTerm.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
-                  :disabled="searchTerm.length === 0"
-          >
-            Submit
-          </button>
         </div>
+        <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+        <button v-else @click="onSubmit"
+                class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
+                :class="searchTerm.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
+                :disabled="searchTerm.length === 0"
+        >
+          Submit
+        </button>
       </div>
       <div v-if="isAdmin">
         <label class="inline-flex items-center">
@@ -61,7 +61,7 @@ import checkAdmin from "@/mixins/checkAdmin";
 function getPath(input) {
   // This regex will match the instrument number format and search for an instrument number.
   // If it does not match, it is assumed to be a name and searches in assigned and history.
-  return input.match(/\w?\d+-\d+/) ? "search/number" : "search/assigned-history";
+  return input.match(/\w?\w?\d*-\d+/) ? "search/number" : "search/assigned-history";
 }
 
 export default {

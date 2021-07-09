@@ -45,5 +45,10 @@ export default {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+
+body {
+  font-family: 'Oxygen', sans-serif;
+}
 </style>
 

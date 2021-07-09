@@ -11,7 +11,10 @@
     <div v-else class="w-full">
       <div class="flex justify-between mb-4">
         <h6 class="text-xl font-bold text-gray-900">
-          {{ currentInstrument.size }} {{ currentInstrument.type }} {{
+          <span v-if="currentInstrument.size !== 'N/A'">
+           {{ currentInstrument.size }}
+          </span>
+           {{ currentInstrument.type }} {{
             currentInstrument.number }}
         </h6>
         <button class="appearance-none text-white bg-red-600 px-2 rounded shadow hover:bg-red-800 hover:shadow-lg text-sm"
