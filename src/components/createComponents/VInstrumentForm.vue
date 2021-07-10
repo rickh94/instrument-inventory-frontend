@@ -118,6 +118,15 @@ export default {
       } else if (this.newInstrumentNumber[0] === 'B') {
         this.data.type = 'Bass'
         this.guessSize(1)
+      } else if (this.newInstrumentNumber[0] === 'K') {
+        this.data.type = 'Keyboard'
+        this.data.size = 'N/A'
+      } else if (this.newInstrumentNumber[0] === 'D') {
+        this.data.type = 'Drum'
+        this.data.size = 'N/A'
+      } else if (this.newInstrumentNumber[0] === 'O') {
+        this.data.type = 'Orff Instrument'
+        this.data.size = 'N/A'
       } else {
         this.data.type = 'Violin'
         this.guessSize(0)
