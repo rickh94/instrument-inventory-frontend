@@ -27,13 +27,13 @@
                id="assigned-to"
                class="appearance-none bg-transparent border-none text-gray-900 focus:text-purple-800 w-full py-1 leading-tight">
       </v-form-control>
-      <v-form-control label="Maintenance Notes" label-for="maintenance-notes">
-      <textarea name="maintenance-notes"
-                id="maintenance-notes"
-                v-model="data.maintenanceNotes"
-                class="appearance-none bg-transparent border-none w-full text-gray-900 focus:text-purple-800 py-1 leading-tight"></textarea>
-      </v-form-control>
-      <v-form-control label="Condition Notes" label-for="condition-notes">
+<!--      <v-form-control label="Maintenance Notes" label-for="maintenance-notes">-->
+<!--      <textarea name="maintenance-notes"-->
+<!--                id="maintenance-notes"-->
+<!--                v-model="data.maintenanceNotes"-->
+<!--                class="appearance-none bg-transparent border-none w-full text-gray-900 focus:text-purple-800 py-1 leading-tight"></textarea>-->
+<!--      </v-form-control>-->
+      <v-form-control label="Notes" label-for="condition-notes">
       <textarea name="condition-notes"
                 id="condition-notes"
                 v-model="data.conditionNotes"

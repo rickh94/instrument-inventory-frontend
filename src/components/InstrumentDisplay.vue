@@ -30,12 +30,12 @@
       <div>
         <span class="font-bold text-gray-700 mb-2">Assigned To: </span>{{ currentInstrument.assignedTo }}
       </div>
+<!--      <div>-->
+<!--        <span class="font-bold text-gray-700 mb-2">Maintenance Notes: </span>{{-->
+<!--          currentInstrument.maintenanceNotes }}-->
+<!--      </div>-->
       <div>
-        <span class="font-bold text-gray-700 mb-2">Maintenance Notes: </span>{{
-          currentInstrument.maintenanceNotes }}
-      </div>
-      <div>
-        <span class="font-bold text-gray-700 mb-2">Condition Notes: </span>{{
+        <span class="font-bold text-gray-700 mb-2">Notes: </span>{{
           currentInstrument.conditionNotes }}
       </div>
       <div>

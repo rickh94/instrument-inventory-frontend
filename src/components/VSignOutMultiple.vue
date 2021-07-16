@@ -35,11 +35,11 @@ export default {
     onChangeFile(e) {
       Papa.parse(e.target.files[0], {
         complete: (results) => {
-          if (results.data[0].number === undefined || results.data[0].assignedTo === undefined || results.data[0].location === undefined) {
+          if (results.data[0].number === undefined || results.data[0].location === undefined) {
             this.$toasted.error('Error: Invalid CSV file', { duration: 2000 })
             return
           }
-          this.multipleData = results.data.filter(item => item.number && item.number.length > 3 && item.assignedTo && item.assignedTo.length > 2 && item.location && item.location.length > 0)
+          this.multipleData = results.data.filter(item => item.number && item.number.length > 3 && item.location && item.location.length > 0)
         },
         header: true,
         skipEmptyLines: true,
