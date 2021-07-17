@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col w-full items-center">
-    <div class="flex justify-center w-full">
-      <div class="relative w-96 h-64 sm:w-104 sm:h-76 md:w-140 md:h-104 overflow-hidden">
-        <v-quagga :onDetected="detected"
-                  class="w-96 sm:w-104 md:w-140"
-                  :readerTypes="['code_39_reader', 'code_128_reader']"></v-quagga>
+  <div class="flex flex-col items-center w-full">
+    <div class="w-full flex-col items-center">
+      <div class="relative h-64 overflow-hidden mx-auto">
+        <v-quagga-wrapper :on-detected="detected"
+                          :reader-types="['code_128_reader', 'code_39_reader']"
+        ></v-quagga-wrapper>
       </div>
     </div>
     <button class="appearance-none font-bold text-purple-800 text-lg py-2 px-4"
@@ -14,15 +14,24 @@
 </template>
 
 <script>
+
+import VQuaggaWrapper from "@/components/UI/VQuaggaWrapper";
+
 export default {
-  name: 'VScanner',
+  name: "VScanner",
+  components: { VQuaggaWrapper },
   methods: {
     detected(result) {
       if (result.codeResult.code.match(/\w?\d+-\d+/)) {
-        this.$emit('detected', result)
+        this.$emit("detected", result);
       }
-    },
+    }
   },
-}
+  data() {
+    return {
+      scannerWidth: Math.floor(window.screen.width * window.devicePixelRatio * 0.6)
+    };
+  }
+};
 </script>
 

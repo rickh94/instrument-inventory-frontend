@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import Amplify from 'aws-amplify'
 import '@aws-amplify/ui-vue'
-import VueQuagga from 'vue-quaggajs'
 import Toasted from 'vue-toasted'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -21,7 +20,6 @@ library.add(faTrash)
 library.add(faChevronDown)
 library.add(faChevronUp)
 
-Vue.use(VueQuagga)
 Vue.use(Toasted)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
