@@ -1,43 +1,48 @@
 <template>
-  <form @submit.prevent='handleSubmit'>
-    <div class='flex'>
-      <h4 class='text-xl text-gray-900 font-bold mb-2'>Create New String Type</h4>
+  <form @submit.prevent="handleSubmit">
+    <div class="flex">
+      <h4 class="text-xl text-gray-900 font-bold mb-2">Create New String Type</h4>
     </div>
-    <v-form-control label='Instrument Type' label-for='type'>
-      <v-autocomplete id='type' v-model='data.type' :options='types'></v-autocomplete>
+    <v-form-control label="Instrument Type" label-for="type">
+      <v-autocomplete id="type" v-model="data.type" :options="types"></v-autocomplete>
     </v-form-control>
-    <v-form-control label='Size' label-for='size'>
-      <v-autocomplete id='size' v-model='data.size' :options='sizes'></v-autocomplete>
+    <v-form-control label="Size" label-for="size">
+      <v-autocomplete id="size" v-model="data.size" :options="sizes"></v-autocomplete>
     </v-form-control>
-    <v-form-control label='String' label-for='string'>
-      <v-autocomplete id='string' v-model='data.string' :options='strings'></v-autocomplete>
+    <v-form-control label="String" label-for="string">
+      <v-autocomplete id="string" v-model="data.string" :options="strings"></v-autocomplete>
     </v-form-control>
-    <v-form-control label='Count' label-for='count'>
-      <input id='count'
-             name='count'
-             min='0'
-             v-model='data.count'
-             type='number'
-             class='appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight'>
+    <v-form-control label="Count" label-for="count">
+      <input id="count"
+             name="count"
+             min="0"
+             v-model="data.count"
+             type="number"
+             class="appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight">
     </v-form-control>
-    <v-spinner v-if='loading' line-fg-color='#805ad5'></v-spinner>
-    <div v-else class='flex justify-end'>
-      <button @click.prevent='handleCancel'
-              class='bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg'>Cancel
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
+    <div v-else class="flex justify-end">
+      <button @click.prevent="handleCancel"
+              class="bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg">Cancel
       </button>
-      <button type='submit'
-              class='bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg'>Submit
+      <button type="submit"
+              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
       </button>
     </div>
   </form>
 </template>
 
 <script>
-import VFormControl from '@/components/UI/VFormControl'
-import VAutocomplete from '@/components/UI/VAutocomplete'
-import { API } from 'aws-amplify'
+import VFormControl from "@/components/UI/VFormControl";
+import VAutocomplete from "@/components/UI/VAutocomplete";
+import { API } from "aws-amplify";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
+  name: "VCreateBow",
+  components: { VAutocomplete, VFormControl, BarLoader },
   data() {
     return {
       types: [],
@@ -45,59 +50,57 @@ export default {
       strings: [],
       loading: false,
       data: {
-        type: '',
-        size: '',
-        count: '',
-        string: '',
-      },
-    }
+        type: "",
+        size: "",
+        count: "",
+        string: ""
+      }
+    };
   },
   async created() {
     if (this.sizes.length === 0) {
       try {
-        const { types, sizes, strings } = await API.get('instrument-inventory', 'schema/ac-options', {})
-        this.types = types
-        this.sizes = sizes
-        this.strings = strings
+        const { types, sizes, strings } = await API.get("instrument-inventory", "schema/ac-options", {});
+        this.types = types;
+        this.sizes = sizes;
+        this.strings = strings;
       } catch (e) {
         if (e.response) {
-          this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 })
+          this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 });
         } else {
-          this.$toasted.error(e.toString(), { duration: 2000 })
+          this.$toasted.error(e.toString(), { duration: 2000 });
         }
       }
     }
   },
-  name: 'VCreateBow',
-  components: { VAutocomplete, VFormControl },
   methods: {
     handleCancel() {
-      this.data = { type: '', size: '', count: '', string: '' }
-      this.$emit('close')
+      this.data = { type: "", size: "", count: "", string: "" };
+      this.$emit("close");
     },
     async handleSubmit() {
       try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', 'strings', {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", "strings", {
           body: {
-            ...this.data,
-          },
-        })
-        this.$emit('updated', { updatedIds: [response.item.id], updatedItems: [response.item] })
-        this.$toasted.show(response.message, { duration: 2000 })
-        this.loading = false
-        this.$emit('close')
+            ...this.data
+          }
+        });
+        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
+        this.$toasted.show(response.message, { duration: 2000 });
+        this.loading = false;
+        this.$emit("close");
       } catch (err) {
-        this.loading = false
+        this.loading = false;
         if (err.response.data) {
-          this.$toasted.error(err.response.data, { duration: 2000 })
+          this.$toasted.error(err.response.data, { duration: 2000 });
         } else {
-          this.$toasted.error(err)
+          this.$toasted.error(err);
         }
       }
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>

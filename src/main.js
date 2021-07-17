@@ -6,7 +6,6 @@ import Amplify from 'aws-amplify'
 import '@aws-amplify/ui-vue'
 import VueQuagga from 'vue-quaggajs'
 import Toasted from 'vue-toasted'
-import VueSimpleSpinner from 'vue-simple-spinner'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faBarcode,
@@ -26,7 +25,6 @@ Vue.use(VueQuagga)
 Vue.use(Toasted)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.component('v-spinner', VueSimpleSpinner)
 Vue.config.productionTip = false
 
 Amplify.configure({

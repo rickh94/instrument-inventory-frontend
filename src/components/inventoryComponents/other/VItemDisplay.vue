@@ -15,10 +15,12 @@
     <div>
       <span class="font-bold text-gray-700 mb-2">Signed Out To: </span>{{ displayItem.signed_out_to | joinOrNull }}
     </div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-56 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-cart mt-2 flex-row-reverse">
       <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
-      @click="edit">Edit
+              @click="edit">Edit
       </button>
       <button
         @click="signOut"
@@ -27,15 +29,18 @@
       </button>
       <button
         @click="retrieve"
-        class="mx-1 appearance-none bg-blue-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">
+        class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">
         Retrieve
       </button>
     </div>
   </div>
 </template>
 <script>
+import { BarLoader } from "@saeris/vue-spinners";
+
 export default {
   name: "VItemDisplay",
+  components: { BarLoader },
   props: {
     displayItem: {}
   },
@@ -58,7 +63,7 @@ export default {
     signOut() {
     },
     retrieve() {
-    },
+    }
   }
 };
 </script>

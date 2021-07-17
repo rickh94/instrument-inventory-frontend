@@ -15,13 +15,16 @@
             <font-awesome-icon icon="barcode" class="mx-2"></font-awesome-icon>
           </button>
         </div>
-        <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-        <button v-else @click="onSubmit"
+        <button @click="onSubmit"
                 class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
                 :class="searchTerm.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
                 :disabled="searchTerm.length === 0"
         >
+
+          <pulse-loader v-if="loading" color="#fff" size="8"></pulse-loader>
+          <span v-else>
           Submit
+          </span>
         </button>
       </div>
       <div v-if="isAdmin">
@@ -54,9 +57,8 @@
 import VScanner from "@/components/UI/VScanner";
 import { API } from "aws-amplify";
 import { mapMutations, mapState } from "vuex";
-import MultipleResults from "@/components/MultipleResults";
-import VModal from "@/components/UI/VModal";
 import checkAdmin from "@/mixins/checkAdmin";
+import { PulseLoader } from "@saeris/vue-spinners";
 
 function getPath(input) {
   // This regex will match the instrument number format and search for an instrument number.
@@ -66,7 +68,12 @@ function getPath(input) {
 
 export default {
   name: "Home",
-  components: { VModal, MultipleResults, VScanner },
+  components: {
+    VModal: () => import("@/components/UI/VModal.vue"),
+    MultipleResults: () => import("@/components/MultipleResults.vue"),
+    VScanner,
+    PulseLoader
+  },
   mixins: [checkAdmin],
   data() {
     return {
@@ -75,7 +82,7 @@ export default {
       showNotFound: false,
       dialogOptions: {},
       loading: false,
-      showArchived: false,
+      showArchived: false
     };
   },
   methods: {
@@ -88,13 +95,16 @@ export default {
       }
     },
     async onSubmit() {
+      if (this.loading) {
+        return;
+      }
       const path = getPath(this.searchTerm);
       try {
         this.loading = true;
         const response = await API.post("instrument-inventory", path, { body: { term: this.searchTerm } });
         this.loading = false;
-        if (path === 'search/number' || this.showArchived) {
-          this.setSearchResults(response)
+        if (path === "search/number" || this.showArchived) {
+          this.setSearchResults(response);
         } else {
           this.setSearchResults(response.filter(item => !item.archived));
         }

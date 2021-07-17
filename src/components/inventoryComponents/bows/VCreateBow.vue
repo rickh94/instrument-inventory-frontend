@@ -17,7 +17,9 @@
              type="number"
              class="appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight">
     </v-form-control>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-end">
       <button @click.prevent="handleCancel"
               class="bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg">Cancel
@@ -30,61 +32,62 @@
 </template>
 
 <script>
-import VFormControl from '@/components/UI/VFormControl'
-import VAutocomplete from '@/components/UI/VAutocomplete'
-import { API } from 'aws-amplify'
+import VFormControl from "@/components/UI/VFormControl";
+import VAutocomplete from "@/components/UI/VAutocomplete";
+import { API } from "aws-amplify";
 import errorHandler from "@/mixins/errorHandler";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
+  name: "VCreateBow",
+  components: { VAutocomplete, VFormControl, BarLoader },
+  mixins: [errorHandler],
   data() {
     return {
       types: [],
       sizes: [],
       loading: false,
       data: {
-        type: '',
-        size: '',
-        count: '',
-      },
-    }
+        type: "",
+        size: "",
+        count: ""
+      }
+    };
   },
   async created() {
     if (this.sizes.length === 0) {
       try {
-        const { types, sizes } = await API.get('instrument-inventory', 'schema/ac-options', {})
-        this.types = types
-        this.sizes = sizes
+        const { types, sizes } = await API.get("instrument-inventory", "schema/ac-options", {});
+        this.types = types;
+        this.sizes = sizes;
       } catch (e) {
-        this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 })
+        this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 });
       }
     }
   },
-  name: 'VCreateBow',
-  components: { VAutocomplete, VFormControl },
-  mixins: [errorHandler],
   methods: {
     handleCancel() {
-      this.data = { type: '', size: '', count: '' }
-      this.$emit('close')
+      this.data = { type: "", size: "", count: "" };
+      this.$emit("close");
     },
     async handleSubmit() {
       try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', 'bows', {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", "bows", {
           body: {
-            ...this.data,
-          },
-        })
-        this.$emit('updated', { updatedIds: [response.item.id], updatedItems: [response.item] })
-        this.$toasted.show(response.message, { duration: 2000 })
-        this.loading = false
-        this.$emit('close')
+            ...this.data
+          }
+        });
+        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
+        this.$toasted.show(response.message, { duration: 2000 });
+        this.loading = false;
+        this.$emit("close");
       } catch (err) {
-        this.handleError(err)
+        this.handleError(err);
       }
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>

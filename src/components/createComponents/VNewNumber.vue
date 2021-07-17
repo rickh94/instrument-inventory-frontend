@@ -14,13 +14,15 @@
           <font-awesome-icon icon="barcode" class="mr-4"></font-awesome-icon>
         </button>
       </div>
-      <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-      <button v-else @click="onSubmit"
+      <button @click="onSubmit"
               class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
               :class="number.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
               :disabled="number.length === 0"
       >
+        <pulse-loader v-if="loading" color="#fff" size="8"></pulse-loader>
+        <span v-else>
         Check
+        </span>
       </button>
     </div>
     <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
@@ -31,9 +33,10 @@
 import VScanner from "@/components/UI/VScanner";
 import { API } from "aws-amplify";
 import { mapMutations } from "vuex";
+import { PulseLoader } from "@saeris/vue-spinners";
 
 export default {
-  components: { VScanner },
+  components: { VScanner, PulseLoader },
   name: "VNewNumber",
   data() {
     return {
@@ -45,9 +48,15 @@ export default {
   methods: {
     ...mapMutations(["setNewInstrumentNumber"]),
     async onSubmit() {
+      // this guards against click the enabled button that is showing the
+      // loading animation
+      if (this.loading) {
+        return;
+      }
       try {
         this.loading = true;
-        await API.post("instrument-inventory", "search/number", { body: { term: this.number } });
+        await API.post("instrument-inventory",
+          "search/number", { body: { term: this.number } });
         this.$toasted.info("This number is already taken", { duration: 2000 });
       } catch (e) {
         if (e.response.status === 404) {
@@ -64,7 +73,7 @@ export default {
       if (result.codeResult.code !== this.number) {
         this.number = result.codeResult.code;
         this.scanner = false;
-        this.onSubmit()
+        this.onSubmit();
       }
     }
   }

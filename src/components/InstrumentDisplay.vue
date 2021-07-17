@@ -14,7 +14,7 @@
           <span v-if="currentInstrument.size !== 'N/A'">
            {{ currentInstrument.size }}
           </span>
-           {{ currentInstrument.type }} {{
+          {{ currentInstrument.type }} {{
             currentInstrument.number }}
         </h6>
         <button class="appearance-none text-white bg-red-600 px-2 rounded shadow hover:bg-red-800 hover:shadow-lg text-sm"
@@ -30,10 +30,6 @@
       <div>
         <span class="font-bold text-gray-700 mb-2">Assigned To: </span>{{ currentInstrument.assignedTo }}
       </div>
-<!--      <div>-->
-<!--        <span class="font-bold text-gray-700 mb-2">Maintenance Notes: </span>{{-->
-<!--          currentInstrument.maintenanceNotes }}-->
-<!--      </div>-->
       <div>
         <span class="font-bold text-gray-700 mb-2">Notes: </span>{{
           currentInstrument.conditionNotes }}
@@ -58,7 +54,9 @@
       <div>
         <span class="font-bold text-gray-700 mb-2">Archived</span> {{ currentInstrument.archived ? "Yes" : "No" }}
       </div>
-      <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+      <div class="w-full flex justify-start flex-row-reverse mt-4 mb-2" v-if="loading">
+        <bar-loader class="w-80 mr-2" color="#805ad5"></bar-loader>
+      </div>
       <div class="flex justify-start mt-2 flex-row-reverse" v-else>
         <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
                 @click="edit" v-if="isAdmin">Edit
@@ -84,9 +82,9 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import VModal from "@/components/UI/VModal";
-import VInstrumentForm from "@/components/createComponents/VInstrumentForm";
 import { API } from "aws-amplify";
 import checkAdmin from "@/mixins/checkAdmin";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "InstrumentDisplay",
@@ -97,7 +95,7 @@ export default {
       loading: false
     };
   },
-  components: { VInstrumentForm, VModal },
+  components: { BarLoader, VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm"), VModal },
   methods: {
     ...mapMutations(["clearCurrentInstrument", "setCurrentInstrument", "updateCurrentInstrument", "clearNewInstrumentNumber"]),
     async toggleArchived() {

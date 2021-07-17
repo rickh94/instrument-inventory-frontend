@@ -7,20 +7,21 @@
       submit-path="other/use"
       @close="$emit('close')"
       @updated="$emit('updated', $event)"
-      ></v-update-multiple-items-form>
+    ></v-update-multiple-items-form>
   </div>
 
 </template>
 
 <script>
 import VUpdateMultipleItemsForm from "@/components/inventoryComponents/other/VUpdateMultipleItemsForm";
+
 export default {
   name: "VUseItems",
   components: { VUpdateMultipleItemsForm },
   props: {
     items: {
       type: Array,
-      required: true,
+      required: true
     }
   }
 };

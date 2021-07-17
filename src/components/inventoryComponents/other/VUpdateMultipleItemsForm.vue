@@ -24,7 +24,9 @@
         </tbody>
       </table>
     </div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-end mt-4">
       <button @click.prevent="$emit('close')"
               class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
@@ -39,9 +41,11 @@
 <script>
 import errorHandler from "@/mixins/errorHandler";
 import { API } from "aws-amplify";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "VUpdateMultipleItemsForm",
+  components: { BarLoader },
   mixins: [errorHandler],
   data() {
     return {
@@ -90,11 +94,11 @@ export default {
           }
         });
         this.$emit("updated", { updatedIds: response.updated, updatedItems: response.updatedItems });
-        this.loading = false
+        this.loading = false;
         if (response.failed.length > 0) {
-          this.$toasted.error(`Updates failed: ${response.failed.join(', ')}`, {duration: 2000})
+          this.$toasted.error(`Updates failed: ${response.failed.join(", ")}`, { duration: 2000 });
         }
-        this.$emit('close')
+        this.$emit("close");
       } catch (err) {
         this.handleError(err);
       }

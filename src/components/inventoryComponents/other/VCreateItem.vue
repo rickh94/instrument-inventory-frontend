@@ -25,7 +25,9 @@
                 class="appearance-none bg-transparent border-none text-gray-900 leading-tight w-full"
       ></textarea>
     </v-form-control>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-end">
       <button @click.prevent="handleCancel"
               class="bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg">Cancel
@@ -40,12 +42,13 @@
 
 <script>
 import VFormControl from "@/components/UI/VFormControl";
+import { BarLoader } from "@saeris/vue-spinners";
 import errorHandler from "@/mixins/errorHandler";
 import { API } from "aws-amplify";
 
 export default {
   name: "VCreateItem",
-  components: { VFormControl },
+  components: { VFormControl, BarLoader },
   mixins: [errorHandler],
   data() {
     return {
@@ -68,9 +71,9 @@ export default {
           }
         });
         this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
-        this.$toasted.show(response.message, {duration: 2000})
-        this.loading = false
-        this.$emit('close')
+        this.$toasted.show(response.message, { duration: 2000 });
+        this.loading = false;
+        this.$emit("close");
       } catch (err) {
         this.handleError(err);
       }

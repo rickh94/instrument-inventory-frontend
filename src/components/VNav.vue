@@ -6,7 +6,6 @@
       </router-link>
     </div>
     <ul class="flex text-sm md:text-lg">
-      <!--      <li class="pr-1 rounded-t border-b border-purple-300" :class="$route.name === 'New' && 'active'">-->
       <li class="nav-item" :class="$route.name === 'New' ?  'active' : 'inactive'" v-if="isAdmin">
         <router-link to="/new"
                      class="nav-link"
@@ -25,7 +24,7 @@
         <router-link to="/sign-out"
                      class="nav-link"
                      :class="$route.name === 'SignOut' ? 'active': 'inactive'"
-        >Sign Out
+        >Assign
         </router-link>
       </li>
       <li class="nav-item" :class="$route.name === 'Inventory' ? 'active' : 'inactive'">

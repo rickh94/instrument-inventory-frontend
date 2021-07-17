@@ -11,12 +11,13 @@
         <tbody>
         <tr v-for="item in violinBows" :key="item.id">
           <td class="pr-4">{{ item.size }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
+          <td class="flex justify-end"><input
+            type="number"
+            :name="`${item.id}-updates`"
+            :id="`${item.id}-updates`"
+            class="w-12 border-b border-gray-800"
+            min="0"
+            v-model="items[item.id]"
           ></td>
         </tr>
         </tbody>
@@ -82,7 +83,9 @@
         </tbody>
       </table>
     </div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-end mt-4">
       <button @click.prevent="$emit('close')"
               class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
@@ -95,77 +98,79 @@
 </template>
 
 <script>
-import computedBows from '@/mixins/computedBows'
-import { API } from 'aws-amplify'
+import computedBows from "@/mixins/computedBows";
+import { API } from "aws-amplify";
+import {BarLoader} from "@saeris/vue-spinners";
 
 export default {
-  name: 'VUpdateBowsForm',
+  name: "VUpdateBowsForm",
+  components: { BarLoader },
   mixins: [computedBows],
   props: {
     bows: {
       type: Array,
-      required: true,
+      required: true
     },
     updateText: {
       type: String,
-      required: true,
+      required: true
     },
     submitPath: {
       type: String,
-      required: true,
+      required: true
     }
   },
   data() {
     return {
       items: {},
-      loading: false,
-    }
+      loading: false
+    };
   },
   created() {
-    this.initializeItems()
+    this.initializeItems();
   },
   methods: {
     async handleSubmit() {
-      const updated = []
+      const updated = [];
       for (const [id, amount] of Object.entries(this.items)) {
         if (amount !== 0) {
           updated.push({
-            id, amount,
-          })
+            id, amount
+          });
         }
       }
       try {
-        this.loading = true
-        const response = await API.post('instrument-inventory', this.submitPath, {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", this.submitPath, {
           body: {
-            bow_updates: updated,
-          },
-        })
-        this.$emit('updated', { updatedIds: response.updated, updatedItems: response.updatedItems })
-        this.loading = false
+            bow_updates: updated
+          }
+        });
+        this.$emit("updated", { updatedIds: response.updated, updatedItems: response.updatedItems });
+        this.loading = false;
         if (response.failed.length > 0) {
-          this.$toasted.error(`Updates failed: ${response.failed.join(', ')}`, { duration: 2000 })
+          this.$toasted.error(`Updates failed: ${response.failed.join(", ")}`, { duration: 2000 });
         }
-        this.$emit('close')
+        this.$emit("close");
       } catch (e) {
-        this.loading = false
+        this.loading = false;
         if (e.response.data) {
-          this.$toasted.error(e.response.data, { duration: 2000 })
+          this.$toasted.error(e.response.data, { duration: 2000 });
         } else {
-          this.$toasted.error(e.toString(), { duration: 2000 })
+          this.$toasted.error(e.toString(), { duration: 2000 });
         }
       }
     },
     initializeItems() {
       for (const bow of this.bows) {
-        this.items[bow.id] = 0
+        this.items[bow.id] = 0;
       }
     },
     handleUpdate(id, e) {
-      this.items[id] = parseInt(e.target.value)
+      this.items[id] = parseInt(e.target.value);
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>

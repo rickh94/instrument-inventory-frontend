@@ -22,7 +22,9 @@
         :items="items"
         @change="handleChange"></v-strings-input-table>
     </div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex justify-end mt-4 mb-2" v-if="loading">
+      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+    </div>
     <div v-else class="flex justify-end mt-4">
       <button @click.prevent="$emit('close')"
               class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
@@ -38,10 +40,11 @@
 import { API } from "aws-amplify";
 import computedStrings from "@/mixins/computedStrings";
 import VStringsInputTable from "@/components/inventoryComponents/strings/layout/VStringsInputTable";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "VUpdateStringsForm",
-  components: { VStringsInputTable },
+  components: { VStringsInputTable, BarLoader },
   mixins: [computedStrings],
   props: {
     strings: {

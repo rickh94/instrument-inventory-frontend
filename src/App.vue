@@ -30,6 +30,7 @@ export default {
   created() {
     onAuthUIStateChange((nextAuthState, authData) => {
       if (nextAuthState === "signedin") {
+        // noinspection ES6ShorthandObjectProperty
         this.logIn(USER_ROLES[authData.attributes["custom:USER_ROLE"]]);
       } else if (nextAuthState === "signedout") {
         this.logOut();

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-spinner v-if="loading" line-fg-color="$805ad5" class="my-2"></v-spinner>
+    <div class="flex h-20 w-full items-center justify-center" v-if="loading">
+      <propagate-loader color="#805ad5"></propagate-loader>
+    </div>
     <div class="flex items-start justify-around flex-wrap mt-4" v-else>
       <table class="table table-auto mx-4">
         <thead>
@@ -47,22 +49,25 @@
 <script>
 import checkAdmin from "@/mixins/checkAdmin";
 import { API } from "aws-amplify";
-import VModal from "@/components/UI/VModal";
-import VItemDisplay from "@/components/inventoryComponents/other/VItemDisplay";
-import VAddItems from "@/components/inventoryComponents/other/VAddItems";
-import VUseItems from "@/components/inventoryComponents/other/VUseItems";
-import VCreateItem from "@/components/inventoryComponents/other/VCreateItem";
+import { PropagateLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "VInventoryOther",
-  components: { VItemDisplay, VModal, VAddItems, VUseItems, VCreateItem },
+  components: {
+    VItemDisplay: () => import("@/components/inventoryComponents/other/VItemDisplay.vue"),
+    VModal: () => import("@/components/UI/VModal.vue"),
+    VAddItems: () => import("@/components/inventoryComponents/other/VAddItems.vue"),
+    VUseItems: () => import("@/components/inventoryComponents/other/VUseItems.vue"),
+    VCreateItem: () => import("@/components/inventoryComponents/other/VCreateItem.vue"),
+    PropagateLoader
+  },
   mixins: [checkAdmin],
   data() {
     return {
       loading: false,
       items: [],
       formComponent: null,
-      displayItem: null,
+      displayItem: null
     };
   },
   async created() {
@@ -82,12 +87,12 @@ export default {
     }
   },
   methods: {
-    handleUpdate({updatedIds, updatedItems}) {
-      this.loading = true
-      this.items = [...this.items.filter(({id}) => !updatedIds.includes(id)), ...updatedItems]
-      this.loading = false
+    handleUpdate({ updatedIds, updatedItems }) {
+      this.loading = true;
+      this.items = [...this.items.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
+      this.loading = false;
     }
-  },
+  }
 };
 </script>
 

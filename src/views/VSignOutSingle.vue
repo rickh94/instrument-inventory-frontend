@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-4xl m-5 shadow p-3">
-    <h4 class="text-xl font-bold text-gray-900">Sign Out Instrument</h4>
+    <h4 class="text-xl font-bold text-gray-900 mb-1">Assign Instrument</h4>
     <form @submit.prevent="onSubmit">
       <v-form-control label="Instrument Number" label-for="number">
         <div class="flex items-center">
@@ -8,7 +8,7 @@
                  class="appearance-none bg-transparent border-none w-full mr-1 py-1 leading-tight focus:outline-none"
                  v-model="number"
           >
-          <button class="appearance-none mr-2" title="Scan Barcode" @click="scanner = true">
+          <button class="appearance-none mr-2" title="Scan Barcode" @click.prevent="scanner = true">
             <font-awesome-icon icon="barcode"></font-awesome-icon>
           </button>
         </div>
@@ -22,14 +22,16 @@
       <v-form-control label="Location" label-for="location">
         <v-autocomplete id="location" :options="locations" v-model="location"></v-autocomplete>
       </v-form-control>
-      <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
-      <div v-else class="flex justify-around mt-5">
+      <div class="flex justify-end mt-4 mb-2" v-if="loading">
+        <bar-loader class="w-56 mr-2" color="#805ad5"></bar-loader>
+      </div>
+      <div v-else class="flex justify-end mt-5">
         <button @click.prevent="clear"
                 type="reset"
-                class="mx-2 bg-yellow-600 px-8 flex-grow text-white md:flex-grow-0 py-2 shadow hover:bg-yellow-800 hover:shadow-lg rounded">
+                class="mx-2 bg-red-600 px-4  text-white  py-2 shadow hover:bg-red-800 hover:shadow-lg rounded">
           Clear
         </button>
-        <button class="bg-purple-600 px-8 text-white py-2 flex-grow md:flex-grow-0 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
+        <button class="bg-purple-600 px-4 text-white py-2  shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
                 type="submit">Submit
         </button>
       </div>
@@ -37,85 +39,86 @@
   </div>
 </template>
 <script>
-import VAutocomplete from '@/components/UI/VAutocomplete'
-import VFormControl from '@/components/UI/VFormControl'
-import VScanner from '@/components/UI/VScanner'
-import { mapMutations, mapState } from 'vuex'
-import { API } from 'aws-amplify'
+import VAutocomplete from "@/components/UI/VAutocomplete";
+import VFormControl from "@/components/UI/VFormControl";
+import VScanner from "@/components/UI/VScanner";
+import { mapMutations, mapState } from "vuex";
+import { API } from "aws-amplify";
+import { BarLoader } from "@saeris/vue-spinners";
 
 export default {
-  name: 'v-sign-out-single',
-  components: { VAutocomplete, VFormControl, VScanner },
+  name: "v-sign-out-single",
+  components: { VAutocomplete, VFormControl, VScanner, BarLoader },
   async created() {
     if (this.currentInstrument) {
-      this.number = this.currentInstrument.number
-      this.clearCurrentInstrument()
+      this.number = this.currentInstrument.number;
+      this.clearCurrentInstrument();
     }
     if (this.locations.length === 0) {
       try {
-        this.loading = true
-        const { locations } = await API.get('instrument-inventory', 'schema/ac-options', {})
-        this.loading = false
-        this.locations = locations
+        this.loading = true;
+        const { locations } = await API.get("instrument-inventory", "schema/ac-options", {});
+        this.loading = false;
+        this.locations = locations;
       } catch (e) {
-        this.loading = false
-        console.error(e)
+        this.loading = false;
+        console.error(e);
         if (e.response.data) {
-          this.$toasted.error(`Error: ${e.response.data}`)
+          this.$toasted.error(`Error: ${e.response.data}`);
         } else {
-          this.$toasted.error(e.toString())
+          this.$toasted.error(e.toString());
         }
       }
     }
   },
   data() {
     return {
-      number: '',
-      assignedTo: '',
-      location: '',
+      number: "",
+      assignedTo: "",
+      location: "",
       scanner: false,
       locations: [],
-      loading: false,
-    }
+      loading: false
+    };
   },
   methods: {
-    ...mapMutations(['clearCurrentInstrument', 'updateCurrentInstrument']),
+    ...mapMutations(["clearCurrentInstrument", "updateCurrentInstrument"]),
     async onSubmit() {
       try {
-        const { number, assignedTo, location } = this
+        const { number, assignedTo, location } = this;
         if (number.length === 0 || assignedTo.length === 0 || location.length === 0) {
-          this.$toasted.error('Missing information', { duration: 2000 })
-          return
+          this.$toasted.error("Missing information", { duration: 2000 });
+          return;
         }
-        this.loading = true
-        const response = await API.post('instrument-inventory', 'sign-out', {
+        this.loading = true;
+        const response = await API.post("instrument-inventory", "sign-out", {
           body: {
-            number, assignedTo, location,
-          },
-        })
-        this.$toasted.success(response.message, { duration: 2000 })
-        this.clear()
-        this.updateCurrentInstrument(response.item)
-        this.loading = false
+            number, assignedTo, location
+          }
+        });
+        this.$toasted.success(response.message, { duration: 2000 });
+        this.clear();
+        this.updateCurrentInstrument(response.item);
+        this.loading = false;
       } catch (e) {
-        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 })
-        console.error(e)
-        this.loading = false
+        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 });
+        console.error(e);
+        this.loading = false;
       }
     },
     detected(result) {
       if (result.codeResult.code !== this.number) {
-        this.number = result.codeResult.code
-        this.scanner = false
+        this.number = result.codeResult.code;
+        this.scanner = false;
       }
-      this.onSubmit()
+      this.onSubmit();
     },
     clear() {
-      this.number = ''
-      this.location = ''
-      this.assignedTo = ''
-    },
+      this.number = "";
+      this.location = "";
+      this.assignedTo = "";
+    }
   },
-  computed: mapState(['currentInstrument']),
-}
+  computed: mapState(["currentInstrument"])
+};
 </script>

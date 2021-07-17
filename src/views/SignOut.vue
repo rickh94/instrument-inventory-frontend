@@ -6,13 +6,15 @@
 </template>
 
 <script>
-import VSignOutMultiple from "@/components/VSignOutMultiple";
 import VSignOutSingle from "@/views/VSignOutSingle";
 import checkAdmin from "@/mixins/checkAdmin";
 
 export default {
   name: "SignOut",
-  components: { VSignOutSingle, VSignOutMultiple },
+  components: {
+    VSignOutSingle,
+    VSignOutMultiple: () => import("@/components/VSignOutMultiple.vue")
+  },
   mixins: [checkAdmin]
 };
 </script>

@@ -27,20 +27,20 @@
 </template>
 
 <script>
-import VInventoryInstruments from '@/components/inventoryComponents/VInventoryInstruments'
-import VInventoryBows from '@/components/inventoryComponents/bows/VInventoryBows'
-import VInventoryStrings from '@/components/inventoryComponents/strings/VInventoryStrings'
-import VInventoryOther from '@/components/inventoryComponents/other/VInventoryOther'
-
 export default {
-  components: {VInventoryInstruments, VInventoryBows, VInventoryStrings, VInventoryOther},
-  name: 'Inventory',
+  components: {
+    VInventoryInstruments: () => import("@/components/inventoryComponents/VInventoryInstruments.vue"),
+    VInventoryBows: () => import("@/components/inventoryComponents/bows/VInventoryBows.vue"),
+    VInventoryStrings: () => import("@/components/inventoryComponents/strings/VInventoryStrings.vue"),
+    VInventoryOther: () => import("@/components/inventoryComponents/other/VInventoryOther.vue")
+  },
+  name: "Inventory",
   data() {
     return {
-      tab: 'v-inventory-instruments',
-    }
-  },
-}
+      tab: "v-inventory-instruments"
+    };
+  }
+};
 </script>
 
 <style scoped>

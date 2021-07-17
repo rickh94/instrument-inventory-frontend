@@ -26,43 +26,45 @@
              id="filter-location"
              class="mx-2 py-1 appearance-none focus:outline-none border-b border-gray-700 placeholder-gray-700"
              v-model="location">
-      <div class="flex justify-start mt-2 flex-wrap">
-        <div class="text-gray-600 mr-2 flex items-center lg:hidden">Sort By:</div>
-        <v-select class="mt-2 lg:hidden mr-2" placeholder="Sort By"
-                  :options="sortColumns"
-                  v-model="sortBy"></v-select>
-        <div class="text-gray-600 flex items-center mr-2 lg:hidden">Sort Direction:</div>
-        <v-select class="mt-2 lg:hidden mr-2"
-                  placeholder="Sort Direction"
-                  :options="[{value: 1, text: 'Ascending'}, {value: -1, text: 'Descending'}]"
-                  v-model="sortDirection"></v-select>
-        <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
-                @click.prevent="showArchived = !showArchived">
-          {{ showArchived ? "Hide Archived" : "Show Archived" }}
-        </button>
-        <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 bg-purple-600 text-white rounded shadow hover:bg-purple-800 hover:shadow-lg"
-                @click.prevent="onlyUnassigned = !onlyUnassigned">
-          {{ onlyUnassigned ? "Show All" : "Show Unassigned Only" }}
-        </button>
+      <div class="flex-col justify-start mt-2 flex-wrap">
+        <div class="flex mx-auto flex-wrap items-start justify-start">
+          <div class="flex items-center">
+            <div class="text-gray-600 mr-2 flex items-center lg:hidden flex-shrink-0">Sort By:</div>
+            <v-select id="sort-by" class="mt-2 lg:hidden mr-2 flex-shrink-0" placeholder="Sort By"
+                      :options="sortColumns"
+                      v-model="sortBy"></v-select>
+          </div>
+          <div class="flex items-center">
+            <div class="text-gray-600 mr-2 flex items-center lg:hidden flex-shrink-0">Sort Direction:</div>
+            <v-select class="mt-2 lg:hidden mr-2 flex-shrink-0"
+                      placeholder="Sort Direction"
+                      :options="[{value: 1, text: 'Ascending'}, {value: -1, text: 'Descending'}]"
+                      v-model="sortDirection"></v-select>
+          </div>
+        </div>
+        <div class="flex justify-start">
+          <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 text-white rounded shadow hover:shadow-lg"
+                  :class="{'bg-purple-600 hover:bg-purple-800': !showArchived, 'bg-red-600 hover:bg-red-800': showArchived}"
+                  @click.prevent="showArchived = !showArchived">
+            {{ showArchived ? "Hide Archived" : "Show Archived" }}
+          </button>
+          <button class="mt-2 lg:mt-0 px-2 py-1 ml-2 text-white rounded shadow hover:shadow-lg"
+                  :class="{'bg-purple-600 hover:bg-purple-800': onlyUnassigned, 'bg-red-600 hover:bg-red-800': !onlyUnassigned}"
+                  @click.prevent="onlyUnassigned = !onlyUnassigned">
+            {{ onlyUnassigned ? "Show All" : "Show Unassigned Only" }}
+          </button>
+        </div>
       </div>
     </div>
-    <v-spinner v-if="loading" line-fg-color="#805ad5"></v-spinner>
+    <div class="flex h-20 w-full items-center justify-center" v-if="loading">
+      <propagate-loader color="#805ad5"></propagate-loader>
+    </div>
+    <div v-else>
+
     <div class="flex flex-col items-center justify-center mt-2 mb-1 lg:hidden">
-      <div v-for="instrument in displayInstruments"
-           class="flex flex-col m-2 border border-purple-300 p-2 w-full"
-           :key="instrument.id"
-      >
-        <a @click.prevent="setCurrentInstrument(instrument)" class="cursor-pointer text-purple-800 font-bold">
-          {{ instrument.size }} {{ instrument.type }} {{ instrument.number }}
-        </a>
-        <div v-if="instrument.assignedTo" class="text-gray-700">
-          Assigned to {{ instrument.assignedTo }} at {{ instrument.location }}
-        </div>
-        <div class="text-gray-700" v-else>Unassigned at {{ instrument.location }}</div>
-        <div class="text-gray-700">Condition: {{ instrument.condition }}, Quality: {{ instrument.quality }}</div>
-        <div class="text-gray-500" v-if="instrument.history">{{ instrument.history.join(", ") }}</div>
-        <div class="text-gray-500" v-else>No History</div>
-      </div>
+      <v-instrument-card v-for="instrument in displayInstruments"
+                         :key="instrument.id"
+                         :instrument="instrument"></v-instrument-card>
     </div>
     <table class="table-auto w-full hidden lg:table">
       <thead>
@@ -117,20 +119,23 @@
       </tr>
       </tbody>
     </table>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import { API } from "aws-amplify";
 import VTableHeader from "@/components/UI/VTableHeader";
 import VSelect from "@/components/UI/VSelect";
 import Papa from "papaparse";
 import { sortBySize } from "@/mixins/ordering";
+import VInstrumentCard from "@/components/VInstrumentCard";
+import { PropagateLoader } from "@saeris/vue-spinners";
 
 export default {
   name: "VInventoryInstruments",
-  components: { VSelect, VTableHeader },
+  components: { VInstrumentCard, VSelect, VTableHeader, PropagateLoader },
   data() {
     return {
       size: "",
@@ -176,8 +181,8 @@ export default {
     }
     try {
       const { sizes, types } = await API.get("instrument-inventory", "schema/ac-options", {});
-      this.sizes = sizes
-      this.types = types
+      this.sizes = sizes;
+      this.types = types;
     } catch (err) {
       this.$toasted.error("Failed to load types and sizes");
     }
