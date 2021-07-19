@@ -4,6 +4,7 @@
       <div class="relative h-64 overflow-hidden mx-auto">
         <v-quagga-wrapper :on-detected="detected"
                           :reader-types="['code_128_reader', 'code_39_reader']"
+                          :on-processed="() => {}"
         ></v-quagga-wrapper>
       </div>
     </div>
@@ -25,13 +26,13 @@ export default {
       if (result.codeResult.code.match(/\w?\d+-\d+/)) {
         this.$emit("detected", result);
       }
-    }
+    },
   },
   data() {
     return {
-      scannerWidth: Math.floor(window.screen.width * window.devicePixelRatio * 0.6)
+      scannerWidth: Math.floor(window.screen.width * window.devicePixelRatio * 0.6),
     };
-  }
+  },
 };
 </script>
 

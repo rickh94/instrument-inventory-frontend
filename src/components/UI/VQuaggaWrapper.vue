@@ -72,8 +72,8 @@ export default {
           type: "LiveStream",
           target: document.querySelector("#interactive.viewport"),
           constraints: {
-            width: { max: 320 },
-            height: { max: 240 },
+            width: { max: 480 },
+            height: { max: 360 },
             facingMode: "environment",
           },
           area: {
@@ -86,7 +86,7 @@ export default {
         decoder: {
           readers: this.readerTypes,
         },
-        locate: false,
+        locate: true,
         multiple: false,
         frequency: 100,
       },
