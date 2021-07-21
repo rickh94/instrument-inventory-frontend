@@ -86,7 +86,7 @@ export default {
         },
         locate: true,
         multiple: false,
-        frequency: 50,
+        frequency: 100,
       },
     };
   },
