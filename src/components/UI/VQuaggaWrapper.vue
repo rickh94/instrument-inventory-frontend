@@ -72,17 +72,21 @@ export default {
           type: "LiveStream",
           target: document.querySelector("#interactive.viewport"),
           constraints: {
-            width: { max: 480 },
-            height: { max: 360 },
+            width: { min: 480 },
+            height: { min: 360 },
             facingMode: "environment",
           },
         },
         decoder: {
           readers: this.readerTypes,
         },
+        locator: {
+          patchSize: "medium",
+          halfSample: true,
+        },
         locate: true,
         multiple: false,
-        frequency: 100,
+        frequency: 50,
       },
     };
   },
