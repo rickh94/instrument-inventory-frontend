@@ -72,8 +72,8 @@ export default {
           type: "LiveStream",
           target: document.querySelector("#interactive.viewport"),
           constraints: {
-            width: { min: 480 },
-            height: { min: 360 },
+            width: { min: 640 },
+            height: { min: 480 },
             facingMode: "environment",
           },
         },
