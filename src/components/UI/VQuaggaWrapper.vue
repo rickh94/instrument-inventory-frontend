@@ -76,12 +76,6 @@ export default {
             height: { max: 360 },
             facingMode: "environment",
           },
-          area: {
-            top: "40%",
-            right: "10%",
-            left: "10%",
-            bottom: "35%",
-          },
         },
         decoder: {
           readers: this.readerTypes,
