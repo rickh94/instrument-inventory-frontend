@@ -46,10 +46,6 @@
       <p class="text-gray-900">Could not find instrument {{ searchTerm }}. Would you like to create a new
         instrument?</p>
       <div class="flex justify-end mt-2 flex-row">
-<!--        <button class="mx-1 appearance-none bg-red-600 text-white px-4 py-1 shadow rounded hover:bg-red-800 hover:shadow-lg"-->
-<!--                @click="showNotFound = false">-->
-<!--          Close-->
-<!--        </button>-->
         <v-close-form-button @close="showNotFound = false" />
         <button class="flex items-center font-bold mx-1 appearance-none bg-green-600 text-white px-3 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg"
                 @click="beginCreateInstrument">
