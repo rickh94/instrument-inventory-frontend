@@ -43,6 +43,6 @@ const prod = {
   },
 }
 
-const config = process.env.NODE_ENV === 'production' ? prod : dev
+const config = process.env.STAGE === 'prod' ? prod : dev
 
 export default config

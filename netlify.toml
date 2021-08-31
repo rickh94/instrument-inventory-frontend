@@ -4,7 +4,7 @@ publish = 'dist'
 command = 'STAGE=dev npm run build'
 
 [context.production]
-command = 'npm run build:prod'
+command = 'STAGE=dev npm run build:prod'
 
 [context.deploy-preview]
 command = 'STAGE=dev npm run build'
