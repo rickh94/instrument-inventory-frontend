@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex h-20 w-full items-center justify-center" v-if="loading">
-      <propagate-loader color="#805ad5"></propagate-loader>
+      <propagate-loader color="#7c3aed"></propagate-loader>
     </div>
     <div class="flex items-start justify-around flex-wrap mt-4" v-else>
       <table class="table table-auto mx-4">
@@ -22,26 +22,15 @@
       </table>
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
-      <div class="flex justify-around max-w-lg mx-auto mt-2">
-        <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white mr-2"
-                @click.prevent="formComponent = 'v-create-item'" v-if="isAdmin">
-          Create Item
-        </button>
-        <button @click.prevent="formComponent = 'v-use-items'"
-                class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white mr-2">
-          Use Items
-        </button>
-        <button @click.prevent="formComponent = 'v-add-items'"
-                class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white">
-          Add Items
-        </button>
-      </div>
+      <v-create-button @click="formComponent = 'v-create-item'" item="Item" />
+      <v-use-button @click="formComponent = 'v-use-items'" item="Items" />
+      <v-add-button @click="formComponent = 'v-add-items'" item="Items" />
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
       <div :is="formComponent" @updated="handleUpdate" :items="items" @close="formComponent = null"></div>
     </v-modal>
     <v-modal v-if="displayItem" @close="displayItem = null" width-class="max-w-lg">
-      <VItemDisplay :display-item="displayItem" />
+      <VItemDisplay :display-item="displayItem" @close="displayItem = null" @updated="handleUpdate"/>
     </v-modal>
   </div>
 </template>
@@ -50,16 +39,22 @@
 import checkAdmin from "@/mixins/checkAdmin";
 import { API } from "aws-amplify";
 import { PropagateLoader } from "@saeris/vue-spinners";
+import VCreateButton from "@/components/UI/buttons/VCreateButton";
+import VUseButton from "@/components/UI/buttons/VUseButton";
+import VAddButton from "@/components/UI/buttons/VAddButton";
 
 export default {
   name: "VInventoryOther",
   components: {
+    VAddButton,
+    VUseButton,
+    VCreateButton,
     VItemDisplay: () => import("@/components/inventoryComponents/other/VItemDisplay.vue"),
     VModal: () => import("@/components/UI/VModal.vue"),
     VAddItems: () => import("@/components/inventoryComponents/other/VAddItems.vue"),
     VUseItems: () => import("@/components/inventoryComponents/other/VUseItems.vue"),
     VCreateItem: () => import("@/components/inventoryComponents/other/VCreateItem.vue"),
-    PropagateLoader
+    PropagateLoader,
   },
   mixins: [checkAdmin],
   data() {
@@ -67,7 +62,7 @@ export default {
       loading: false,
       items: [],
       formComponent: null,
-      displayItem: null
+      displayItem: null,
     };
   },
   async created() {
@@ -87,12 +82,15 @@ export default {
     }
   },
   methods: {
-    handleUpdate({ updatedIds, updatedItems }) {
+    handleUpdate({ updatedIds, updatedItems, replaceDisplay =  false }) {
       this.loading = true;
       this.items = [...this.items.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
       this.loading = false;
-    }
-  }
+      if (replaceDisplay) {
+        this.displayItem = updatedItems[0];
+      }
+    },
+  },
 };
 </script>
 

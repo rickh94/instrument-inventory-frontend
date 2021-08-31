@@ -16,14 +16,19 @@
           </button>
         </div>
         <button @click="onSubmit"
-                class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
+                class="appearance-none rounded ml-4 text-white font-bold"
                 :class="searchTerm.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
                 :disabled="searchTerm.length === 0"
         >
 
-          <pulse-loader v-if="loading" color="#fff" size="8"></pulse-loader>
-          <span v-else>
-          Submit
+          <pulse-loader v-if="loading" color="#fff" size="8" class="px-2 py-1"></pulse-loader>
+          <span v-else class="inline-flex items-center px-2 py-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd" />
+            </svg>
+          Search
           </span>
         </button>
       </div>
@@ -41,12 +46,18 @@
       <p class="text-gray-900">Could not find instrument {{ searchTerm }}. Would you like to create a new
         instrument?</p>
       <div class="flex justify-end mt-2 flex-row">
-        <button class="mx-1 appearance-none bg-red-600 text-white px-4 py-1 shadow rounded hover:bg-red-800 hover:shadow-lg"
-                @click="showNotFound = false">
-          Close
-        </button>
-        <button class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg"
-                @click="beginCreateInstrument">Create
+<!--        <button class="mx-1 appearance-none bg-red-600 text-white px-4 py-1 shadow rounded hover:bg-red-800 hover:shadow-lg"-->
+<!--                @click="showNotFound = false">-->
+<!--          Close-->
+<!--        </button>-->
+        <v-close-form-button @close="showNotFound = false" />
+        <button class="flex items-center font-bold mx-1 appearance-none bg-green-600 text-white px-3 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg"
+                @click="beginCreateInstrument">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+          </svg>
+          Create
         </button>
       </div>
     </v-modal>
@@ -59,6 +70,7 @@ import { API } from "aws-amplify";
 import { mapMutations, mapState } from "vuex";
 import checkAdmin from "@/mixins/checkAdmin";
 import { PulseLoader } from "@saeris/vue-spinners";
+import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton";
 
 function getPath(input) {
   // This regex will match the instrument number format and search for an instrument number.
@@ -69,10 +81,11 @@ function getPath(input) {
 export default {
   name: "Home",
   components: {
+    VCloseFormButton,
     VModal: () => import("@/components/UI/VModal.vue"),
     MultipleResults: () => import("@/components/MultipleResults.vue"),
     VScanner,
-    PulseLoader
+    PulseLoader,
   },
   mixins: [checkAdmin],
   data() {
@@ -82,7 +95,7 @@ export default {
       showNotFound: false,
       dialogOptions: {},
       loading: false,
-      showArchived: false
+      showArchived: false,
     };
   },
   methods: {
@@ -113,7 +126,7 @@ export default {
           this.setCurrentInstrument(this.searchResults[0]);
         } else if (this.searchResults.length < 1) {
           this.$toasted.info("Only archived instruments found", {
-            duration: 2000
+            duration: 2000,
           });
         } else {
           this.$toasted.info("Multiple Instruments Found", { duration: 2000 });
@@ -138,9 +151,9 @@ export default {
     },
     showArchivedResults(results) {
       this.setSearchResults(results);
-    }
+    },
   },
-  computed: mapState(["searchResults"])
+  computed: mapState(["searchResults"]),
 };
 </script>
 

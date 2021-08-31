@@ -1,12 +1,9 @@
 const { colors } = require('tailwindcss/defaultTheme')
 
 module.exports = {
+  mode: 'jit',
   purge: {
-    content: [
-      './js/*.js',
-      './src/*.vue',
-      './src/**/*.vue',
-    ],
+    content: ['./js/*.js', './src/*.vue', './src/**/*.vue'],
   },
   theme: {
     extend: {
@@ -40,13 +37,22 @@ module.exports = {
       },
     },
   },
-  variants: {
-    padding: ['last', 'responsive', 'hover', 'focus', 'first'],
-    borderStyle: ['last', 'first', 'responsive', 'hover', 'focus', 'even', 'odd'],
-    borderWidth: ['last', 'first', 'responsive', 'hover', 'focus'],
-    borderColor: ['last', 'responsive', 'hover', 'focus', 'first', 'focus-within', 'even', 'odd'],
-    backgroundColor: ['last', 'first', 'hover', 'focus', 'even', 'odd'],
-    shadow: ['hover', 'focus', 'focus-within'],
-  },
+  // variants: {
+  //   padding: ['last', 'responsive', 'hover', 'focus', 'first'],
+  //   borderStyle: ['last', 'first', 'responsive', 'hover', 'focus', 'even', 'odd'],
+  //   borderWidth: ['last', 'first', 'responsive', 'hover', 'focus'],
+  //   borderColor: [
+  //     'last',
+  //     'responsive',
+  //     'hover',
+  //     'focus',
+  //     'first',
+  //     'focus-within',
+  //     'even',
+  //     'odd',
+  //   ],
+  //   backgroundColor: ['last', 'first', 'hover', 'focus', 'even', 'odd'],
+  //   shadow: ['hover', 'focus', 'focus-within'],
+  // },
   plugins: [],
 }

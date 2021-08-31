@@ -23,15 +23,11 @@
         @change="handleChange"></v-strings-input-table>
     </div>
     <div class="flex justify-end mt-4 mb-2" v-if="loading">
-      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+      <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
     </div>
     <div v-else class="flex justify-end mt-4">
-      <button @click.prevent="$emit('close')"
-              class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
-      </button>
-      <button type="submit"
-              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
-      </button>
+      <v-close-form-button @close="$emit('close')"/>
+      <v-save-button />
     </div>
   </form>
 </template>
@@ -41,29 +37,31 @@ import { API } from "aws-amplify";
 import computedStrings from "@/mixins/computedStrings";
 import VStringsInputTable from "@/components/inventoryComponents/strings/layout/VStringsInputTable";
 import { BarLoader } from "@saeris/vue-spinners";
+import VSaveButton from "@/components/UI/buttons/VSaveButton";
+import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton";
 
 export default {
   name: "VUpdateStringsForm",
-  components: { VStringsInputTable, BarLoader },
+  components: { VCloseFormButton, VSaveButton, VStringsInputTable, BarLoader },
   mixins: [computedStrings],
   props: {
     strings: {
       type: Array,
-      required: true
+      required: true,
     },
     updateText: {
       type: String,
-      required: true
+      required: true,
     },
     submitPath: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       items: {},
-      loading: false
+      loading: false,
     };
   },
   created() {
@@ -75,7 +73,7 @@ export default {
       for (const [id, amount] of Object.entries(this.items)) {
         if (amount !== 0) {
           updated.push({
-            id, amount
+            id, amount,
           });
         }
       }
@@ -83,8 +81,8 @@ export default {
         this.loading = true;
         const response = await API.post("instrument-inventory", this.submitPath, {
           body: {
-            string_updates: updated
-          }
+            string_updates: updated,
+          },
         });
         this.$emit("updated", { updatedIds: response.updated, updatedItems: response.updatedItems });
         this.loading = false;
@@ -108,11 +106,8 @@ export default {
     },
     handleChange({ id, value }) {
       this.items[id] = value;
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
-
-</style>

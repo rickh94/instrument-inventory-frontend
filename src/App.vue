@@ -1,17 +1,20 @@
 <template>
   <!--  TODO: Create custom sign in component -->
-  <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
-    <div id="app">
-      <v-nav></v-nav>
-      <div class="w-full">
-        <router-view class="mx-auto" />
+  <amplify-auth-container>
+    <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
+      <div slot="sign-up">Sign Up is not enabled for this app</div>
+      <div id="app">
+        <v-nav></v-nav>
+        <div class="w-full">
+          <router-view class="mx-auto" />
+        </div>
       </div>
-    </div>
-    <div class="flex justify-center">
-      <amplify-sign-out button-text="Log Out"></amplify-sign-out>
-    </div>
-    <instrument-display />
-  </amplify-authenticator>
+      <div class="flex justify-center">
+        <amplify-sign-out button-text="Log Out"></amplify-sign-out>
+      </div>
+      <instrument-display />
+    </amplify-authenticator>
+  </amplify-auth-container>
 </template>
 
 <script>
@@ -38,7 +41,7 @@ export default {
     });
   },
   methods: mapMutations(["logIn", "logOut"]),
-  computed: mapState(["userRole"])
+  computed: mapState(["userRole"]),
 };
 </script>
 
@@ -51,5 +54,13 @@ export default {
 body {
   font-family: 'Oxygen', sans-serif;
 }
+
+:root {
+  --ampllify-font-family: 'Oxygen', sans-serif;
+  --amplify-primary-color: #7c3aed;
+  --amplify-primary-shade: rgb(91, 33, 182);
+  --amplify-primary-tint: rgb(139, 92, 246);
+}
 </style>
+
 

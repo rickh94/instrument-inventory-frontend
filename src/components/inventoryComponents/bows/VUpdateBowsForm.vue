@@ -84,15 +84,18 @@
       </table>
     </div>
     <div class="flex justify-end mt-4 mb-2" v-if="loading">
-      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+      <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
     </div>
     <div v-else class="flex justify-end mt-4">
-      <button @click.prevent="$emit('close')"
-              class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
-      </button>
-      <button type="submit"
-              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
-      </button>
+<!--      <button @click.prevent="$emit('close')"-->
+<!--              class="inline-flex items-center font-bold bg-red-600 px-3 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">-->
+<!--        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">-->
+<!--          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />-->
+<!--        </svg>-->
+<!--        Close-->
+<!--      </button>-->
+      <v-close-form-button @close="$emit('close')"/>
+      <v-save-button/>
     </div>
   </form>
 </template>
@@ -101,10 +104,12 @@
 import computedBows from "@/mixins/computedBows";
 import { API } from "aws-amplify";
 import {BarLoader} from "@saeris/vue-spinners";
+import VSaveButton from "@/components/UI/buttons/VSaveButton";
+import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton";
 
 export default {
   name: "VUpdateBowsForm",
-  components: { BarLoader },
+  components: { VCloseFormButton, VSaveButton, BarLoader },
   mixins: [computedBows],
   props: {
     bows: {

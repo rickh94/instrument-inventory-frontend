@@ -17,8 +17,11 @@
           {{ currentInstrument.type }} {{
             currentInstrument.number }}
         </h6>
-        <button class="appearance-none text-white bg-red-600 px-2 rounded shadow hover:bg-red-800 hover:shadow-lg text-sm"
-                @click="clearCurrentInstrument">Close
+        <button class="appearance-none text-white bg-red-600 px-1 rounded shadow hover:bg-red-800 hover:shadow-lg text-sm"
+                @click="clearCurrentInstrument" title="Close Instrument Display">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
         </button>
       </div>
       <div>
@@ -55,24 +58,37 @@
         <span class="font-bold text-gray-700 mb-2">Archived</span> {{ currentInstrument.archived ? "Yes" : "No" }}
       </div>
       <div class="w-full flex justify-start flex-row-reverse mt-4 mb-2" v-if="loading">
-        <bar-loader class="w-80 mr-2" color="#805ad5"></bar-loader>
+        <bar-loader class="w-80 mr-2" color="#7c3aed"></bar-loader>
       </div>
       <div class="flex justify-start mt-2 flex-row-reverse" v-else>
-        <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"
-                @click="edit" v-if="isAdmin">Edit
-        </button>
+        <v-edit-button v-if="isAdmin" @click="edit"/>
+<!--        <button class="mx-1 appearance-none bg-yellow-600 text-white px-4 py-1 shadow rounded hover:bg-yellow-800 hover:shadow-lg"-->
+<!--                @click="edit" v-if="isAdmin">Edit-->
+<!--        </button>-->
         <router-link
           v-if="$route.path !== '/sign-out'"
           to="/sign-out"
-          class="mx-1 appearance-none bg-blue-600 text-white px-4 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
-          Sign Out
+          class="inline-flex items-center font-bold mx-1 appearance-none bg-blue-600 text-white px-3 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"> <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+          </svg>
+          Assign
         </router-link>
-        <button @click="retrieve"
-                class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">
-          Retrieve
-        </button>
+        <v-retrieve-button @click="retrieve"/>
+<!--        <button @click="retrieve"-->
+<!--                class="mx-1 appearance-none bg-green-600 text-white px-4 py-1 shadow rounded hover:bg-green-800 hover:shadow-lg">-->
+<!--          Retrieve-->
+<!--        </button>-->
         <button v-if="isAdmin" @click="toggleArchived"
-                class="mx-1 appearance-none bg-orange-600 text-white px-4 py-1 shadow rounded hover:bg-orange-800 hover:shadow-lg">
+                class="inline-flex items-center font-bold mx-1 appearance-none bg-pink-600 text-white px-4 py-1 shadow rounded hover:bg-pink-800 hover:shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          v-if="currentInstrument.archived">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor" v-else>
+            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
+            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+          </svg>
           {{ currentInstrument.archived ? "Un-archive" : "Archive" }}
         </button>
       </div>
@@ -85,6 +101,8 @@ import VModal from "@/components/UI/VModal";
 import { API } from "aws-amplify";
 import checkAdmin from "@/mixins/checkAdmin";
 import { BarLoader } from "@saeris/vue-spinners";
+import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton";
+import VEditButton from "@/components/UI/buttons/VEditButton";
 
 export default {
   name: "InstrumentDisplay",
@@ -95,7 +113,7 @@ export default {
       loading: false
     };
   },
-  components: { BarLoader, VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm"), VModal },
+  components: { VEditButton, VRetrieveButton, BarLoader, VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm"), VModal },
   methods: {
     ...mapMutations(["clearCurrentInstrument", "setCurrentInstrument", "updateCurrentInstrument", "clearNewInstrumentNumber"]),
     async toggleArchived() {

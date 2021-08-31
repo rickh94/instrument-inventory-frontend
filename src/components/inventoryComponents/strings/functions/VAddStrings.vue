@@ -7,11 +7,6 @@
       update-text="Added"
       @close="$emit('close')"
       @updated="$emit('updated', $event)"></v-update-strings-form>
-<!--    <v-strings-input-table-->
-<!--      submit-path="strings/add"-->
-<!--      :strings="strings"-->
-<!--      @close="$emit('close')"-->
-<!--      @updated="$emit('updated', $event)"></v-strings-input-table>-->
   </div>
 </template>
 

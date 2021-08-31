@@ -19,10 +19,13 @@
               <font-awesome-icon icon="barcode" class="mx-2"></font-awesome-icon>
             </button>
           </div>
-          <button @click.prevent="onAdd" class="appearance-none rounded ml-4 text-white font-bold px-4 py-1"
+          <button @click.prevent="onAdd" class="appearance-none rounded ml-4 text-white font-bold px-2 py-1 inline-flex items-center"
                   :class="currentNumber.length === 0 ? 'bg-gray-600' : 'bg-purple-600 hover:shadow hover:bg-purple-800'"
                   :disabled="currentNumber.length === 0"
           >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+            </svg>
             Add
           </button>
         </div>
@@ -34,20 +37,31 @@
                   :key="instrument"
                   class="bg-purple-300 flex m-1 justify-between items-center rounded-full px-4 py-2 shadow-sm hover:shadow hover:bg-red-300"
                   title="Click to remove">
-            <span class="block mr-2">{{ instrument }}</span>
-            <font-awesome-icon icon="trash"></font-awesome-icon>
+            <span class="block mr-1">{{ instrument }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
           </button>
         </transition-group>
         <div class="flex justify-end mt-4 mb-2" v-if="loading">
-          <bar-loader class="w-56 mr-2" color="#805ad5"></bar-loader>
+          <bar-loader class="w-56 mr-2" color="#7c3aed"></bar-loader>
         </div>
         <div v-else class="flex justify-end w-full mt-5">
-          <button class="bg-red-600 mx-2 px-4 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded font-bold"
+          <button class="bg-red-600 mx-2 px-3 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded font-bold inline-flex items-center"
                   type="reset"
-                  @click.prevent="instruments = []">Clear
+                  @click.prevent="instruments = []">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+            </svg>
+            Clear
           </button>
-          <button class="bg-purple-600 ml-2 px-4 font-bold text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded"
-                  type="submit">Retrieve
+          <button class="bg-purple-600 ml-2 px-3 font-bold text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded inline-flex items-center"
+                  type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z" />
+              <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+            </svg>
+            Retrieve
           </button>
         </div>
       </form>

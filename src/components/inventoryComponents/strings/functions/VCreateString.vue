@@ -4,13 +4,13 @@
       <h4 class="text-xl text-gray-900 font-bold mb-2">Create New String Type</h4>
     </div>
     <v-form-control label="Instrument Type" label-for="type">
-      <v-autocomplete id="type" v-model="data.type" :options="types"></v-autocomplete>
+      <v-autocomplete required id="type" v-model="data.type" :options="types"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Size" label-for="size">
-      <v-autocomplete id="size" v-model="data.size" :options="sizes"></v-autocomplete>
+      <v-autocomplete required id="size" v-model="data.size" :options="sizes"></v-autocomplete>
     </v-form-control>
     <v-form-control label="String" label-for="string">
-      <v-autocomplete id="string" v-model="data.string" :options="strings"></v-autocomplete>
+      <v-autocomplete required id="string" v-model="data.string" :options="strings"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Count" label-for="count">
       <input id="count"
@@ -18,18 +18,15 @@
              min="0"
              v-model="data.count"
              type="number"
-             class="appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight">
+             class="appearance-none bg-transparent border-none w-16 text-gray-900 py-1 leading-tight"
+      >
     </v-form-control>
     <div class="flex justify-end mt-4 mb-2" v-if="loading">
-      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+      <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
     </div>
     <div v-else class="flex justify-end">
-      <button @click.prevent="handleCancel"
-              class="bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg">Cancel
-      </button>
-      <button type="submit"
-              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
-      </button>
+      <v-cancel-button @cancel="handleCancel" />
+      <v-save-button />
     </div>
   </form>
 </template>
@@ -39,10 +36,12 @@ import VFormControl from "@/components/UI/VFormControl";
 import VAutocomplete from "@/components/UI/VAutocomplete";
 import { API } from "aws-amplify";
 import { BarLoader } from "@saeris/vue-spinners";
+import VCancelButton from "@/components/UI/buttons/VCancelButton";
+import VSaveButton from "@/components/UI/buttons/VSaveButton";
 
 export default {
   name: "VCreateBow",
-  components: { VAutocomplete, VFormControl, BarLoader },
+  components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader },
   data() {
     return {
       types: [],
@@ -52,9 +51,9 @@ export default {
       data: {
         type: "",
         size: "",
-        count: "",
-        string: ""
-      }
+        count: "0",
+        string: "",
+      },
     };
   },
   async created() {
@@ -83,8 +82,8 @@ export default {
         this.loading = true;
         const response = await API.post("instrument-inventory", "strings", {
           body: {
-            ...this.data
-          }
+            ...this.data,
+          },
         });
         this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
         this.$toasted.show(response.message, { duration: 2000 });
@@ -93,16 +92,13 @@ export default {
       } catch (err) {
         this.loading = false;
         if (err.response.data) {
-          this.$toasted.error(err.response.data, { duration: 2000 });
+          this.$toasted.error("Error: Invalid form", { duration: 2000 });
         } else {
           this.$toasted.error(err);
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
-
-</style>

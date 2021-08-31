@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex h-20 w-full items-center justify-center" v-if="loading">
-      <propagate-loader color="#805ad5"></propagate-loader>
+      <propagate-loader color="#7c3aed"></propagate-loader>
     </div>
     <div v-else class="flex items-start flex-wrap justify-around mt-4">
       <v-bows-table :bows="violinBows" instrument="Violin"></v-bows-table>
@@ -10,18 +10,10 @@
       <v-bows-table :bows="bassBows" instrument="Bass"></v-bows-table>
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
-      <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white"
-              @click.prevent="formComponent = 'v-create-bow'" v-if="isAdmin">
-        Create Bow
-      </button>
-      <button @click.prevent="formComponent = 'v-use-bows'"
-              class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white">
-        Use Bows
-      </button>
-      <button @click.prevent="formComponent = 'v-add-bows'"
-              class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white">
-        Add Bows
-      </button>
+      <v-create-button @click="formComponent = 'v-create-bow'" item="Bow" />
+      <!--        class="bg-gradient-to-tr from-purple-600 to-purple-400 hover:from-purple-800  py-2 px-3 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white font-bold inline-flex items-center">-->
+      <v-use-button  @click="formComponent = 'v-use-bows'" item="Bows" />
+      <v-add-button @click="formComponent = 'v-add-bows'" item="Bows" />
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
       <div :is="formComponent" @close="formComponent = null" @updated="handleUpdate" :bows="bows"></div>
@@ -35,23 +27,35 @@ import { API } from "aws-amplify";
 import computedBows from "@/mixins/computedBows";
 import checkAdmin from "@/mixins/checkAdmin";
 import { PropagateLoader } from "@saeris/vue-spinners";
+import VCreateButton from "@/components/UI/buttons/VCreateButton";
+import VUseButton from "@/components/UI/buttons/VUseButton";
+import VAddButton from "@/components/UI/buttons/VAddButton";
+
+
+// Webstorm stop removing my components!
+// VAddBows: () => import("@/components/inventoryComponents/bows/VAddBows"),
+//   VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows"),
+//   VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
 
 export default {
   name: "VInventoryBows",
   components: {
+    VAddButton,
+    VUseButton,
+    VCreateButton,
     VModal: () => import("@/components/UI/VModal.vue"),
-    VBowsTable,
-    VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow.vue"),
-    VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows.vue"),
     VAddBows: () => import("@/components/inventoryComponents/bows/VAddBows"),
-    PropagateLoader
+    VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows"),
+    VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
+    VBowsTable,
+    PropagateLoader,
   },
   mixins: [computedBows, checkAdmin],
   data() {
     return {
       bows: [],
       formComponent: null,
-      loading: false
+      loading: false,
     };
   },
   async created() {
@@ -75,12 +79,9 @@ export default {
       this.loading = true;
       this.bows = [...this.bows.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
       this.loading = false;
-    }
-  }
+    },
+  },
 };
 
 </script>
 
-<style scoped>
-
-</style>

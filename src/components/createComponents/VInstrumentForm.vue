@@ -7,13 +7,13 @@
     </div>
     <form @submit.prevent="onSubmit">
       <v-form-control label="Size" label-for="size">
-        <v-autocomplete id="size" v-model="data.size" :options="sizes"></v-autocomplete>
+        <v-autocomplete id="size" v-model="data.size" :options="acOptions.sizes"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Type" label-for="type">
-        <v-autocomplete id="type" v-model="data.type" :options="types"></v-autocomplete>
+        <v-autocomplete id="type" v-model="data.type" :options="acOptions.types"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Location" label-for="location">
-        <v-autocomplete id="location" :options="locations" v-model="data.location"></v-autocomplete>
+        <v-autocomplete id="location" :options="acOptions.locations" v-model="data.location"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Assigned To" label-for="assigned-to">
         <input type="text"
@@ -51,21 +51,25 @@
         </div>
       </v-form-control>
       <div class="w-full flex justify-end mt-4 mb-2" v-if="loading">
-        <bar-loader class="w-56 mx-2" color="#805ad5"></bar-loader>
+        <bar-loader class="w-56 mx-2" color="#7c3aed"></bar-loader>
       </div>
       <div v-else class="flex justify-end w-full mt-5">
-        <button v-if="mode === 'editing'"
-                @click="$emit('cancel')"
-                class="mx-2 bg-red-600 px-4 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded"
-        >Cancel
-        </button>
+        <v-cancel-button v-if="mode === 'editing'" @cancel="$emit('cancel')"/>
         <button v-else
-                class="mx-2 bg-red-600 px-4 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded"
-                @click="clearNewInstrumentNumber()">Change Number
+                class="font-bold inline-flex items-center mx-2 bg-red-600 px-3 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded"
+                @click="clearNewInstrumentNumber()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+          </svg>
+          Change Number
         </button>
         <button
-          class="bg-purple-600  px-4 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
-          type="submit">Save
+          class="inline-flex items-center font-bold bg-purple-600 px-3 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded mx-2"
+          type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
+          </svg>
+          Save
         </button>
       </div>
     </form>
@@ -78,10 +82,13 @@ import VAutocomplete from "@/components/UI/VAutocomplete";
 import { mapMutations, mapState } from "vuex";
 import VFormControl from "@/components/UI/VFormControl";
 import { BarLoader } from "@saeris/vue-spinners";
+import acOptions from "@/mixins/acOptions";
+import VCancelButton from "@/components/UI/buttons/VCancelButton";
 
 export default {
   name: "VInstrumentForm",
-  components: { VFormControl, VAutocomplete, BarLoader },
+  components: { VCancelButton, VFormControl, VAutocomplete, BarLoader },
+  mixins: [acOptions],
   data() {
     return {
       mode: "creating",
@@ -97,35 +104,42 @@ export default {
         maintenanceNotes: "",
         conditionNotes: "",
         condition: 5,
-        quality: 5
-      }
+        quality: 5,
+      },
     };
   },
   async created() {
-    console.log(this.newInstrumentNumber.length);
     if (this.newInstrumentNumber.length > 0) {
       this.mode = "creating";
-      if (this.newInstrumentNumber[0] === "C") {
-        this.data.type = "Cello";
-        this.guessSize(1);
-      } else if (this.newInstrumentNumber[0] === "V") {
-        this.data.type = "Viola";
-        this.guessSize(1);
-      } else if (this.newInstrumentNumber[0] === "B") {
-        this.data.type = "Bass";
-        this.guessSize(1);
-      } else if (this.newInstrumentNumber[0] === "K") {
-        this.data.type = "Keyboard";
-        this.data.size = "N/A";
-      } else if (this.newInstrumentNumber[0] === "D") {
-        this.data.type = "Drum";
-        this.data.size = "N/A";
-      } else if (this.newInstrumentNumber[0] === "O") {
-        this.data.type = "Orff Instrument";
-        this.data.size = "N/A";
-      } else {
-        this.data.type = "Violin";
-        this.guessSize(0);
+      switch (this.newInstrumentNumber[0]) {
+        case "C":
+          this.data.type = "Cello";
+          this.guessSize(1);
+          break;
+        case "V":
+          this.data.type = "Viola";
+          this.guessSize(1);
+          break;
+        case "B":
+          this.data.type = "Bass";
+          this.guessSize(1);
+          break;
+        case "K":
+          this.data.type = "Keyboard";
+          this.data.size = "N/A";
+          break;
+        case "D":
+          this.data.type = "Drum";
+          this.data.size = "N/A";
+          break;
+        case "O":
+          this.data.type = "Orff Instrument";
+          this.data.size = "N/A";
+          break;
+        default:
+          this.data.type = "Violin";
+          this.guessSize(0);
+          break;
       }
       this.data.conditionNotes = `Tagged in on ${(new Date()).toLocaleDateString()}`;
     } else if (this.currentInstrument) {
@@ -134,16 +148,7 @@ export default {
     } else {
       this.$toasted.error("Error: must have either current instrument or new instrument", { duration: 2000 });
     }
-    if (this.locations.length === 0) {
-      try {
-        const { locations, types, sizes } = await API.get("instrument-inventory", "schema/ac-options", {});
-        this.locations = locations;
-        this.types = types;
-        this.sizes = sizes;
-      } catch (e) {
-        this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 });
-      }
-    }
+    await this.getACOptions()
   },
   methods: {
     ...mapMutations(["clearNewInstrumentNumber", "setCurrentInstrument", "updateCurrentInstrument"]),
@@ -160,8 +165,8 @@ export default {
         const response = await API.post("instrument-inventory", "instruments", {
           body: {
             ...this.data,
-            number: this.newInstrumentNumber
-          }
+            number: this.newInstrumentNumber,
+          },
         });
         this.loading = false;
         this.$toasted.info(`Instrument ${response.item.number} created`, { duration: 2000 });
@@ -177,8 +182,8 @@ export default {
       try {
         const response = await API.put("instrument-inventory", `instruments/${this.data.id}`, {
           body: {
-            ...this.data
-          }
+            ...this.data,
+          },
         });
         this.updateCurrentInstrument(response.item);
         this.$emit("editSuccess", response.item);
@@ -232,9 +237,9 @@ export default {
         default:
           this.data.size = "";
       }
-    }
+    },
   },
-  computed: mapState(["newInstrumentNumber", "currentInstrument"])
+  computed: mapState(["newInstrumentNumber", "currentInstrument"]),
 };
 </script>
 

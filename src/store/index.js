@@ -16,6 +16,11 @@ export default new Vuex.Store({
     newInstrumentNumber: '',
     allInstruments: [],
     userRole: USER_ROLES.unauthenticated,
+    acOptions: {
+      locations: [],
+      types: [],
+      sizes: [],
+    },
   },
   mutations: {
     setAllInstruments(state, instruments) {
@@ -62,6 +67,9 @@ export default new Vuex.Store({
     },
     logOut(state) {
       state.userRole = USER_ROLES.unauthenticated
+    },
+    setACOptions(state, nextOptions) {
+      state.acOptions = nextOptions
     },
   },
   modules: {},

@@ -26,15 +26,11 @@
       ></textarea>
     </v-form-control>
     <div class="flex justify-end mt-4 mb-2" v-if="loading">
-      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+      <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
     </div>
     <div v-else class="flex justify-end">
-      <button @click.prevent="handleCancel"
-              class="bg-yellow-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-yellow-800 hover:shadow-lg">Cancel
-      </button>
-      <button type="submit"
-              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
-      </button>
+      <v-cancel-button @cancel="handleCancel" />
+      <v-save-button />
     </div>
   </form>
 
@@ -45,10 +41,12 @@ import VFormControl from "@/components/UI/VFormControl";
 import { BarLoader } from "@saeris/vue-spinners";
 import errorHandler from "@/mixins/errorHandler";
 import { API } from "aws-amplify";
+import VCancelButton from "@/components/UI/buttons/VCancelButton";
+import VSaveButton from "@/components/UI/buttons/VSaveButton";
 
 export default {
   name: "VCreateItem",
-  components: { VFormControl, BarLoader },
+  components: { VSaveButton, VCancelButton, VFormControl, BarLoader },
   mixins: [errorHandler],
   data() {
     return {
@@ -57,8 +55,8 @@ export default {
         count: 0,
         num_out: 0,
         signed_out_to: [],
-        notes: ""
-      }
+        notes: "",
+      },
     };
   },
   methods: {
@@ -67,8 +65,8 @@ export default {
         this.loading = true;
         const response = await API.post("instrument-inventory", "other/create", {
           body: {
-            ...this.data
-          }
+            ...this.data,
+          },
         });
         this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
         this.$toasted.show(response.message, { duration: 2000 });
@@ -82,8 +80,8 @@ export default {
     handleCancel() {
       this.data = { name: "", count: 0, num_out: 0, signed_out_to: [], notes: "" };
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
 

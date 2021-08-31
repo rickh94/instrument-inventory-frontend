@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex h-20 w-full items-center justify-center" v-if="loading">
-      <propagate-loader color="#805ad5"></propagate-loader>
+      <propagate-loader color="#7c3aed"></propagate-loader>
     </div>
     <div class="flex items-start flex-wrap justify-around mt-4" v-else>
       <v-strings-table :strings="violinStrings" instrument="Violin"></v-strings-table>
@@ -10,18 +10,9 @@
       <v-strings-table :strings="bassStrings" instrument="Bass"></v-strings-table>
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
-      <button class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white"
-              @click.prevent="formComponent = 'v-create-string'" v-if="isAdmin">
-        Create String
-      </button>
-      <button @click.prevent="formComponent = 'v-use-strings'"
-              class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white">
-        Use Strings
-      </button>
-      <button @click.prevent="formComponent = 'v-add-strings'"
-              class="bg-purple-600 py-2 px-4 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white">
-        Add Strings
-      </button>
+      <v-create-button @click="formComponent = 'v-create-string'" item="String"/>
+      <v-use-button @click="formComponent = 'v-use-strings'" item="Strings"/>
+      <v-add-button @click="formComponent = 'v-add-strings'" item="Strings"/>
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
       <div :is="formComponent" @close="formComponent = null" @updated="handleUpdate" :strings="strings"></div>
@@ -35,10 +26,16 @@ import computedStrings from "@/mixins/computedStrings.js";
 import checkAdmin from "@/mixins/checkAdmin.js";
 import { API } from "aws-amplify";
 import { PropagateLoader } from "@saeris/vue-spinners";
+import VCreateButton from "@/components/UI/buttons/VCreateButton";
+import VUseButton from "@/components/UI/buttons/VUseButton";
+import VAddButton from "@/components/UI/buttons/VAddButton";
 
 export default {
   name: "VInventoryStrings",
   components: {
+    VAddButton,
+    VUseButton,
+    VCreateButton,
     VModal: () => import("@/components/UI/VModal"),
     VStringsTable,
     VCreateString: () => import("@/components/inventoryComponents/strings/functions/VCreateString.vue"),

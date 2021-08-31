@@ -1,17 +1,24 @@
 <template>
+<!--  possibly redo this with an input and datalist -->
   <div class="autocomplete" @blur="open = false">
     <input class="appearance-none bg-transparent border-none w-full text-gray-900  py-1 focus:text-purple-800 mr-3 leading-tight focus:outline-none"
-           @input="onInput" @keydown.arrow-down="selectedIndex += 1" :value="value"
-           @keydown.arrow-up="selectedIndex -= 1" @keydown.enter="selectOption(matchingOptions[selectedIndex])"
+           :value="value"
+           @input="onInput"
+           @keydown.arrow-down="selectedIndex += 1"
+           @keydown.arrow-up="selectedIndex -= 1"
+           @keydown.enter.prevent="selectOption(matchingOptions[selectedIndex])"
            @keydown.escape="open = false"
+           @blur="closeSoon"
+           :required="required"
     >
     <div class="autocomplete-items" v-if="open">
       <div v-for="(option, index) in matchingOptions"
            :key="index"
            :id="`autocomplete-option-${index}`"
-           @click="selectOption(option)"
+           @click.prevent="selectOption(option)"
            @mouseover="selectedIndex = index"
-           :class="selectedIndex === index ? 'bg-gray-300' : 'bg-white'"
+           :class="selectedIndex === index ? 'from-purple-200 to-purple-100' : 'bg-white'"
+           class="text-black bg-gradient-to-br"
       >{{ option }}
       </div>
     </div>
@@ -20,7 +27,7 @@
 
 <script>
 export default {
-  name: 'VAutocomplete',
+  name: "VAutocomplete",
   props: {
     options: {
       type: Array,
@@ -30,30 +37,42 @@ export default {
       type: String,
       required: true,
     },
+    required: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
       open: false,
       selectedIndex: 0,
-    }
+    };
   },
   methods: {
     selectOption(option) {
-      this.$emit('input', option)
-      this.open = false
-      this.selectedIndex = 0
+      this.$emit("input", option);
+      this.open = false;
+      this.selectedIndex = 0;
     },
     onInput(e) {
-      this.$emit('input', e.target.value)
-      this.open = true
+      this.$emit("input", e.target.value);
+      this.open = true;
     },
+    closeSoon() {
+      // Why? because technically the options are outside the element and cause
+      // a 'blur' event on the main input, closing the whole thing before the option
+      // actually gets selected. A short delay ensures that the option is seleted
+      // before the element closes. And without closing on blur, we just leave
+      // random autocomplete lists all over the page, which is gross.
+      setTimeout(() => this.open = false, 200);
+    }
   },
   computed: {
     matchingOptions() {
-      return this.options.filter(item => item.toLowerCase().substr(0, this.value.length) === this.value.toLowerCase())
+      return this.options.filter(item => item.toLowerCase().substr(0, this.value.length) === this.value.toLowerCase());
     },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -64,7 +83,7 @@ export default {
 
 .autocomplete-items {
   position: absolute;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #7c3aed;
   border-bottom: none;
   z-index: 99;
   top: 100%;
@@ -76,7 +95,7 @@ export default {
   display: block;
   padding: 10px;
   cursor: pointer;
-  border-bottom: 1px solid #d4d4d4;
+  border-bottom: 1px solid #7c3aed;
 }
 
 .autocomplete-active {

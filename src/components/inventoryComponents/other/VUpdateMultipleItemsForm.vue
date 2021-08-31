@@ -25,15 +25,11 @@
       </table>
     </div>
     <div class="flex justify-end mt-4 mb-2" v-if="loading">
-      <bar-loader class="w-40 mr-2" color="#805ad5"></bar-loader>
+      <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
     </div>
     <div v-else class="flex justify-end mt-4">
-      <button @click.prevent="$emit('close')"
-              class="bg-red-600 px-4 mx-2 py-2 text-white shadow rounded hover:bg-red-800 hover:shadow-lg">Close
-      </button>
-      <button type="submit"
-              class="bg-purple-600 px-4 py-2 text-white shadow rounded hover:bg-purple-800 hover:shadow-lg">Submit
-      </button>
+      <v-close-form-button @close="$emit('close')" />
+      <v-save-button />
     </div>
   </form>
 </template>
@@ -42,30 +38,32 @@
 import errorHandler from "@/mixins/errorHandler";
 import { API } from "aws-amplify";
 import { BarLoader } from "@saeris/vue-spinners";
+import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton";
+import VSaveButton from "@/components/UI/buttons/VSaveButton";
 
 export default {
   name: "VUpdateMultipleItemsForm",
-  components: { BarLoader },
+  components: { VSaveButton, VCloseFormButton, BarLoader },
   mixins: [errorHandler],
   data() {
     return {
       itemsToUpdate: {},
-      loading: false
+      loading: false,
     };
   },
   props: {
     items: {
       type: Array,
-      required: true
+      required: true,
     },
     updateText: {
       type: String,
-      required: true
+      required: true,
     },
     submitPath: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {
     this.initializeItems();
@@ -90,8 +88,8 @@ export default {
         this.loading = true;
         const response = await API.post("instrument-inventory", this.submitPath, {
           body: {
-            item_updates: updated
-          }
+            item_updates: updated,
+          },
         });
         this.$emit("updated", { updatedIds: response.updated, updatedItems: response.updatedItems });
         this.loading = false;
@@ -102,9 +100,8 @@ export default {
       } catch (err) {
         this.handleError(err);
       }
-    }
-  }
-
+    },
+  },
 };
 </script>
 
