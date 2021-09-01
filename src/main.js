@@ -32,6 +32,10 @@ Amplify.configure({
     userPoolId: config.cognito.USER_POOL_ID,
     identityPoolId: config.cognito.IDENTITY_POOL_ID,
     userPoolWebClientId: config.cognito.APP_CLIENT_ID,
+    cookieStorage: {
+      domain: config.cognito.DOMAIN,
+      secure: config.cognito.SECURE,
+    },
   },
   API: {
     endpoints: [
