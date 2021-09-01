@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Amplify from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 import '@aws-amplify/ui-vue'
 import Toasted from 'vue-toasted'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -46,12 +46,14 @@ Amplify.configure({
       },
     ],
   },
-  Storage: {
-    region: config.s3.REGION,
-    bucket: config.s3.BUCKET,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID,
-  },
+  // Storage: {
+  //   region: config.s3.REGION,
+  //   bucket: config.s3.BUCKET,
+  //   identityPoolId: config.cognito.IDENTITY_POOL_ID,
+  // },
 })
+
+Auth.configure(config)
 
 new Vue({
   router,
