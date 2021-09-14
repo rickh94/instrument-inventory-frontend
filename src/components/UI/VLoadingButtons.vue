@@ -1,8 +1,8 @@
 <template>
   <div class="flex justify-end mt-4 mb-2" v-if="loading">
-    <bar-loader class="w-40 mr-2" color="#7c3aed"></bar-loader>
+    <bar-loader :class="loaderClass" color="#7c3aed"></bar-loader>
   </div>
-  <div class="flex w-full justify-end" v-else>
+  <div :class="containerClass" v-else>
     <slot></slot>
   </div>
 </template>
@@ -13,7 +13,18 @@ export default {
   name: "v-loading-buttons",
   components: { BarLoader },
   props: {
-    loading: {},
+    loading: {
+      type: Boolean,
+      required: true,
+    },
+    containerClass: {
+      type: String,
+      default: "flex w-full justify-end",
+    },
+    loaderClass: {
+      type: String,
+      default: "w-40 mr-2"
+    }
   },
 };
 </script>

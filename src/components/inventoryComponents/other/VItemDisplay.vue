@@ -79,11 +79,11 @@
 
         </table>
       </div>
-      <v-loading-buttons :loading="loading">
-        <v-retrieve-button @click="retrieve" />
-        <v-assign-button @click="signOut" />
-        <v-edit-button @click="edit" />
-        <v-move-button @click="move" />
+      <v-loading-buttons :loading="loading" container-class="grid grid-cols-2 sm:grid-cols-4 gap-y-2">
+        <v-retrieve-button @click="retrieve" center />
+        <v-assign-button @click="signOut" center />
+        <v-edit-button @click="edit" center />
+        <v-move-button @click="move" center />
       </v-loading-buttons>
     </div>
   </div>

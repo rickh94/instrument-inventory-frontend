@@ -73,6 +73,12 @@
 import { API } from "aws-amplify";
 import { BarLoader } from "@saeris/vue-spinners";
 
+const ADD_OUTCOMES = {
+  added: Symbol(),
+  invalid: Symbol(),
+  duplicate: Symbol(),
+}
+
 export default {
   name: "Retrieve",
   components: { VScanner: () => import("@/components/UI/VScanner"), BarLoader },
@@ -113,22 +119,64 @@ export default {
       }
     },
     onAdd() {
-      if (this.currentNumber.match(/\w?\d+-\d+/)) {
-        this.instruments.push(this.currentNumber);
-        this.currentNumber = "";
-      } else {
-        this.$toasted.error("Invalid Instrument number", { duration: 1000 });
+      switch (this.doAdd(this.currentNumber)) {
+        case ADD_OUTCOMES.added:
+          this.currentNumber = "";
+          break;
+        case ADD_OUTCOMES.duplicate:
+          this.currentNumber = "";
+          this.$toasted.info("Instrument already added", {duration: 900});
+          break;
+        case ADD_OUTCOMES.invalid:
+          this.$toasted.error("Invalid Instrument number", { duration: 1000 });
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 1000 });
       }
+      // if (this.currentNumber.match(/\w?\d+-\d+/)) {
+      //   if (!this.instruments.includes(this.currentNumber)) {
+      //     this.instruments.push(this.currentNumber);
+      //   }
+      //   this.currentNumber = "";
+      // } else {
+      // }
     },
     detected(result) {
-      if (!this.instruments.includes(result.codeResult.code)) {
-        this.instruments.push(result.codeResult.code);
-        this.flash = true;
-        setTimeout(() => this.flash = false, 300);
+      switch (this.doAdd(result.codeResult.code)) {
+        case ADD_OUTCOMES.added:
+          this.doFlash();
+          break;
+        case ADD_OUTCOMES.duplicate:
+        case ADD_OUTCOMES.invalid:
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 1000 });
       }
+      // if (this.doAdd(result.codeResult.code)) {
+      //   this.doFlash();
+      // }
+      // if (!this.instruments.includes(result.codeResult.code)) {
+      //   this.instruments.push(result.codeResult.code);
+      //   this.flash = true;
+      //   setTimeout(() => this.flash = false, 300);
+      // }
     },
     remove(instrument) {
       this.instruments = this.instruments.filter(item => item !== instrument);
+    },
+    doFlash(timeout = 300) {
+      this.flash = true;
+      setTimeout(() => this.flash = false, timeout)
+    },
+    doAdd(number) {
+      if (!number.match(/\w?\d+-\d+/)) {
+        return ADD_OUTCOMES.invalid;
+      }
+      if (this.instruments.includes(number)) {
+        return ADD_OUTCOMES.duplicate;
+      }
+      this.instruments.push(number);
+      return ADD_OUTCOMES.added;
     }
   }
 };
