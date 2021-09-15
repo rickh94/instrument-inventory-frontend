@@ -133,13 +133,6 @@ export default {
         default:
           this.$toasted.error("Something went wrong", { duration: 1000 });
       }
-      // if (this.currentNumber.match(/\w?\d+-\d+/)) {
-      //   if (!this.instruments.includes(this.currentNumber)) {
-      //     this.instruments.push(this.currentNumber);
-      //   }
-      //   this.currentNumber = "";
-      // } else {
-      // }
     },
     detected(result) {
       switch (this.doAdd(result.codeResult.code)) {
@@ -152,14 +145,6 @@ export default {
         default:
           this.$toasted.error("Something went wrong", { duration: 1000 });
       }
-      // if (this.doAdd(result.codeResult.code)) {
-      //   this.doFlash();
-      // }
-      // if (!this.instruments.includes(result.codeResult.code)) {
-      //   this.instruments.push(result.codeResult.code);
-      //   this.flash = true;
-      //   setTimeout(() => this.flash = false, 300);
-      // }
     },
     remove(instrument) {
       this.instruments = this.instruments.filter(item => item !== instrument);

@@ -158,7 +158,6 @@ export default {
       try {
         const response = await API.post("instrument-inventory", "retrieve-single",
           { body: { number: this.currentInstrument.number } });
-        console.log(response);
         this.updateCurrentInstrument(response.item);
         this.$toasted.info(response.message, { duration: 2000 });
         this.loading = false;
