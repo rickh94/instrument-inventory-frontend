@@ -26,8 +26,15 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+interface ComponentState {
+  tab: string,
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default Vue.extend({
   components: {
     VInventoryInstruments: () => import("@/components/inventoryComponents/VInventoryInstruments.vue"),
     VInventoryBows: () => import("@/components/inventoryComponents/bows/VInventoryBows.vue"),
@@ -35,12 +42,12 @@ export default {
     VInventoryOther: () => import("@/components/inventoryComponents/other/VInventoryOther.vue")
   },
   name: "Inventory",
-  data() {
+  data(): ComponentState {
     return {
       tab: "v-inventory-instruments"
     };
   }
-};
+});
 </script>
 
 <style scoped>

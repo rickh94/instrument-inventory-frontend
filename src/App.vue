@@ -17,24 +17,19 @@
   </amplify-auth-container>
 </template>
 
-<script>
+<script lang="ts">
 import VNav from "@/components/VNav";
 import InstrumentDisplay from "@/components/InstrumentDisplay";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
-import { USER_ROLES } from "@/store";
 import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "App",
   components: { InstrumentDisplay, VNav },
-  data() {
-    return {};
-  },
-  created() {
+  created(): void {
     onAuthUIStateChange((nextAuthState, authData) => {
       if (nextAuthState === "signedin") {
-        // noinspection ES6ShorthandObjectProperty
-        this.logIn(USER_ROLES[authData.attributes["custom:USER_ROLE"]]);
+        this.logIn(authData.attributes["custom:USER_ROLE"]);
       } else if (nextAuthState === "signedout") {
         this.logOut();
       }

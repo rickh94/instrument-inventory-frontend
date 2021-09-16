@@ -1,7 +1,7 @@
 <template>
   <div class="m-5 shadow p-3">
     <h6 class="text-xl font-bold mb-1">Assign Multiple from CSV</h6>
-    <form class="flex-col flex" @submit.prevent="onSubmitMultiple">
+    <form class="flex-col flex" @submit.prevent="onSubmit">
       <v-form-control label="Upload CSV of 'assignedTo, location, number'" label-for="sign-out-csv">
         <input @change="onChangeFile" type="file" name="sign-out-csv" id="sign-out-csv" accept="text/csv" class="my-2">
       </v-form-control>
@@ -13,7 +13,9 @@
                 class="bg-purple-600 px-4 text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded inline-flex items-center font-bold">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+            <path fill-rule="evenodd"
+                  d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                  clip-rule="evenodd" />
           </svg>
           Assign Multiple
         </button>
@@ -21,17 +23,24 @@
     </form>
   </div>
 </template>
-<script>
-import VFormControl from "@/components/UI/VFormControl";
+<script lang="ts">
+import VFormControl from "@/components/UI/VFormControl.vue";
 import { mapMutations } from "vuex";
 import Papa from "papaparse";
-import { API } from "aws-amplify";
 import { BarLoader } from "@saeris/vue-spinners";
+import Vue from "vue";
+import { AssignBody, GenericOutcome} from "@/util/commonTypes";
+import { assignMultiple } from "@/services/assign";
+import { WithLoading } from "@/util/componentTypes";
 
-export default {
+interface ComponentState extends WithLoading {
+  multipleData: AssignBody[];
+}
+
+export default Vue.extend({
   name: "VSignOutMultiple",
   components: { VFormControl, BarLoader },
-  data() {
+  data(): ComponentState {
     return {
       multipleData: [],
       loading: false
@@ -39,9 +48,10 @@ export default {
   },
   methods: {
     ...mapMutations(["clearSearchResults"]),
-    onChangeFile(e) {
+    onChangeFile(e): void {
       Papa.parse(e.target.files[0], {
-        complete: (results) => {
+        complete: (results: { data: AssignBody[] }): void => {
+          // noinspection JSIncompatibleTypesComparison
           if (results.data[0].number === undefined || results.data[0].location === undefined) {
             this.$toasted.error("Error: Invalid CSV file", { duration: 2000 });
             return;
@@ -52,22 +62,23 @@ export default {
         skipEmptyLines: true
       });
     },
-    async onSubmitMultiple() {
-      try {
-        this.loading = true;
-        const response = await API.post("instrument-inventory", "sign-out/multiple", {
-          body: {
-            instruments: this.multipleData
-          }
-        });
-        this.loading = false;
-        this.$toasted.info(`Signed out ${response.updated.join(", ")}`, { duration: 5000 });
-        this.clearSearchResults();
-      } catch (e) {
-        this.loading = false;
-        this.$toasted.error(`Error: ${e.response.data}`);
+    async onSubmit() {
+      this.loading = true;
+      const [outcome, result] = await assignMultiple(this.multipleData);
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.$toasted.success(`Signed out ${result}`, { duration: 5000 });
+          this.clearSearchResults();
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(`Error: ${result}`, {duration: 2000});
+          break;
+        default:
+          console.error(outcome, result)
+          this.$toasted.show("Something went wrong", {duration: 1000})
       }
     }
   }
-};
+});
 </script>

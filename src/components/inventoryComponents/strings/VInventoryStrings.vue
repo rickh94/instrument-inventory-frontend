@@ -23,7 +23,7 @@
 <script>
 import VStringsTable from "@/components/inventoryComponents/strings/layout/VStringsDisplayTable.vue";
 import computedStrings from "@/mixins/computedStrings.js";
-import checkAdmin from "@/mixins/checkAdmin.js";
+import checkAdmin from "@/mixins/checkAdmin";
 import { API } from "aws-amplify";
 import { PropagateLoader } from "@saeris/vue-spinners";
 import VCreateButton from "@/components/UI/buttons/VCreateButton";

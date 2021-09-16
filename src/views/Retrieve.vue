@@ -1,6 +1,5 @@
 <template>
-  <div class="max-w-4xl">
-
+  <div class="max-w-3xl">
     <div class="shadow p-3 m-5" :class="flash ? 'bg-green-300' : 'bg-white'">
       <h4 class="text-gray-800 font-bold text-xl mb-1">Retrieve Multiple Instruments</h4>
       <form @submit.prevent="onSubmit" autocomplete="off">
@@ -30,9 +29,9 @@
           </button>
         </div>
         <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
-        <div class="my-2" v-show="this.instruments.length > 0"><h4 class="text-xl font-bold">Instruments to Retrieve</h4></div>
+        <div class="my-2 max-w-xl mx-auto" v-show="this.instrumentNumbers.length > 0"><h4 class="text-xl font-bold">Instruments to Retrieve</h4></div>
         <transition-group name="tag" tag="div" class="flex flex-wrap mx-auto max-w-xl" mode="out-in">
-          <button v-for="instrument in instruments"
+          <button v-for="instrument in instrumentNumbers"
                   @click.prevent="remove(instrument)"
                   :key="instrument"
                   class="bg-purple-300 flex m-1 justify-between items-center rounded-full px-4 py-2 shadow-sm hover:shadow hover:bg-red-300"
@@ -49,7 +48,7 @@
         <div v-else class="flex justify-end w-full mt-5">
           <button class="bg-red-600 mx-2 px-3 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded font-bold inline-flex items-center"
                   type="reset"
-                  @click.prevent="instruments = []">
+                  @click.prevent="instrumentNumbers = []">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
             </svg>
@@ -69,22 +68,34 @@
   </div>
 </template>
 
-<script>
-import { API } from "aws-amplify";
+<script lang="ts">
+/* eslint-disable no-unused-vars */
+import Vue from "vue";
 import { BarLoader } from "@saeris/vue-spinners";
+import { retrieveMultiple } from "@/services/retreive";
+import { GenericOutcome } from "@/util/commonTypes";
 
-const ADD_OUTCOMES = {
-  added: Symbol(),
-  invalid: Symbol(),
-  duplicate: Symbol(),
+enum AddOutcomes {
+  Added = "ADDED",
+  Invalid = "INVALID",
+  Duplicate = "DUPLICATE"
 }
 
-export default {
+type ComponentState = {
+  instrumentNumbers: string[],
+  currentNumber: string,
+  loading: boolean,
+  scanner: boolean,
+  flash: boolean,
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default Vue.extend({
   name: "Retrieve",
-  components: { VScanner: () => import("@/components/UI/VScanner"), BarLoader },
-  data() {
+  components: { VScanner: () => import("@/components/UI/VScanner.vue"), BarLoader },
+  data(): ComponentState {
     return {
-      instruments: [],
+      instrumentNumbers: [],
       currentNumber: "",
       scanner: false,
       loading: false,
@@ -92,79 +103,86 @@ export default {
     };
   },
   methods: {
-    async onSubmit() {
-      if (this.instruments.length < 1) {
+    async onSubmit(): Promise<void> {
+      if (this.instrumentNumbers.length < 1) {
         this.$toasted.error("No Instruments to retrieve", { duration: 2000 });
         return;
       }
-      try {
-        this.loading = true;
-        const response = await API.post("instrument-inventory", "retrieve-multiple", {
-          body: {
-            numbers: this.instruments
-          }
-        });
-        this.instruments = [];
-        this.loading = false;
-        if (response.instrumentsUpdated.length > 0) {
-          this.$toasted.success(`Succesfully retrieved ${response.instrumentsUpdated.join(", ")}`, { duration: 4000 });
-        }
-        if (response.instrumentsFailed.length > 0) {
-          this.$toasted.error(`Failed to retrieve ${response.instrumentsFailed.join(", ")}`);
-        }
-        console.log(response.instrumentsFailed);
-      } catch (e) {
-        this.loading = false;
-        this.$toasted.error(e.response.data, { duration: 2000 });
+
+      this.loading = true;
+      const [outcome, result] = await retrieveMultiple(this.instrumentNumbers);
+      this.loading = false;
+
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.handleUpdated(result.instrumentsUpdated);
+          this.handleFailed(result.instrumentsFailed);
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(`Error: ${result}`, { duration: 2000 });
+          console.error(result);
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 1000});
       }
     },
-    onAdd() {
+    handleUpdated(updatedNumbers: string[]): void {
+      if (updatedNumbers.length > 0) {
+        this.$toasted.success(`Successfully retrieved ${updatedNumbers.join(", ")}`, { duration: 4000 });
+      }
+    },
+    handleFailed(failedNumbers: string[]): void {
+      if (failedNumbers.length > 0) {
+        this.$toasted.success(`Failed to retrieve ${failedNumbers.join(", ")}`, { duration: 4000 });
+      }
+    },
+    onAdd(): void {
       switch (this.doAdd(this.currentNumber)) {
-        case ADD_OUTCOMES.added:
+        case AddOutcomes.Added:
           this.currentNumber = "";
           break;
-        case ADD_OUTCOMES.duplicate:
+        case AddOutcomes.Duplicate:
           this.currentNumber = "";
           this.$toasted.info("Instrument already added", {duration: 900});
           break;
-        case ADD_OUTCOMES.invalid:
+        case AddOutcomes.Invalid:
           this.$toasted.error("Invalid Instrument number", { duration: 1000 });
           break;
         default:
           this.$toasted.error("Something went wrong", { duration: 1000 });
       }
     },
-    detected(result) {
+    detected(result: {codeResult: {code: string}}): void {
       switch (this.doAdd(result.codeResult.code)) {
-        case ADD_OUTCOMES.added:
+        case AddOutcomes.Added:
           this.doFlash();
           break;
-        case ADD_OUTCOMES.duplicate:
-        case ADD_OUTCOMES.invalid:
+        case AddOutcomes.Duplicate:
+        case AddOutcomes.Invalid:
           break;
         default:
           this.$toasted.error("Something went wrong", { duration: 1000 });
       }
     },
-    remove(instrument) {
-      this.instruments = this.instruments.filter(item => item !== instrument);
+    remove(instrument: string) {
+      this.instrumentNumbers = this.instrumentNumbers.filter(item => item !== instrument);
     },
-    doFlash(timeout = 300) {
+    doFlash(timeout = 300): void {
       this.flash = true;
       setTimeout(() => this.flash = false, timeout)
     },
-    doAdd(number) {
-      if (!number.match(/\w?\d+-\d+/)) {
-        return ADD_OUTCOMES.invalid;
+    doAdd(number: string): AddOutcomes {
+      if (!number.match(/\w*\d*-\d+/)) {
+        return AddOutcomes.Invalid;
       }
-      if (this.instruments.includes(number)) {
-        return ADD_OUTCOMES.duplicate;
+      if (this.instrumentNumbers.includes(number)) {
+        return AddOutcomes.Duplicate;
       }
-      this.instruments.push(number);
-      return ADD_OUTCOMES.added;
+      this.instrumentNumbers.push(number);
+      return AddOutcomes.Added;
     }
   }
-};
+});
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
   <v-modal v-if="currentInstrument"
            @close="editing = false; clearCurrentInstrument()"
-           :width-class="editing ? 'sm:max-w-xl' : 'sm:max-w-lg'">
+           :width-class="editing ? 'sm:max-w-2xl' : 'sm:max-w-lg'">
     <div class="rounded w-full sm:max-w-2xl" v-if="editing">
       <v-instrument-form
         @editSuccess="editing = false"
@@ -59,14 +59,17 @@
       <div>
         <span class="font-bold text-gray-700 mb-2">Archived</span> {{ currentInstrument.archived ? "Yes" : "No" }}
       </div>
-      <v-loading-buttons loader-class="w-80 mr-2" :loading="loading" container-class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2">
-        <v-edit-button v-if="isAdmin" @click="edit" center />
+      <v-loading-buttons loader-class="w-80 mr-2"
+                         :loading="loading"
+                         container-class="mt-2 grid grid-cols-2 gap-y-2 sm:mx-4 sm:gap-x-2"
+      >
         <router-link
           v-if="$route.path !== '/sign-out'"
           to="/sign-out"
           class="inline-flex items-center justify-center font-bold mx-1 appearance-none bg-blue-600 text-white px-3 py-1 shadow rounded hover:bg-blue-800 hover:shadow-lg">
           <span class="inline-flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"> <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"> <path
+              d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fill-rule="evenodd"
                     d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
                     clip-rule="evenodd" />
@@ -74,6 +77,8 @@
             Assign
           </span>
         </router-link>
+        <div v-else></div>
+        <v-edit-button v-if="isAdmin" @click="edit" center />
         <v-retrieve-button @click="retrieve" center />
         <button v-if="isAdmin" @click="toggleArchived"
                 class="inline-flex items-center justify-center font-bold mx-1 appearance-none bg-pink-600 text-white px-4 py-1 shadow rounded hover:bg-pink-800 hover:shadow-lg">
@@ -99,84 +104,82 @@
           </span>
         </button>
       </v-loading-buttons>
-<!--      <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2" v-else>-->
-<!--      </div>-->
     </div>
   </v-modal>
 </template>
-<script>
+<script lang="ts">
 import { mapMutations, mapState } from "vuex";
 import VModal from "@/components/UI/VModal";
-import { API } from "aws-amplify";
 import checkAdmin from "@/mixins/checkAdmin";
 import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton";
 import VEditButton from "@/components/UI/buttons/VEditButton";
 import VLoadingButtons from "@/components/UI/VLoadingButtons";
+import { WithEditing, WithLoading } from "@/util/componentTypes";
+import { toggleArchived } from "@/services/updateInstrument";
+import { GenericOutcome } from "@/util/commonTypes";
+import { retrieveSingle } from "@/services/retreive";
+
+interface ComponentState extends WithLoading, WithEditing {
+}
 
 export default {
   name: "InstrumentDisplay",
   mixins: [checkAdmin],
-  data() {
+  data(): ComponentState {
     return {
       editing: false,
-      loading: false,
+      loading: false
     };
   },
   components: {
     VLoadingButtons,
     VEditButton,
     VRetrieveButton,
-    VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm"),
-    VModal,
+    VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm.vue"),
+    VModal
   },
   methods: {
     ...mapMutations(["clearCurrentInstrument", "setCurrentInstrument", "updateCurrentInstrument", "clearNewInstrumentNumber"]),
-    async toggleArchived() {
-      const wasArchived = this.currentInstrument.archived;
-      try {
-        this.loading = true;
-        const response = await API.put("instrument-inventory", `instruments/${this.currentInstrument.id}`, {
-          body: {
-            ...this.currentInstrument,
-            archived: !this.currentInstrument.archived,
-          },
-        });
-        this.loading = false;
-        if (wasArchived) {
-          this.$toasted.info(`Instrument ${response.item.number} un-archived`, { duration: 2000 });
-        } else {
-          this.$toasted.info(`Instrument ${response.item.number} archived`, { duration: 2000 });
-        }
-        this.updateCurrentInstrument(response.item);
-      } catch (e) {
-        this.loading = false;
-        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 });
-      }
-    },
-    async retrieve() {
+    async toggleArchived(): Promise<void> {
       this.loading = true;
-      try {
-        const response = await API.post("instrument-inventory", "retrieve-single",
-          { body: { number: this.currentInstrument.number } });
-        this.updateCurrentInstrument(response.item);
-        this.$toasted.info(response.message, { duration: 2000 });
-        this.loading = false;
-      } catch (e) {
-        this.$toasted.error(e.response.data, { duration: 2000 });
-        console.log(e);
-        this.loading = false;
-      }
+      const [outcome, message, nextInstrument] = await toggleArchived(this.currentInstrument);
+      this.loading = false;
 
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.$toasted.success(message, { duration: 1000 });
+          this.updateCurrentInstrument(nextInstrument);
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(`Error: ${message}`, { duration: 2000 });
+          break;
+        default:
+          console.error(outcome, message, nextInstrument);
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+          break;
+      }
     },
-    async handleEditSuccess() {
-      this.editing = false;
-      this.$emit("instrumentUpdated", this.currentInstrument.id);
+    async retrieve(): Promise<void> {
+      this.loading = true;
+      const [outcome, message, result] = await retrieveSingle(this.currentInstrument.number);
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.$toasted.success(message, { duration: 2000 });
+          this.updateCurrentInstrument(result);
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(`Error: ${message}`);
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 1000 });
+      }
     },
-    edit() {
+    edit(): void {
       this.clearNewInstrumentNumber();
       this.editing = true;
-    },
+    }
   },
-  computed: mapState(["currentInstrument"]),
+  computed: mapState(["currentInstrument"])
 };
 </script>

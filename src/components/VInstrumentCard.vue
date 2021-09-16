@@ -24,10 +24,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapMutations } from "vuex";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "VInstrumentCard",
   props: {
     instrument: {
@@ -39,14 +40,14 @@ export default {
     ...mapMutations(["setCurrentInstrument"])
   },
   filters: {
-    truncateHistory(history) {
+    truncateHistory(history: string[]): string {
       if (history.length > 3) {
         return history.slice(0, 3).join(", ") + ", ...";
       }
       return history.join(", ");
     }
   }
-};
+});
 </script>
 
 <style scoped>

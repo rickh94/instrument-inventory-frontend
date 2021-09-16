@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl">
+  <div class="max-w-3xl">
     <div class="m-5 shadow p-3 h-auto">
       <label for="number" class="text-gray-800 font-bold text-xl mb-1">Instrument Number or Student Name</label>
       <div class="flex items-start justify-between mt-2 mb-1">

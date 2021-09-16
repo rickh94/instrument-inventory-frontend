@@ -88,7 +88,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="js">
 import VEditButton from "@/components/UI/buttons/VEditButton";
 import VAssignButton from "@/components/UI/buttons/VAssignButton";
 import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton";

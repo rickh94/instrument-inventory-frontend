@@ -62,13 +62,14 @@
   </nav>
 </template>
 
-<script>
+<script lang="ts">
 import checkAdmin from "@/mixins/checkAdmin";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "VNav",
   mixins: [checkAdmin],
-};
+});
 </script>
 
 <style scoped>

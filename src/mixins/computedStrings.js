@@ -1,32 +1,32 @@
-const { sortByString } = require('@/mixins/ordering')
-const { sortBySize } = require('@/mixins/ordering')
+import { sortBySize, sortByString } from "@/mixins/ordering";
+
 const computedStrings = {
   computed: {
     violinStrings() {
       return this.strings
-        .filter(item => item.type === 'Violin')
+        .filter(item => item.type === "Violin")
         .sort(sortByString)
-        .sort(sortBySize)
+        .sort(sortBySize);
     },
     violaStrings() {
       return this.strings
-        .filter(item => item.type === 'Viola')
+        .filter(item => item.type === "Viola")
         .sort(sortByString)
-        .sort(sortBySize)
+        .sort(sortBySize);
     },
     celloStrings() {
       return this.strings
-        .filter(item => item.type === 'Cello')
+        .filter(item => item.type === "Cello")
         .sort(sortByString)
-        .sort(sortBySize)
+        .sort(sortBySize);
     },
     bassStrings() {
       return this.strings
-        .filter(item => item.type === 'Bass')
+        .filter(item => item.type === "Bass")
         .sort(sortByString)
-        .sort(sortBySize)
+        .sort(sortBySize);
     },
   },
-}
+};
 
-export default computedStrings
+export default computedStrings;
