@@ -4,16 +4,18 @@
     <slot></slot>
   </div>
 </template>
-<script>
-export default {
-  name: 'v-form-control',
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "v-form-control",
   props: {
     label: {
-      type: String,
+      type: String
     },
     labelFor: {
-      type: String,
+      type: String
     }
   }
-}
+});
 </script>

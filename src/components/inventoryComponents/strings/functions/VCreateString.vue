@@ -4,13 +4,16 @@
       <h4 class="text-xl text-gray-900 font-bold mb-2">Create New String Type</h4>
     </div>
     <v-form-control label="Instrument Type" label-for="type">
-      <v-autocomplete required id="type" v-model="data.type" :options="types"></v-autocomplete>
+      <v-autocomplete required id="type" v-model="data.type" :completion-options="acOptions.types"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Size" label-for="size">
-      <v-autocomplete required id="size" v-model="data.size" :options="sizes"></v-autocomplete>
+      <v-autocomplete required id="size" v-model="data.size" :completion-options="acOptions.sizes"></v-autocomplete>
     </v-form-control>
     <v-form-control label="String" label-for="string">
-      <v-autocomplete required id="string" v-model="data.string" :options="strings"></v-autocomplete>
+      <v-autocomplete required
+                      id="string"
+                      v-model="data.instrumentString"
+                      :completion-options="acOptions.strings"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Count" label-for="count">
       <input id="count"
@@ -31,74 +34,77 @@
   </form>
 </template>
 
-<script>
-import VFormControl from "@/components/UI/VFormControl";
-import VAutocomplete from "@/components/UI/VAutocomplete";
-import { API } from "aws-amplify";
-import { BarLoader } from "@saeris/vue-spinners";
-import VCancelButton from "@/components/UI/buttons/VCancelButton";
-import VSaveButton from "@/components/UI/buttons/VSaveButton";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+import VFormControl from "@/components/UI/VFormControl.vue";
+import VAutocomplete from "@/components/UI/VAutocomplete.vue";
+import { BarLoader } from "@saeris/vue-spinners";
+import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
+import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
+import acOptions from "@/mixins/acOptions";
+import { WithLoading } from "@/util/componentTypes";
+import { createString } from "@/services/stringInventory";
+import { GenericOutcome } from "@/util/commonTypes";
+
+interface ComponentState extends WithLoading {
+  data: {
+    type: string,
+    size: string,
+    count: string,
+    instrumentString: string,
+  };
+}
+
+export default Vue.extend({
   name: "VCreateBow",
   components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader },
+  mixins: [acOptions],
   data() {
     return {
-      types: [],
-      sizes: [],
-      strings: [],
       loading: false,
       data: {
         type: "",
         size: "",
         count: "0",
-        string: "",
-      },
+        instrumentString: ""
+      }
     };
   },
-  async created() {
-    if (this.sizes.length === 0) {
-      try {
-        const { types, sizes, strings } = await API.get("instrument-inventory", "schema/ac-options", {});
-        this.types = types;
-        this.sizes = sizes;
-        this.strings = strings;
-      } catch (e) {
-        if (e.response) {
-          this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 });
-        } else {
-          this.$toasted.error(e.toString(), { duration: 2000 });
-        }
-      }
+  async created(): Promise<void> {
+    const error = await this.getACOptions();
+    if (error) {
+      this.$toasted.error(error);
     }
   },
   methods: {
-    handleCancel() {
-      this.data = { type: "", size: "", count: "", string: "" };
+    handleCancel(): void {
+      this.data = { type: "", size: "", count: "", instrumentString: "" };
       this.$emit("close");
     },
-    async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await API.post("instrument-inventory", "strings", {
-          body: {
-            ...this.data,
-          },
-        });
-        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
-        this.$toasted.show(response.message, { duration: 2000 });
-        this.loading = false;
-        this.$emit("close");
-      } catch (err) {
-        this.loading = false;
-        if (err.response.data) {
-          this.$toasted.error("Error: Invalid form", { duration: 2000 });
-        } else {
-          this.$toasted.error(err);
-        }
+    async handleSubmit(): Promise<void> {
+      this.loading = true;
+      // eslint-disable
+      const [outcome, newString, message] = await createString({ string: this.data.instrumentString, ...this.data });
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          if (newString !== null) {
+            this.$emit("updated", { updatedIds: [newString.id], updatedItems: [newString] });
+            this.$toasted.success(message, { duration: 2000 });
+            this.$emit("close");
+          } else {
+            this.$toasted.error("Something went wrong", { duration: 2000 });
+          }
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(message);
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 2000 });
       }
-    },
-  },
-};
+    }
+  }
+});
 </script>
 

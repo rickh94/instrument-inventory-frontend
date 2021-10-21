@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import Quagga from "@ericblade/quagga2";
 
 export default {

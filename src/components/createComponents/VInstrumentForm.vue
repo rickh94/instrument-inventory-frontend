@@ -7,13 +7,15 @@
     </div>
     <form @submit.prevent="onSubmit">
       <v-form-control label="Size" label-for="size">
-        <v-autocomplete id="size" v-model="data.size" :options="acOptions.sizes"></v-autocomplete>
+        <v-autocomplete id="size" v-model="data.size" :completion-options="acOptions.sizes"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Type" label-for="type">
-        <v-autocomplete id="type" v-model="data.type" :options="acOptions.types"></v-autocomplete>
+        <v-autocomplete id="type" v-model="data.type" :completion-options="acOptions.types"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Location" label-for="location">
-        <v-autocomplete id="location" :options="acOptions.locations" v-model="data.location"></v-autocomplete>
+        <v-autocomplete id="location"
+                        :completion-options="acOptions.locations"
+                        v-model="data.location"></v-autocomplete>
       </v-form-control>
       <v-form-control label="Assigned To" label-for="assigned-to">
         <input type="text"
@@ -54,12 +56,14 @@
         <bar-loader class="w-56 mx-2" color="#7c3aed"></bar-loader>
       </div>
       <div v-else class="flex justify-end w-full mt-5">
-        <v-cancel-button v-if="mode === 'editing'" @cancel="$emit('cancel')"/>
+        <v-cancel-button v-if="mode === 'editing'" @cancel="$emit('cancel')" />
         <button v-else
                 class="font-bold inline-flex items-center mx-2 bg-red-600 px-3 text-white py-2 shadow hover:bg-red-800 hover:shadow-lg rounded"
                 @click="clearNewInstrumentNumber()">
           <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+            <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                  clip-rule="evenodd" />
           </svg>
           Change Number
         </button>
@@ -76,25 +80,41 @@
   </div>
 </template>
 
-<script>
-import { API } from "aws-amplify";
+<script lang="ts">
+import Vue from "vue";
+
 import VAutocomplete from "@/components/UI/VAutocomplete";
 import { mapMutations, mapState } from "vuex";
 import VFormControl from "@/components/UI/VFormControl";
 import { BarLoader } from "@saeris/vue-spinners";
 import acOptions from "@/mixins/acOptions";
 import VCancelButton from "@/components/UI/buttons/VCancelButton";
+import { WithLoading } from "@/util/componentTypes";
+import { createInstrument } from "@/services/createInstrument";
+import { GenericOutcome } from "@/util/commonTypes";
+import { editInstrument } from "@/services/updateInstrument";
 
-export default {
+interface ComponentState extends WithLoading {
+  mode: "creating" | "editing",
+  data: {
+    size: string,
+    type: string,
+    location: string,
+    assignedTo: string,
+    maintenanceNotes: string,
+    conditionNotes: string,
+    condition: number,
+    quality: number,
+  },
+}
+
+export default Vue.extend({
   name: "VInstrumentForm",
   components: { VCancelButton, VFormControl, VAutocomplete, BarLoader },
   mixins: [acOptions],
-  data() {
+  data(): ComponentState {
     return {
       mode: "creating",
-      locations: [],
-      types: [],
-      sizes: [],
       loading: false,
       data: {
         size: "",
@@ -104,8 +124,8 @@ export default {
         maintenanceNotes: "",
         conditionNotes: "",
         condition: 5,
-        quality: 5,
-      },
+        quality: 5
+      }
     };
   },
   async created() {
@@ -148,7 +168,10 @@ export default {
     } else {
       this.$toasted.error("Error: must have either current instrument or new instrument", { duration: 2000 });
     }
-    await this.getACOptions()
+    const error = await this.getACOptions();
+    if (error) {
+      this.$toasted.error(error, { duration: 2000 });
+    }
   },
   methods: {
     ...mapMutations(["clearNewInstrumentNumber", "setCurrentInstrument", "updateCurrentInstrument"]),
@@ -161,37 +184,35 @@ export default {
       }
     },
     async submitCreate() {
-      try {
-        const response = await API.post("instrument-inventory", "instruments", {
-          body: {
-            ...this.data,
-            number: this.newInstrumentNumber,
-          },
-        });
-        this.loading = false;
-        this.$toasted.info(`Instrument ${response.item.number} created`, { duration: 2000 });
-        this.clearNewInstrumentNumber();
-        this.setCurrentInstrument(response.item);
-        // this.$emit('instrumentCreated', response)
-      } catch (e) {
-        this.loading = false;
-        this.$toasted.info(e.response.data, { duration: 2000 });
+      const [outcome, message, instrument] = await createInstrument(this.data, this.newInstrumentNumber);
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.$toasted.info(message, { duration: 2000 });
+          this.clearNewInstrumentNumber();
+          this.setCurrentInstrument(instrument);
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(message, { duration: 2000 });
+          break;
+        default:
+          this.$toased.error("Something went wrong", { duration: 2000 });
       }
     },
     async submitEdit() {
-      try {
-        const response = await API.put("instrument-inventory", `instruments/${this.data.id}`, {
-          body: {
-            ...this.data,
-          },
-        });
-        this.updateCurrentInstrument(response.item);
-        this.$emit("editSuccess", response.item);
-        this.loading = false;
-      } catch (e) {
-        this.loading = false;
-        console.error(e);
-        this.$toasted.show(`Error: ${e.response.data}`);
+      const [outcome, message, updatedInstrument] = await editInstrument(this.data.id, this.data);
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.updateCurrentInstrument(updatedInstrument);
+          this.$emit("editSuccess", updatedInstrument);
+          this.$toasted.info(message);
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(`Error: ${message}`, { duration: 2000 });
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 2000 });
       }
     },
     guessSize(idx) {
@@ -237,9 +258,9 @@ export default {
         default:
           this.data.size = "";
       }
-    },
+    }
   },
-  computed: mapState(["newInstrumentNumber", "currentInstrument"]),
-};
+  computed: mapState(["newInstrumentNumber", "currentInstrument"])
+});
 </script>
 

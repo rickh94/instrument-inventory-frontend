@@ -36,7 +36,8 @@ export async function retrieveSingle(instrumentNumber: string):
     return [GenericOutcome.Ok, message, updatedInstrument];
   } catch(e) {
     console.error(e)
-    return [GenericOutcome.Err, e.response.data, null]
+    const message = e.response ? e.response.data : e.toString();
+    return [GenericOutcome.Err, message, null]
   }
 
 }

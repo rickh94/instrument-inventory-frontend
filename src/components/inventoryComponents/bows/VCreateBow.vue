@@ -4,10 +4,10 @@
       <h4 class="text-xl text-gray-900 font-bold mb-2">Create New Bow Type</h4>
     </div>
     <v-form-control label="Instrument Type" label-for="type">
-      <v-autocomplete id="type" v-model="data.type" :options="types"></v-autocomplete>
+      <v-autocomplete id="type" v-model="data.type" :completion-options="acOptions.types"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Size" label-for="size">
-      <v-autocomplete id="size" v-model="data.size" :options="sizes"></v-autocomplete>
+      <v-autocomplete id="size" v-model="data.size" :completion-options="acOptions.sizes"></v-autocomplete>
     </v-form-control>
     <v-form-control label="Count" label-for="count">
       <input id="count"
@@ -27,23 +27,34 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import VFormControl from "@/components/UI/VFormControl";
 import VAutocomplete from "@/components/UI/VAutocomplete";
-import { API } from "aws-amplify";
 import errorHandler from "@/mixins/errorHandler";
 import { BarLoader } from "@saeris/vue-spinners";
 import VCancelButton from "@/components/UI/buttons/VCancelButton";
 import VSaveButton from "@/components/UI/buttons/VSaveButton";
+import acOptions from "@/mixins/acOptions";
+import { WithLoading } from "@/util/componentTypes";
+import { createBow } from "@/services/bows";
+import { GenericOutcome } from "@/util/commonTypes";
 
-export default {
+interface ComponentState extends WithLoading {
+  data: {
+    type: string,
+    size: string,
+    count: string,
+  },
+}
+
+export default Vue.extend({
   name: "VCreateBow",
   components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader },
-  mixins: [errorHandler],
-  data() {
+  mixins: [errorHandler, acOptions],
+  data(): ComponentState {
     return {
-      types: [],
-      sizes: [],
       loading: false,
       data: {
         type: "",
@@ -53,15 +64,7 @@ export default {
     };
   },
   async created() {
-    if (this.sizes.length === 0) {
-      try {
-        const { types, sizes } = await API.get("instrument-inventory", "schema/ac-options", {});
-        this.types = types;
-        this.sizes = sizes;
-      } catch (e) {
-        this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 });
-      }
-    }
+    await this.getACOptions();
   },
   methods: {
     handleCancel() {
@@ -69,22 +72,23 @@ export default {
       this.$emit("close");
     },
     async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await API.post("instrument-inventory", "bows", {
-          body: {
-            ...this.data
-          }
-        });
-        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
-        this.$toasted.show(response.message, { duration: 2000 });
-        this.loading = false;
-        this.$emit("close");
-      } catch (err) {
-        this.handleError(err);
+      this.loading = true;
+      const [outcome, message, updatedBow] = await createBow(this.data.type, this.data.size, parseInt(this.data.count));
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          this.$emit("updated", { updatedIds: [updatedBow.id], updatedItems: [updatedBow] });
+          this.$toasted.success(message, { duration: 2000 });
+          this.$emit("close");
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(message, { duration: 2000 });
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 2000 });
       }
     }
   }
-};
+});
 </script>
 

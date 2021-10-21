@@ -10,19 +10,21 @@
   </div>
 </template>
 
-<script>
-import VUpdateStringsForm from '@/components/inventoryComponents/strings/layout/VUpdateStringsForm'
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  name: 'VUseStrings',
+import VUpdateStringsForm from "@/components/inventoryComponents/strings/layout/VUpdateStringsForm.vue";
+
+export default Vue.extend({
+  name: "VUseStrings",
   components: { VUpdateStringsForm },
   props: {
     strings: {
       type: Array,
-      required: true,
-    },
-  },
-}
+      required: true
+    }
+  }
+});
 </script>
 
 <style scoped>

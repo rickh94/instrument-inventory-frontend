@@ -86,3 +86,12 @@ export interface AssignBody {
   location: string,
   assignedTo: string,
 }
+
+export interface OtherItem {
+  id?: string,
+  name: string,
+  count: number,
+  location_counts?: {[location: string]: number},
+  signed_out_to?: string[],
+  notes?: string,
+}

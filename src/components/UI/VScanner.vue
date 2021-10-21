@@ -14,25 +14,26 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import VQuaggaWrapper from "@/components/UI/VQuaggaWrapper.vue";
+import { CodeResult } from "@/util/componentTypes";
 
-import VQuaggaWrapper from "@/components/UI/VQuaggaWrapper";
-
-export default {
+export default Vue.extend({
   name: "VScanner",
   components: { VQuaggaWrapper },
   methods: {
-    detected(result) {
+    detected(result: CodeResult): void {
       if (result.codeResult.code.match(/\w?\d+-\d+/)) {
         this.$emit("detected", result);
       }
-    },
+    }
   },
-  data() {
+  data(): { scannerWidth: number } {
     return {
-      scannerWidth: Math.floor(window.screen.width * window.devicePixelRatio * 0.6),
+      scannerWidth: Math.floor(window.screen.width * window.devicePixelRatio * 0.6)
     };
-  },
-};
+  }
+});
 </script>
 

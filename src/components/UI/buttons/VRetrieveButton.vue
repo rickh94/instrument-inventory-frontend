@@ -14,8 +14,10 @@
     </span>
   </button>
 </template>
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "v-retrieve-button",
   props: {
     center: {
@@ -23,5 +25,5 @@ export default {
       default: false,
     }
   },
-};
+});
 </script>

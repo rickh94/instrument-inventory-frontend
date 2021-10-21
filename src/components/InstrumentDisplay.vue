@@ -109,20 +109,27 @@
 </template>
 <script lang="ts">
 import { mapMutations, mapState } from "vuex";
-import VModal from "@/components/UI/VModal";
+import VModal from "@/components/UI/VModal.vue";
 import checkAdmin from "@/mixins/checkAdmin";
-import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton";
-import VEditButton from "@/components/UI/buttons/VEditButton";
-import VLoadingButtons from "@/components/UI/VLoadingButtons";
+import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton.vue";
+import VEditButton from "@/components/UI/buttons/VEditButton.vue";
+import VLoadingButtons from "@/components/UI/VLoadingButtons.vue";
 import { WithEditing, WithLoading } from "@/util/componentTypes";
 import { toggleArchived } from "@/services/updateInstrument";
 import { GenericOutcome } from "@/util/commonTypes";
 import { retrieveSingle } from "@/services/retreive";
+import Vue from "vue";
+import VFormLoader from "@/components/VFormLoader.vue";
 
 interface ComponentState extends WithLoading, WithEditing {
 }
 
-export default {
+const VInstrumentForm = () => ({
+  component: import("@/components/createComponents/VInstrumentForm.vue"),
+  loading: VFormLoader
+});
+
+export default Vue.extend({
   name: "InstrumentDisplay",
   mixins: [checkAdmin],
   data(): ComponentState {
@@ -135,7 +142,7 @@ export default {
     VLoadingButtons,
     VEditButton,
     VRetrieveButton,
-    VInstrumentForm: () => import("@/components/createComponents/VInstrumentForm.vue"),
+    VInstrumentForm,
     VModal
   },
   methods: {
@@ -169,7 +176,7 @@ export default {
           this.updateCurrentInstrument(result);
           break;
         case GenericOutcome.Err:
-          this.$toasted.error(`Error: ${message}`);
+          this.$toasted.error(`Error: ${message}`, { duration: 2000 });
           break;
         default:
           this.$toasted.error("Something went wrong", { duration: 1000 });
@@ -181,5 +188,5 @@ export default {
     }
   },
   computed: mapState(["currentInstrument"])
-};
+});
 </script>

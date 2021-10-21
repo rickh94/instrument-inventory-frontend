@@ -17,10 +17,12 @@
   </table>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import stringTableMixin from "@/mixins/stringTableMixin";
 
-export default {
+export default Vue.extend({
   name: "VStringsBaseTable",
   mixins: [stringTableMixin],
   props: {
@@ -32,16 +34,8 @@ export default {
       type: String,
       required: true
     }
-  },
-  filters: {
-    getStringInfo: function(string) {
-      if (string === undefined) {
-        return "0";
-      }
-      return `${string.count}`;
-    }
   }
-};
+});
 </script>
 
 <style scoped>

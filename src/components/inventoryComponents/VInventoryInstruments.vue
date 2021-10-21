@@ -32,21 +32,29 @@
              id="filter-location"
              class="col-span-2 mx-2 py-1 appearance-none focus:outline-none border-b border-gray-700 placeholder-gray-400 focus:border-purple-600"
              v-model="location">
-      <div class="flex items-center justify-center lg:hidden">
-        <div class="text-gray-600 mr-2 flex items-center lg:hidden flex-shrink-0">Sort By:</div>
-        <v-select id="sort-by" class="mt-2 lg:hidden mr-2 flex-shrink-0" placeholder="Sort By"
+      <div class="flex items-center justify-center lg:hidden mt-1">
+        <div class="h-full flex items-center text-gray-600 font-bold mr-2 lg:hidden flex-shrink-0">Sort By:</div>
+        <v-select id="sort-by" class="lg:hidden flex-shrink-0" placeholder="Sort By"
                   :options="sortColumns"
                   v-model="sortBy"></v-select>
       </div>
       <div class="flex items-center justify-center lg:hidden">
-        <button class="font-bold inline-flex items-center mt-2 lg:mt-0 px-2 py-1 ml-2 text-white rounded shadow hover:shadow-lg bg-purple-600 hover:bg-purple-800"
+        <button class="font-bold mt-2 inline-flex items-center lg:mt-0 px-2 py-1 ml-2 text-white rounded shadow hover:shadow-lg bg-purple-600 hover:bg-purple-800"
                 @click.prevent="sortDirection = -sortDirection"
                 title="Click to change direction"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor" v-if="sortDirection === -1">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-5 w-5 mr-1"
+               viewBox="0 0 20 20"
+               fill="currentColor"
+               v-if="sortDirection === -1">
             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z" />
           </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor" v-if="sortDirection === 1">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-5 w-5 mr-1"
+               viewBox="0 0 20 20"
+               fill="currentColor"
+               v-if="sortDirection === 1">
             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" />
           </svg>
           {{ sortDirection === -1 ? "Ascending" : "Descending" }}
@@ -58,7 +66,9 @@
                 @click.prevent="showArchived = !showArchived">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
             <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
-            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+            <path fill-rule="evenodd"
+                  d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"
+                  clip-rule="evenodd" />
           </svg>
           {{ showArchived ? "Hide Archived" : "Show Archived" }}
         </button>
@@ -67,9 +77,15 @@
         <button class="inline-flex items-center font-bold mt-2 lg:mt-0 px-2 py-1 ml-2 text-white rounded shadow hover:shadow-lg"
                 :class="{'bg-purple-600 hover:bg-purple-800': onlyUnassigned, 'bg-red-600 hover:bg-red-800': !onlyUnassigned}"
                 @click.prevent="onlyUnassigned = !onlyUnassigned">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor" v-if="onlyUnassigned">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-5 w-5 mr-1"
+               viewBox="0 0 20 20"
+               fill="currentColor"
+               v-if="onlyUnassigned">
             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+            <path fill-rule="evenodd"
+                  d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                  clip-rule="evenodd" />
           </svg>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" v-else>
             <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
@@ -155,20 +171,36 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapMutations, mapState } from "vuex";
-import { API } from "aws-amplify";
-import VTableHeader from "@/components/UI/VTableHeader";
-import VSelect from "@/components/UI/VSelect";
+import VTableHeader from "@/components/UI/VTableHeader.vue";
+import VSelect from "@/components/UI/VSelect.vue";
 import Papa from "papaparse";
 import { sortBySize } from "@/mixins/ordering";
-import VInstrumentCard from "@/components/VInstrumentCard";
+import VInstrumentCard from "@/components/VInstrumentCard.vue";
 import { PropagateLoader } from "@saeris/vue-spinners";
+import { WithLoading } from "@/util/componentTypes";
+import acOptions from "@/mixins/acOptions";
+import { GenericOutcome, Instrument } from "@/util/commonTypes";
+import { getAllInstruments } from "@/services/getInstruments";
 
-export default {
+interface ComponentState extends WithLoading {
+  size: string,
+  type: string,
+  location: string,
+  onlyUnassigned: boolean,
+  showArchived: boolean,
+  sortBy: string,
+  sortDirection: -1 | 1,
+  sortColumns: { value: string, text: string }[],
+}
+
+export default Vue.extend({
   name: "VInventoryInstruments",
   components: { VInstrumentCard, VSelect, VTableHeader, PropagateLoader },
-  data() {
+  mixins: [acOptions],
+  data(): ComponentState {
     return {
       size: "",
       type: "",
@@ -178,8 +210,6 @@ export default {
       loading: false,
       sortBy: "number",
       sortDirection: 1,
-      sizes: [],
-      types: [],
       sortColumns: [
         { value: "size", text: "Size" },
         { value: "type", text: "Type" },
@@ -188,43 +218,42 @@ export default {
         { value: "assignedTo", text: "Assigned To" },
         { value: "condition", text: "Condition" },
         { value: "quality", text: "Quality" },
-        { value: "history", text: "History" },
-      ],
+        { value: "history", text: "History" }
+      ]
     };
   },
-  async created() {
-    try {
-      this.loading = true;
-      const res = await API.get("instrument-inventory", "instruments/all", {});
-      this.loading = false;
-      this.setAllInstruments(res.instruments);
-      if (res.instrumentsFailed.length > 0) {
-        this.$toasted.error("Some instruments failed to load", { duration: 2000 });
-        console.log(res.instrumentsFailed);
-      }
-    } catch (err) {
-      this.loading = false;
-      if (err.response.data) {
-        this.$toasted.error(err.response.data, { duration: 3000 });
-      } else {
-        this.$toasted.error(err.toString());
-      }
-      console.error(err);
+  async created(): Promise<void> {
+    // Load instruments
+    this.loading = true;
+    const [outcome, instruments, message] = await getAllInstruments();
+    this.loading = false;
+
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.setAllInstruments(instruments);
+        if (message.length > 0) {
+          this.$toasted.error(message, { duration: 1000 });
+        }
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message, { duration: 4000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 1000 });
     }
-    try {
-      const { sizes, types } = await API.get("instrument-inventory", "schema/ac-options", {});
-      this.sizes = sizes;
-      this.types = types;
-    } catch (err) {
-      this.$toasted.error("Failed to load types and sizes");
+
+    // Load autocomplete
+    const error = await this.getACOptions();
+    if (error) {
+      this.$toasted.error(error, { duration: 2000 });
     }
   },
   methods: {
     ...mapMutations(["setAllInstruments", "setCurrentInstrument"]),
-    getCsv() {
+    getCsv(): void {
       const csvData = Papa.unparse(this.displayInstruments, {
         skipEmptyLines: true,
-        header: true,
+        header: true
       });
       const csvDownload = document.createElement("a");
       csvDownload.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csvData));
@@ -232,7 +261,7 @@ export default {
 
       csvDownload.click();
     },
-    changeSort(newSortAttribute) {
+    changeSort(newSortAttribute: string): void {
       if (this.sortBy === newSortAttribute) {
         this.sortDirection *= -1;
       } else {
@@ -240,7 +269,7 @@ export default {
         this.sortDirection = 1;
       }
     },
-    displayInstrument(instrument) {
+    displayInstrument(instrument: Instrument): boolean {
       if (this.onlyUnassigned && instrument.assignedTo) {
         return false;
       }
@@ -255,7 +284,7 @@ export default {
       }
       return this.showArchived || !instrument.archived;
     },
-    sortInstruments(a, b) {
+    sortInstruments(a: Instrument, b: Instrument): number {
       if (this.sortBy === "size") {
         return this.sortDirection * -sortBySize(a, b);
       }
@@ -267,17 +296,17 @@ export default {
         return this.sortDirection;
       }
       return 0;
-    },
+    }
   },
   computed: {
     ...mapState(["allInstruments"]),
-    displayInstruments() {
+    displayInstruments(): Instrument[] {
       let tmpInstruments = this.allInstruments.filter(ins => this.displayInstrument(ins));
       return tmpInstruments.sort(this.sortInstruments);
-    },
+    }
   },
   filters: {
-    abbreviateHistory(history) {
+    abbreviateHistory(history?: string[]): string {
       if (!history || history.length < 1) {
         return "";
       } else if (history.length > 3) {
@@ -285,9 +314,9 @@ export default {
       } else {
         return history.join(", ");
       }
-    },
-  },
-};
+    }
+  }
+});
 </script>
 
 <style scoped>

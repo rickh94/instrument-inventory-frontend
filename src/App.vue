@@ -13,31 +13,96 @@
         <amplify-sign-out button-text="Log Out"></amplify-sign-out>
       </div>
       <instrument-display />
+      <v-modal v-if="globalSearchActive" width-class="sm:max-w-lg" @close="closeGlobalSearch">
+        <div class="flex justify-between mb-4">
+          <h6 class="text-xl font-bold text-gray-900">
+            Search for an Instrument
+          </h6>
+          <button class="appearance-none text-white bg-red-600 px-1 rounded shadow hover:bg-red-800 hover:shadow-lg text-sm"
+                  @click="closeGlobalSearch" title="Close Global Search">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        <v-instrument-search-box
+          focus-on-created
+          @notFound="handleNotFound"
+          @foundOne="handleFoundOne"
+          @foundMultiple="handleFoundMultiple"
+        >
+        </v-instrument-search-box>
+      </v-modal>
+      <v-not-found-modal :number="notFoundNumber"
+                         v-if="showNotFound"
+                         @close="showNotFound = false; notFoundNumber = ''"></v-not-found-modal>
     </amplify-authenticator>
   </amplify-auth-container>
 </template>
 
 <script lang="ts">
-import VNav from "@/components/VNav";
-import InstrumentDisplay from "@/components/InstrumentDisplay";
+import VNav from "@/components/VNav.vue";
+import InstrumentDisplay from "@/components/InstrumentDisplay.vue";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
-import { mapState, mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import Vue from "vue";
+import VModal from "@/components/UI/VModal.vue";
+import VInstrumentSearchBox from "@/components/VInstrumentSearchBox.vue";
+import VNotFoundModal from "@/components/VNotFoundModal.vue";
 
-export default {
+export default Vue.extend({
   name: "App",
-  components: { InstrumentDisplay, VNav },
+  components: { VNotFoundModal, VInstrumentSearchBox, VModal, InstrumentDisplay, VNav },
+  data() {
+    return {
+      globalSearchActive: false,
+      showNotFound: false,
+      notFoundNumber: ""
+    };
+  },
   created(): void {
-    onAuthUIStateChange((nextAuthState, authData) => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    onAuthUIStateChange((nextAuthState: string, authData?: object): void => {
+      if (!authData) {
+        return;
+      }
       if (nextAuthState === "signedin") {
-        this.logIn(authData.attributes["custom:USER_ROLE"]);
+        this.logIn(authData["attributes"]["custom:USER_ROLE"]);
       } else if (nextAuthState === "signedout") {
         this.logOut();
       }
+      document.body.addEventListener("keydown", ({ key, target }) => {
+        if (key && target === document.body && key.toString().length === 1) {
+          this.globalSearchActive = true;
+        }
+      });
     });
   },
-  methods: mapMutations(["logIn", "logOut"]),
-  computed: mapState(["userRole"]),
-};
+  methods: {
+    ...mapMutations(["logIn", "logOut"]),
+    closeGlobalSearch() {
+      this.globalSearchActive = false;
+    },
+    handleNotFound({ detail }) {
+      if (detail) {
+        this.showNotFound = true;
+        this.notFoundNumber = detail;
+      } else {
+        this.$toasted.error("Could not find matching instrument", { duration: 2000 });
+      }
+    },
+    handleFoundMultiple() {
+      this.globalSearchActive = false;
+      this.$router.push("/");
+    },
+    handleFoundOne() {
+      this.globalSearchActive = false;
+    }
+  },
+  computed: mapState(["userRole"])
+});
 </script>
 
 <style>

@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <button class="appearance-none px-4 py-1 border border-purple-600 text-purple-600 border-black rounded shadow"
+    <button class="appearance-none px-2 py-1 border border-black text-black rounded shadow"
             @click="open = !open">{{ selectedText ? selectedText : placeholder }}
       <font-awesome-icon :icon="open ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
     </button>
@@ -16,43 +16,50 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'VSelect',
+<script lang="ts">
+import Vue from "vue";
+
+interface ComponentState {
+  open: boolean,
+}
+
+export default Vue.extend({
+  name: "VSelect",
   props: {
     placeholder: {
       type: String,
-      required: true,
+      required: true
     },
     value: {
-      required: true,
+      type: String,
+      required: true
     },
-    options: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      open: false,
+    completionOptions: {
+      type: Array.of(Object),
+      required: true
     }
   },
+  data(): ComponentState {
+    return {
+      open: false
+    };
+  },
   methods: {
-    handleClick(nextValue) {
-      this.open = false
-      this.$emit('input', nextValue)
-    },
+    handleClick(nextValue: string): void {
+      this.open = false;
+      this.$emit("input", nextValue);
+    }
   },
   computed: {
-    selectedText() {
+    selectedText(): string | null {
       if (this.value) {
-        const found = this.options.find(item => item.value === this.value)
-        return found.text
+        const found = this.completionOptions.find((item: { value: string, text: string }) => item.value === this.value);
+        return found.text;
       }
-      return null
-    },
-  },
-}
+      return null;
+    }
+  }
+});
 </script>
 
 <style scoped>

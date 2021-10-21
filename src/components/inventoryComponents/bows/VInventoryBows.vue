@@ -11,8 +11,7 @@
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
       <v-create-button @click="formComponent = 'v-create-bow'" item="Bow" />
-      <!--        class="bg-gradient-to-tr from-purple-600 to-purple-400 hover:from-purple-800  py-2 px-3 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white font-bold inline-flex items-center">-->
-      <v-use-button  @click="formComponent = 'v-use-bows'" item="Bows" />
+      <v-use-button @click="formComponent = 'v-use-bows'" item="Bows" />
       <v-add-button @click="formComponent = 'v-add-bows'" item="Bows" />
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
@@ -21,15 +20,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import VBowsTable from "@/components/inventoryComponents/bows/VBowsTable";
-import { API } from "aws-amplify";
 import computedBows from "@/mixins/computedBows";
 import checkAdmin from "@/mixins/checkAdmin";
 import { PropagateLoader } from "@saeris/vue-spinners";
 import VCreateButton from "@/components/UI/buttons/VCreateButton";
 import VUseButton from "@/components/UI/buttons/VUseButton";
 import VAddButton from "@/components/UI/buttons/VAddButton";
+import { WithLoading } from "@/util/componentTypes";
+import { getBows } from "@/services/bows";
+import { GenericOutcome } from "@/util/commonTypes";
 
 
 // Webstorm stop removing my components!
@@ -37,7 +40,12 @@ import VAddButton from "@/components/UI/buttons/VAddButton";
 //   VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows"),
 //   VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
 
-export default {
+interface ComponentState extends WithLoading {
+  bows: { id: string, count: string }[],
+  formComponent: "v-create-bow" | "v-add-bows" | "v-use-bows" | null
+}
+
+export default Vue.extend({
   name: "VInventoryBows",
   components: {
     VAddButton,
@@ -48,30 +56,29 @@ export default {
     VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows"),
     VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
     VBowsTable,
-    PropagateLoader,
+    PropagateLoader
   },
   mixins: [computedBows, checkAdmin],
-  data() {
+  data(): ComponentState {
     return {
       bows: [],
       formComponent: null,
-      loading: false,
+      loading: false
     };
   },
   async created() {
-    try {
-      this.loading = true;
-      const response = await API.get("instrument-inventory", "bows", {});
-      this.bows = response.bows;
-      this.loading = false;
-    } catch (e) {
-      this.loading = false;
-      if (e.response) {
-        this.$toasted.error(e.response.data, { duration: 2000 });
-      } else {
-        this.$toasted.error(e.toString(), { duration: 2000 });
-        console.error(e);
-      }
+    this.loading = true;
+    const [outcome, bows, message] = await getBows();
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.bows = bows;
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message);
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
     }
   },
   methods: {
@@ -79,9 +86,9 @@ export default {
       this.loading = true;
       this.bows = [...this.bows.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
       this.loading = false;
-    },
-  },
-};
+    }
+  }
+});
 
 </script>
 

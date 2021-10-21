@@ -16,7 +16,8 @@ export async function assignSingle(body: AssignBody): Promise<[GenericOutcome.Ok
     return [GenericOutcome.Ok, message, item];
   } catch (e) {
     console.error(e);
-    return [GenericOutcome.Err, e.response.data, null];
+    const message = e.response ? e.response.data : e.toString();
+    return [GenericOutcome.Err, message, null];
   }
 }
 
@@ -30,6 +31,7 @@ export async function assignMultiple(instruments: AssignBody[]): Promise<[Generi
     return [GenericOutcome.Ok, updated.join(", ")];
   } catch (e) {
     console.error(e);
-    return [GenericOutcome.Err, e.response.data];
+    const message = e.response ? e.response.data : e.toString();
+    return [GenericOutcome.Err, message];
   }
 }

@@ -10,10 +10,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+
 import VUpdateBowsForm from '@/components/inventoryComponents/bows/VUpdateBowsForm'
 
-export default {
+export default Vue.extend({
   name: 'VAddBows',
   components: { VUpdateBowsForm },
   props: {
@@ -22,7 +24,7 @@ export default {
       required: true,
     },
   },
-}
+})
 </script>
 
 <style scoped>

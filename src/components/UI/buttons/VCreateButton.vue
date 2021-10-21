@@ -1,7 +1,7 @@
 <template>
   <button
     class="bg-purple-600 py-2 px-3 shadow hover:bg-purple-800 hover:shadow-lg rounded text-white font-bold inline-flex items-center"
-          @click.prevent="$emit('click')" v-if="isAdmin"
+    @click.prevent="$emit('click')" v-if="isAdmin"
     type="button"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -13,17 +13,18 @@
     Create {{ item }}
   </button>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
 import checkAdmin from "@/mixins/checkAdmin";
 
-export default {
+export default Vue.extend({
   name: "v-create-button",
   mixins: [checkAdmin],
   props: {
     item: {
       type: String,
-      required: true,
+      required: true
     }
-  },
-};
+  }
+});
 </script>

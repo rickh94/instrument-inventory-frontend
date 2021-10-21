@@ -11,8 +11,10 @@
     Add {{ item }}
   </button>
 </template>
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "v-add-button",
   props: {
     item: {
@@ -20,5 +22,5 @@ export default {
       required: true,
     }
   },
-};
+});
 </script>

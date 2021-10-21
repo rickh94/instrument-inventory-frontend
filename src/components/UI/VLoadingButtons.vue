@@ -6,10 +6,11 @@
     <slot></slot>
   </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue"
 import { BarLoader } from "@saeris/vue-spinners";
 
-export default {
+export default Vue.extend({
   name: "v-loading-buttons",
   components: { BarLoader },
   props: {
@@ -26,5 +27,5 @@ export default {
       default: "w-40 mr-2"
     }
   },
-};
+});
 </script>

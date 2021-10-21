@@ -10,10 +10,12 @@
   </div>
 </template>
 
-<script>
-import VUpdateMultipleItemsForm from "@/components/inventoryComponents/other/VUpdateMultipleItemsForm";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+import VUpdateMultipleItemsForm from "@/components/inventoryComponents/other/VUpdateMultipleItemsForm.vue";
+
+export default Vue.extend({
   name: "VAddItems",
   components: { VUpdateMultipleItemsForm },
   props: {
@@ -22,7 +24,7 @@ export default {
       required: true
     }
   }
-};
+});
 </script>
 
 <style scoped>

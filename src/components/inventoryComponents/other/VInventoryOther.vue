@@ -30,20 +30,30 @@
       <div :is="formComponent" @updated="handleUpdate" :items="items" @close="formComponent = null"></div>
     </v-modal>
     <v-modal v-if="displayItem" @close="displayItem = null" width-class="max-w-lg">
-      <VItemDisplay :display-item="displayItem" @close="displayItem = null" @updated="handleUpdate"/>
+      <VItemDisplay :display-item="displayItem" @close="displayItem = null" @updated="handleUpdate" />
     </v-modal>
   </div>
 </template>
 
-<script>
-import checkAdmin from "@/mixins/checkAdmin";
-import { API } from "aws-amplify";
-import { PropagateLoader } from "@saeris/vue-spinners";
-import VCreateButton from "@/components/UI/buttons/VCreateButton";
-import VUseButton from "@/components/UI/buttons/VUseButton";
-import VAddButton from "@/components/UI/buttons/VAddButton";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+import checkAdmin from "@/mixins/checkAdmin";
+import { PropagateLoader } from "@saeris/vue-spinners";
+import VCreateButton from "@/components/UI/buttons/VCreateButton.vue";
+import VUseButton from "@/components/UI/buttons/VUseButton.vue";
+import VAddButton from "@/components/UI/buttons/VAddButton.vue";
+import { WithLoading } from "@/util/componentTypes";
+import { GenericOutcome, OtherItem } from "@/util/commonTypes";
+import { getItems } from "@/services/otherItems";
+
+interface ComponentState extends WithLoading {
+  items: OtherItem[],
+  formComponent: string | null,
+  displayItem: OtherItem | null,
+}
+
+export default Vue.extend({
   name: "VInventoryOther",
   components: {
     VAddButton,
@@ -54,43 +64,50 @@ export default {
     VAddItems: () => import("@/components/inventoryComponents/other/VAddItems.vue"),
     VUseItems: () => import("@/components/inventoryComponents/other/VUseItems.vue"),
     VCreateItem: () => import("@/components/inventoryComponents/other/VCreateItem.vue"),
-    PropagateLoader,
+    PropagateLoader
   },
   mixins: [checkAdmin],
-  data() {
+  data(): ComponentState {
     return {
       loading: false,
       items: [],
       formComponent: null,
-      displayItem: null,
+      displayItem: null
     };
   },
   async created() {
-    try {
-      this.loading = true;
-      const response = await API.get("instrument-inventory", "other", {});
-      this.items = response.items;
-      this.loading = false;
-    } catch (e) {
-      this.loading = false;
-      if (e.response) {
-        this.$toasted.error(e.response.data, { duration: 2000 });
-      } else {
-        this.$toasted.error(e.toString(), { duration: 2000 });
-        console.error(e);
-      }
+    this.loading = true;
+    const [outcome, items, message] = await getItems();
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.items = items;
+        break;
+      case GenericOutcome.Err:
+        if (message) {
+          this.$toasted.error(message);
+        } else {
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+        }
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
     }
   },
   methods: {
-    handleUpdate({ updatedIds, updatedItems, replaceDisplay =  false }) {
+    handleUpdate({
+                   updatedIds,
+                   updatedItems,
+                   replaceDisplay = false
+                 }: { updatedIds: string[], updatedItems: OtherItem[], replaceDisplay: boolean }) {
       this.loading = true;
       this.items = [...this.items.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
       this.loading = false;
       if (replaceDisplay) {
         this.displayItem = updatedItems[0];
       }
-    },
-  },
-};
+    }
+  }
+});
 </script>
 

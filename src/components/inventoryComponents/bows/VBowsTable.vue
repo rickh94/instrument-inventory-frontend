@@ -15,8 +15,10 @@
 </table>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
 name: "VBowsTable",
   props: {
     bows: {
@@ -28,7 +30,7 @@ name: "VBowsTable",
       required: true,
     }
   },
-}
+})
 </script>
 
 <style scoped>

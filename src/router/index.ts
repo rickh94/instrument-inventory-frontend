@@ -16,9 +16,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "new" */ '../views/New.vue'),
   },
   {
-    path: '/retrieve',
-    name: 'Retrieve',
-    component: () => import(/* webpackChunkName: "retrieve" */ '../views/Retrieve.vue'),
+    path: '/batch',
+    name: 'Batch',
+    component: () => import(/* webpackChunkName: "retrieve" */ '../views/Batch.vue'),
   },
   {
     path: '/sign-out',

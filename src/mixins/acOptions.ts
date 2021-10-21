@@ -1,13 +1,15 @@
 import { mapState, mapMutations } from 'vuex'
 import { API } from 'aws-amplify'
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   computed: {
     ...mapState(['acOptions']),
   },
   methods: {
     ...mapMutations(['setACOptions']),
-    async getACOptions() {
+    async getACOptions(): Promise<void | string> {
+      // TODO: refactor this out to a service
       if (this.acOptions.locations.length === 0) {
         try {
           const { locations, types, sizes } = await API.get(
@@ -17,9 +19,10 @@ export default {
           )
           this.setACOptions({ locations, types, sizes })
         } catch (e) {
-          this.$toasted.error(`Error ${e.response.data}`, { duration: 2000 })
+          console.error(e)
+          return `Error: ${e.response.data}`
         }
       }
     },
   },
-}
+});

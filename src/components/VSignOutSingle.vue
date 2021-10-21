@@ -22,7 +22,7 @@
         >
       </v-form-control>
       <v-form-control label="Location" label-for="location">
-        <v-autocomplete id="location" :options="acOptions.locations" v-model="body.location" required></v-autocomplete>
+        <v-autocomplete id="location" :completion-options="acOptions.locations" v-model="body.location" required></v-autocomplete>
       </v-form-control>
       <div class="flex justify-end mt-4 mb-2" v-if="loading">
         <bar-loader class="w-56 mr-2" color="#7c3aed"></bar-loader>
@@ -61,7 +61,7 @@ import { mapMutations, mapState } from "vuex";
 import { BarLoader } from "@saeris/vue-spinners";
 import Vue from "vue";
 import acOptions from "@/mixins/acOptions";
-import { AssignBody, GenericOutcome, Instrument} from "@/util/commonTypes";
+import { AssignBody, GenericOutcome, Instrument } from "@/util/commonTypes";
 import { assignSingle } from "@/services/assign";
 import { CodeResult, WithLoading, WithScanner } from "@/util/componentTypes";
 
@@ -72,19 +72,22 @@ interface ComponentState extends WithLoading, WithScanner {
 const blankBody: AssignBody = {
   number: "",
   assignedTo: "",
-  location: ""
+  location: "Westminster Presbyterian Church"
 };
 
 export default Vue.extend({
   name: "v-sign-out-single",
   components: { VAutocomplete, VFormControl, VScanner, BarLoader },
   mixins: [acOptions],
-  async created() {
+  async created(): Promise<void> {
     if (this.currentInstrument) {
       this.body.number = this.currentInstrument.number;
       this.clearCurrentInstrument();
     }
-    await this.getACOptions();
+    const error = await this.getACOptions();
+    if (error) {
+      this.$toasted.error(error, { duration: 2000 });
+    }
   },
   data(): ComponentState {
     return {

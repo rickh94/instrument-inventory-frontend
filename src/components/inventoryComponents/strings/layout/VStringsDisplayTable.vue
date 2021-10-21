@@ -6,11 +6,12 @@
   </v-strings-base-table>
 </template>
 
-<script>
-import stringTableMixin from "@/mixins/stringTableMixin";
-import VStringsBaseTable from "@/components/inventoryComponents/strings/layout/VStringsBaseTable";
+<script lang="ts">
+import stringTableMixin from "@/mixins/stringTableMixin.js";
+import VStringsBaseTable from "@/components/inventoryComponents/strings/layout/VStringsBaseTable.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "VStringsDisplayTable",
   components: { VStringsBaseTable },
   mixins: [stringTableMixin],
@@ -25,14 +26,14 @@ export default {
     }
   },
   filters: {
-    getStringInfo: function(string) {
-      if (string === undefined) {
+    getStringInfo(instrumentString?: {count: number}) {
+      if (instrumentString === undefined) {
         return "0";
       }
-      return `${string.count}`;
+      return `${instrumentString.count}`;
     }
   }
-};
+});
 </script>
 
 <style scoped>

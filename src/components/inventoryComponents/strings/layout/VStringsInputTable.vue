@@ -17,11 +17,12 @@
 
 </template>
 
-<script>
-import stringTableMixin from "@/mixins/stringTableMixin";
-import VStringsBaseTable from "@/components/inventoryComponents/strings/layout/VStringsBaseTable";
+<script lang="ts">
+import stringTableMixin from "@/mixins/stringTableMixin.js";
+import VStringsBaseTable from "@/components/inventoryComponents/strings/layout/VStringsBaseTable.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "VStringsInputTable",
   components: { VStringsBaseTable },
   mixins: [stringTableMixin],
@@ -40,11 +41,11 @@ export default {
     }
   },
   methods: {
-    handleChange(id, value) {
+    handleChange(id: string, value: number): void {
       this.$emit("change", { id, value });
     }
   }
-};
+});
 </script>
 
 <style scoped>

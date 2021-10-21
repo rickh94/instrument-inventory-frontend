@@ -36,15 +36,23 @@
 
 </template>
 
-<script>
-import VFormControl from "@/components/UI/VFormControl";
+<script lang="ts">
+import Vue from "vue";
+
+import VFormControl from "@/components/UI/VFormControl.vue";
 import { BarLoader } from "@saeris/vue-spinners";
 import errorHandler from "@/mixins/errorHandler";
-import { API } from "aws-amplify";
-import VCancelButton from "@/components/UI/buttons/VCancelButton";
-import VSaveButton from "@/components/UI/buttons/VSaveButton";
+import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
+import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
+import { WithLoading } from "@/util/componentTypes";
+import { GenericOutcome, OtherItem } from "@/util/commonTypes";
+import { createItem } from "@/services/otherItems";
 
-export default {
+interface ComponentState extends WithLoading {
+  data: OtherItem,
+}
+
+export default Vue.extend({
   name: "VCreateItem",
   components: { VSaveButton, VCancelButton, VFormControl, BarLoader },
   mixins: [errorHandler],
@@ -55,34 +63,39 @@ export default {
         count: 0,
         num_out: 0,
         signed_out_to: [],
-        notes: "",
+        notes: ""
       },
+      loading: false
     };
   },
   methods: {
     async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await API.post("instrument-inventory", "other/create", {
-          body: {
-            ...this.data,
-          },
-        });
-        this.$emit("updated", { updatedIds: [response.item.id], updatedItems: [response.item] });
-        this.$toasted.show(response.message, { duration: 2000 });
-        this.loading = false;
-        this.$emit("close");
-      } catch (err) {
-        this.handleError(err);
+      this.loading = true;
+      const [outcome, message, newItem] = await createItem(this.data);
+      this.loading = false;
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          if (newItem) {
+            this.$emit("updated", { updatedIds: [newItem.id], updatedItems: [newItem] });
+            this.$toasted.success(message, { duration: 2000 });
+            this.$emit("close");
+          } else {
+            this.$toasted.error("Something went wrong", { duration: 2000 });
+          }
+          break;
+        case GenericOutcome.Err:
+          this.$toasted.error(message, { duration: 2000 });
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 2000 });
       }
-
     },
     handleCancel() {
       this.data = { name: "", count: 0, num_out: 0, signed_out_to: [], notes: "" };
       this.$emit("close");
-    },
-  },
-};
+    }
+  }
+});
 </script>
 
 <style scoped>

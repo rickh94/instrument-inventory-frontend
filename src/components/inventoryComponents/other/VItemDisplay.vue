@@ -17,18 +17,18 @@
     <form v-if="mode === 'move'" @submit.prevent="doMove">
       <v-form-control label="Move From" label-for="from_location">
         <v-autocomplete
-          v-model="moveData.from_location"
+          v-model="moveData.fromLocation"
           id="from_location"
           required
-          :options="moveFromLocations"
+          :completion-options="moveFromLocations"
         />
       </v-form-control>
       <v-form-control label="Move To" label-for="to_location">
         <v-autocomplete
-          v-model="moveData.to_location"
+          v-model="moveData.toLocation"
           id="to_location"
           required
-          :options="acOptions.locations"
+          :completion-options="acOptions.locations"
         />
       </v-form-control>
       <v-form-control label="Count" label-for="count">
@@ -88,18 +88,31 @@
     </div>
   </div>
 </template>
-<script lang="js">
-import VEditButton from "@/components/UI/buttons/VEditButton";
-import VAssignButton from "@/components/UI/buttons/VAssignButton";
-import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton";
-import VMoveButton from "@/components/UI/buttons/VMoveButton";
+<script lang="ts">
+/* eslint-disable */
+import VEditButton from "@/components/UI/buttons/VEditButton.vue";
+import VAssignButton from "@/components/UI/buttons/VAssignButton.vue";
+import VRetrieveButton from "@/components/UI/buttons/VRetrieveButton.vue";
+import VMoveButton from "@/components/UI/buttons/VMoveButton.vue";
 import acOptions from "@/mixins/acOptions";
-import { API } from "aws-amplify";
-import VCancelButton from "@/components/UI/buttons/VCancelButton";
-import VSaveButton from "@/components/UI/buttons/VSaveButton";
-import VLoadingButtons from "@/components/UI/VLoadingButtons";
+import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
+import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
+import VLoadingButtons from "@/components/UI/VLoadingButtons.vue";
+import { WithLoading } from "@/util/componentTypes";
+import Vue from "vue";
+import { moveItem } from "@/services/otherItems";
+import { GenericOutcome } from "@/util/commonTypes";
 
-export default {
+interface ComponentState extends WithLoading {
+  mode: string,
+  moveData: {
+    fromLocation: string,
+    toLocation: string,
+    count: number,
+  }
+}
+
+export default Vue.extend({
   name: "VItemDisplay",
   components: {
     VSaveButton,
@@ -110,21 +123,21 @@ export default {
     VMoveButton,
     VRetrieveButton,
     VAssignButton,
-    VEditButton,
+    VEditButton
   },
   mixins: [acOptions],
   props: {
-    displayItem: {},
+    displayItem: {}
   },
-  data() {
+  data(): ComponentState {
     return {
       loading: false,
       mode: "display",
       moveData: {
-        from_location: "",
-        to_location: "",
-        count: 0,
-      },
+        fromLocation: "",
+        toLocation: "",
+        count: 0
+      }
     };
   },
   filters: {
@@ -133,7 +146,7 @@ export default {
         return value.join(", ");
       }
       return "";
-    },
+    }
   },
   methods: {
     edit() {
@@ -144,31 +157,40 @@ export default {
     },
     async move() {
       this.mode = "move";
-      await this.getACOptions();
+      const error = await this.getACOptions();
+      if (error) {
+        this.$toasted.error(error, { duration: 2000 });
+      }
     },
     async doMove() {
+      const { fromLocation, toLocation, count } = this.moveData;
       this.loading = true;
-      try {
-        const { from_location, to_location, count } = this.moveData;
-        const response = await API.post("instrument-inventory", "other/move", {
-          body: {
-            id: this.displayItem.id,
-            from_location,
-            to_location,
-            count,
-          },
-        });
-        this.$emit("updated", {
-          updatedIds: [this.displayItem.id],
-          updatedItems: [response.item],
-          replaceDisplay: true,
-        });
-        this.mode = "display";
-      } catch (e) {
-        this.$toasted.error(`Error: ${e.response.data}`, { duration: 2000 });
-      }
+      const [outcome, updatedItem, message] = await moveItem(this.displayItem.id, fromLocation, toLocation, count);
       this.loading = false;
-    },
+      switch (outcome) {
+        case GenericOutcome.Ok:
+          if (updatedItem) {
+            this.$emit("updated", {
+              updatedIds: [updatedItem.id],
+              updateItems: [updatedItem],
+              replaceDisplay: true
+            });
+            this.mode = "display";
+          } else {
+            this.$toasted.error("Something went wrong", { duration: 2000 });
+          }
+          break;
+        case GenericOutcome.Err:
+          if (message) {
+            this.$toasted.error(message, { duration: 2000 });
+          } else {
+            this.$toasted.error("Something went wrong", { duration: 2000 });
+          }
+          break;
+        default:
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+      }
+    }
   },
   computed: {
     moveFromLocations() {
@@ -179,7 +201,7 @@ export default {
         }
       });
       return locations;
-    },
-  },
-};
+    }
+  }
+});
 </script>
