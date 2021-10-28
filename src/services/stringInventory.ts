@@ -17,9 +17,7 @@ export async function updateStrings(path: string, updates: AddStrings | UseStrin
   let message = "";
   try {
     const { updated, updatedItems, failed } = await API.post("instrument-inventory", path, {
-      body: {
-        string_updates: updates
-      }
+      body: updates
     });
     if (failed.length > 0) {
       message = `Updates failed: ${failed.join(", ")}`;

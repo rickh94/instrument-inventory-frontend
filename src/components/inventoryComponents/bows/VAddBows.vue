@@ -13,18 +13,18 @@
 <script lang="ts">
 import Vue from "vue";
 
-import VUpdateBowsForm from '@/components/inventoryComponents/bows/VUpdateBowsForm'
+import VUpdateBowsForm from "@/components/inventoryComponents/bows/VUpdateBowsForm.vue";
 
 export default Vue.extend({
-  name: 'VAddBows',
+  name: "VAddBows",
   components: { VUpdateBowsForm },
   props: {
     bows: {
       type: Array,
-      required: true,
-    },
-  },
-})
+      required: true
+    }
+  }
+});
 </script>
 
 <style scoped>

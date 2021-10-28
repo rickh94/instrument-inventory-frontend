@@ -1,13 +1,12 @@
 import { GenericOutcome, Instrument } from "@/util/commonTypes";
 import { API } from "aws-amplify";
 
-export async function createInstrument(newInstrument: Instrument, number: string):
+export async function createInstrument(newInstrument: Instrument):
   Promise<[GenericOutcome, string, Instrument?]> {
   try {
     const { item, message } = await API.post("instrument-inventory", "instruments", {
       body: {
         ...newInstrument,
-        number
       }
     });
     return [GenericOutcome.Ok, message, item];

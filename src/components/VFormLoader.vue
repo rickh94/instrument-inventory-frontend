@@ -1,15 +1,15 @@
 <template>
-  <Skeleton :count="8"></Skeleton>
+  <div>Loading form...</div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Skeleton } from "vue-loading-skeleton";
+import Component from "vue-class-component";
 
-export default Vue.extend({
-  name: "VFormLoader",
-  components: { Skeleton },
-});
+@Component
+export default class VFormLoader extends Vue {
+}
+
 </script>
 
 <style scoped>

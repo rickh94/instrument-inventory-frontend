@@ -10,7 +10,7 @@
       <v-strings-table :strings="bassStrings" instrument="Bass"></v-strings-table>
     </div>
     <div class="flex justify-around max-w-lg mx-auto mt-2">
-      <v-create-button @click="formComponent = 'v-create-string'" item="String" />
+      <v-create-button @click="formComponent = 'v-create-string'" item="String" v-if="isAdmin" />
       <v-use-button @click="formComponent = 'v-use-strings'" item="Strings" />
       <v-add-button @click="formComponent = 'v-add-strings'" item="Strings" />
     </div>
@@ -28,27 +28,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import VStringsTable from "@/components/inventoryComponents/strings/layout/VStringsDisplayTable.vue";
-import computedStrings from "@/mixins/computedStrings.js";
-import checkAdmin from "@/mixins/checkAdmin";
+import ComputedStrings from "@/mixins/computedStrings";
 import { PropagateLoader } from "@saeris/vue-spinners";
 import VCreateButton from "@/components/UI/buttons/VCreateButton.vue";
 import VUseButton from "@/components/UI/buttons/VUseButton.vue";
 import VAddButton from "@/components/UI/buttons/VAddButton.vue";
-import { WithLoading } from "@/util/componentTypes";
 import { InstrumentString } from "@/util/stringTypes";
 import { getStrings } from "@/services/stringInventory";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
+import { mapGetters } from "vuex";
 
-interface ComponentState extends WithLoading {
-  strings: InstrumentString[],
-  formComponent: string | null
-}
 
-// noinspection JSUnusedGlobalSymbols
-export default Vue.extend({
-  name: "VInventoryStrings",
+type StringFormComponent = "v-create-string" | "v-add-strings" | "v-use-strings" | null;
+
+@Component({
   components: {
     VAddButton,
     VUseButton,
@@ -60,16 +55,18 @@ export default Vue.extend({
     VAddStrings: () => import("@/components/inventoryComponents/strings/functions/VAddStrings.vue"),
     PropagateLoader
   },
-  mixins: [computedStrings, checkAdmin],
-  data(): ComponentState {
-    return {
-      strings: [],
-      loading: false,
-      formComponent: null
-    };
-  },
+  computed: mapGetters(["isAdmin"])
+})
+export default class VInventoryStrings extends mixins(ComputedStrings) {
+  isAdmin!: boolean;
+  strings: InstrumentString[] = [];
+  loading = false;
+  formComponent: StringFormComponent = null;
+
   async created(): Promise<void> {
+    this.loading = true;
     const [outcome, strings, message] = await getStrings();
+    this.loading = false;
     switch (outcome) {
       case GenericOutcome.Ok:
         this.strings = strings;
@@ -80,15 +77,15 @@ export default Vue.extend({
       default:
         this.$toasted.error("Something went wrong", { duration: 1000 });
     }
-  },
-  methods: {
-    handleUpdate({ updatedIds, updatedItems }: { updatedIds: string[], updatedItems: InstrumentString[] }) {
-      this.loading = true;
-      this.strings = [...this.strings.filter(({ id }) => id && !updatedIds.includes(id)), ...updatedItems];
-      this.loading = false;
-    }
   }
-});
+
+  handleUpdate({ updatedIds, updatedItems }: { updatedIds: string[], updatedItems: InstrumentString[] }): void {
+    this.loading = true;
+    this.strings = [...this.strings.filter(({ id }) => id && !updatedIds.includes(id)), ...updatedItems];
+    this.loading = false;
+  }
+}
+
 </script>
 
 <style scoped>

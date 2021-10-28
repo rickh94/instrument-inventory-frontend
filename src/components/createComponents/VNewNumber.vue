@@ -64,96 +64,99 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-import VScanner from "@/components/UI/VScanner";
+import VScanner from "@/components/UI/VScanner.vue";
 import { mapMutations } from "vuex";
 import { PulseLoader } from "@saeris/vue-spinners";
-import VFormControl from "@/components/UI/VFormControl";
-import VAutocomplete from "@/components/UI/VAutocomplete";
+import VFormControl from "@/components/UI/VFormControl.vue";
+import VAutocomplete from "@/components/UI/VAutocomplete.vue";
 import acOptions from "@/mixins/acOptions";
-import { WithLoading, WithScanner } from "@/util/componentTypes";
 import { checkNewNumber, DoesInstrumentExist, getNextNumber } from "@/services/getInstruments";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
+import { CodeResult } from "@/util/componentTypes";
 
-interface ComponentState extends WithLoading, WithScanner {
-  number: string,
-  nextSize: string,
-  nextType: string,
-}
 
-export default Vue.extend({
+@Component({
   components: { VAutocomplete, VFormControl, VScanner, PulseLoader },
-  mixins: [acOptions],
-  name: "VNewNumber",
-  data(): ComponentState {
-    return {
-      number: "",
-      scanner: false,
-      loading: false,
-      nextSize: "",
-      nextType: ""
-    };
-  },
-  async created() {
+  methods: mapMutations(["setNewInstrumentNumber"])
+})
+export default class VNewNumber extends mixins(acOptions) {
+  number = "";
+  scanner = false;
+  loading = false;
+  nextSize = "";
+  nextType = "";
+
+  // mutations
+  setNewInstrumentNumber!: (any) => void;
+
+
+  async created(): Promise<void> {
     const error = await this.getACOptions();
     if (error) {
       this.$toasted.error(error, { duration: 2000 });
     }
-  },
-  methods: {
-    ...mapMutations(["setNewInstrumentNumber"]),
-    async onSubmit() {
-      // this guards against click the enabled button that is showing the
-      // loading animation
-      if (this.loading) {
-        return;
-      }
-      const [exists, message] = await checkNewNumber(this.number);
-      this.loading = false;
+  }
 
-      switch (exists) {
-        case DoesInstrumentExist.Yes:
-          this.$toasted.info(message, { duration: 2000 });
-          this.number = "";
-          break;
-        case DoesInstrumentExist.No:
-          this.$toasted.info(message, { duration: 2000 });
-          this.setNewInstrumentNumber(this.number);
-          break;
-        case DoesInstrumentExist.Err:
-          this.$toasted.error(message, { duration: 2000 });
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
-    },
-    detected(result) {
-      if (result.codeResult.code !== this.number) {
-        this.number = result.codeResult.code;
-        this.scanner = false;
-        this.onSubmit();
-      }
-    },
-    async getNumber() {
-      this.loading = true;
-      const [outcome, nextNumber, message] = await getNextNumber(this.nextType, this.nextSize);
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.setNewInstrumentNumber(nextNumber);
-          this.$toasted.success(message, { duration: 1000 });
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message, { duration: 2000 });
-          this.nextSize = "";
-          this.nextType = "";
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
+
+  async onSubmit(): Promise<void> {
+    // this guards against click the enabled button that is showing the
+    // loading animation
+    if (this.loading) {
+      return;
+    }
+    const [exists, message] = await checkNewNumber(this.number);
+    this.loading = false;
+
+    switch (exists) {
+      case DoesInstrumentExist.Yes:
+        this.$toasted.info(message, { duration: 2000 });
+        this.number = "";
+        break;
+      case DoesInstrumentExist.No:
+        this.$toasted.info(message, { duration: 2000 });
+        this.setNewInstrumentNumber(this.number);
+        break;
+      case DoesInstrumentExist.Err:
+        this.$toasted.error(message, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
     }
   }
-});
+
+
+  detected(result: CodeResult): void {
+    if (result.codeResult.code !== this.number) {
+      this.number = result.codeResult.code;
+      this.scanner = false;
+      this.onSubmit();
+    }
+  }
+
+  async getNumber(): Promise<void> {
+    if (this.loading) {
+      return;
+    }
+    this.loading = true;
+    const [outcome, nextNumber, message] = await getNextNumber(this.nextType, this.nextSize);
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.setNewInstrumentNumber(nextNumber);
+        this.$toasted.success(message, { duration: 1000 });
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message, { duration: 2000 });
+        this.nextSize = "";
+        this.nextType = "";
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+}
+
 </script>
 
 <style scoped>

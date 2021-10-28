@@ -27,6 +27,7 @@
       <v-add-button @click="formComponent = 'v-add-items'" item="Items" />
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
+      <!--suppress HtmlUnknownAttribute -->
       <div :is="formComponent" @updated="handleUpdate" :items="items" @close="formComponent = null"></div>
     </v-modal>
     <v-modal v-if="displayItem" @close="displayItem = null" width-class="max-w-lg">
@@ -101,7 +102,11 @@ export default Vue.extend({
                    replaceDisplay = false
                  }: { updatedIds: string[], updatedItems: OtherItem[], replaceDisplay: boolean }) {
       this.loading = true;
-      this.items = [...this.items.filter(({ id }) => !updatedIds.includes(id)), ...updatedItems];
+      this.items = [...this.items.filter(({ id }) => {
+        if (id) {
+          return !updatedIds.includes(id);
+        }
+      }), ...updatedItems];
       this.loading = false;
       if (replaceDisplay) {
         this.displayItem = updatedItems[0];

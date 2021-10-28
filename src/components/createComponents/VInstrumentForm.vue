@@ -25,10 +25,10 @@
                class="appearance-none bg-transparent border-none text-gray-900 focus:text-purple-800 w-full py-1 leading-tight">
       </v-form-control>
       <v-form-control label="Notes" label-for="condition-notes">
-      <textarea name="condition-notes"
-                id="condition-notes"
-                v-model="data.conditionNotes"
-                class="appearance-none bg-transparent border-none w-full text-gray-900 focus:text-purple-800 py-1 leading-tight"></textarea>
+      <textarea
+        id="condition-notes"
+        v-model="data.conditionNotes"
+        class="appearance-none bg-transparent border-none w-full text-gray-900 focus:text-purple-800 py-1 leading-tight"></textarea>
       </v-form-control>
       <v-form-control label="Condition" label-for="condition">
         <div>
@@ -81,54 +81,59 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-import VAutocomplete from "@/components/UI/VAutocomplete";
+import VAutocomplete from "@/components/UI/VAutocomplete.vue";
 import { mapMutations, mapState } from "vuex";
-import VFormControl from "@/components/UI/VFormControl";
+import VFormControl from "@/components/UI/VFormControl.vue";
 import { BarLoader } from "@saeris/vue-spinners";
 import acOptions from "@/mixins/acOptions";
-import VCancelButton from "@/components/UI/buttons/VCancelButton";
-import { WithLoading } from "@/util/componentTypes";
+import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
 import { createInstrument } from "@/services/createInstrument";
-import { GenericOutcome } from "@/util/commonTypes";
+import { GenericOutcome, Instrument } from "@/util/commonTypes";
 import { editInstrument } from "@/services/updateInstrument";
+import Component, { mixins } from "vue-class-component";
 
-interface ComponentState extends WithLoading {
-  mode: "creating" | "editing",
-  data: {
-    size: string,
-    type: string,
-    location: string,
-    assignedTo: string,
-    maintenanceNotes: string,
-    conditionNotes: string,
-    condition: number,
-    quality: number,
-  },
+interface FormData {
+  size: string,
+  type: string,
+  location: string,
+  assignedTo?: string,
+  maintenanceNotes?: string,
+  conditionNotes?: string,
+  condition?: number,
+  quality?: number,
+  id?: string
+  number?: string,
 }
 
-export default Vue.extend({
-  name: "VInstrumentForm",
+@Component({
   components: { VCancelButton, VFormControl, VAutocomplete, BarLoader },
-  mixins: [acOptions],
-  data(): ComponentState {
-    return {
-      mode: "creating",
-      loading: false,
-      data: {
-        size: "",
-        type: "",
-        location: "Storage",
-        assignedTo: "",
-        maintenanceNotes: "",
-        conditionNotes: "",
-        condition: 5,
-        quality: 5
-      }
-    };
-  },
-  async created() {
+  methods: mapMutations(["clearNewInstrumentNumber", "setCurrentInstrument", "updateCurrentInstrument"]),
+  computed: mapState(["newInstrumentNumber", "currentInstrument"])
+})
+export default class VInstrumentForm extends mixins(acOptions) {
+  mode: "creating" | "editing" = "creating";
+  loading = false;
+  data: FormData = {
+    size: "",
+    type: "",
+    location: "Storage",
+    assignedTo: "",
+    maintenanceNotes: "",
+    conditionNotes: "",
+    condition: 5,
+    quality: 5
+  };
+
+  // mutations
+  clearNewInstrumentNumber!: () => void;
+  setCurrentInstrument!: (any) => void;
+  updateCurrentInstrument!: (any) => void;
+
+  // state
+  newInstrumentNumber!: string;
+  currentInstrument!: Instrument | undefined | null;
+
+  async created(): Promise<void> {
     if (this.newInstrumentNumber.length > 0) {
       this.mode = "creating";
       switch (this.newInstrumentNumber[0]) {
@@ -172,95 +177,109 @@ export default Vue.extend({
     if (error) {
       this.$toasted.error(error, { duration: 2000 });
     }
-  },
-  methods: {
-    ...mapMutations(["clearNewInstrumentNumber", "setCurrentInstrument", "updateCurrentInstrument"]),
-    async onSubmit() {
-      this.loading = true;
-      if (this.mode === "creating") {
-        await this.submitCreate();
-      } else if (this.mode === "editing") {
-        await this.submitEdit();
-      }
-    },
-    async submitCreate() {
-      const [outcome, message, instrument] = await createInstrument(this.data, this.newInstrumentNumber);
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.$toasted.info(message, { duration: 2000 });
-          this.clearNewInstrumentNumber();
-          this.setCurrentInstrument(instrument);
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message, { duration: 2000 });
-          break;
-        default:
-          this.$toased.error("Something went wrong", { duration: 2000 });
-      }
-    },
-    async submitEdit() {
-      const [outcome, message, updatedInstrument] = await editInstrument(this.data.id, this.data);
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.updateCurrentInstrument(updatedInstrument);
-          this.$emit("editSuccess", updatedInstrument);
-          this.$toasted.info(message);
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(`Error: ${message}`, { duration: 2000 });
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
-    },
-    guessSize(idx) {
-      // get the size portion of the inventory number to predict the size of the instrument.
-      const sizeNum = this.newInstrumentNumber.substr(idx).split("-")[0];
-      switch (sizeNum) {
-        case "1":
-          this.data.size = "4/4";
-          break;
-        case "2":
-          this.data.size = "1/2";
-          break;
-        case "3":
-          this.data.size = "3/4";
-          break;
-        case "4":
-          this.data.size = "1/4";
-          break;
-        case "8":
-          this.data.size = "1/8";
-          break;
-        case "10":
-          this.data.size = "1/10";
-          break;
-        case "16":
-          this.data.size = "1/16";
-          break;
-        case "11":
-          this.data.size = "11\"";
-          break;
-        case "12":
-          this.data.size = "12\"";
-          break;
-        case "13":
-          this.data.size = "13\"";
-          break;
-        case "14":
-          this.data.size = "14\"";
-          break;
-        case "15":
-          this.data.size = "15\"";
-          break;
-        default:
-          this.data.size = "";
-      }
+  }
+
+  async onSubmit(): Promise<void> {
+    this.loading = true;
+    if (this.mode === "creating") {
+      await this.submitCreate();
+    } else if (this.mode === "editing") {
+      await this.submitEdit();
     }
-  },
-  computed: mapState(["newInstrumentNumber", "currentInstrument"])
-});
+  }
+
+  async submitCreate(): Promise<void> {
+    const [outcome, message, instrument] = await createInstrument({ ...this.data, number: this.newInstrumentNumber });
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.$toasted.info(message, { duration: 2000 });
+        this.clearNewInstrumentNumber();
+        this.setCurrentInstrument(instrument);
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+
+  async submitEdit(): Promise<void> {
+    if (!this.data.id) {
+      this.$toasted.error("Cannot edit instrument without ID");
+      return;
+    }
+    if (!this.data.number) {
+      this.$toasted.error("Cannot edit instrument without number");
+      return;
+    }
+    // what a dumb hack to make typescript shut up. Something about guards and
+    // accessing properties explicitly?
+    const [outcome, message, updatedInstrument] = await editInstrument(this.data.id, {
+      ...this.data,
+      number: this.data.number
+    });
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.updateCurrentInstrument(updatedInstrument);
+        this.$emit("editSuccess", updatedInstrument);
+        this.$toasted.info(message);
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(`Error: ${message}`, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+
+  guessSize(idx: number): void {
+    // get the size portion of the inventory number to predict the size of the instrument.
+    const sizeNum = this.newInstrumentNumber.substr(idx).split("-")[0];
+    switch (sizeNum) {
+      case "1":
+        this.data.size = "4/4";
+        break;
+      case "2":
+        this.data.size = "1/2";
+        break;
+      case "3":
+        this.data.size = "3/4";
+        break;
+      case "4":
+        this.data.size = "1/4";
+        break;
+      case "8":
+        this.data.size = "1/8";
+        break;
+      case "10":
+        this.data.size = "1/10";
+        break;
+      case "16":
+        this.data.size = "1/16";
+        break;
+      case "11":
+        this.data.size = "11\"";
+        break;
+      case "12":
+        this.data.size = "12\"";
+        break;
+      case "13":
+        this.data.size = "13\"";
+        break;
+      case "14":
+        this.data.size = "14\"";
+        break;
+      case "15":
+        this.data.size = "15\"";
+        break;
+      default:
+        this.data.size = "";
+    }
+  }
+}
+
 </script>
 

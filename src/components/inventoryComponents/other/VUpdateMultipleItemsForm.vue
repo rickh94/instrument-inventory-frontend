@@ -36,28 +36,15 @@
 <script lang="ts">
 import Vue from "vue";
 
-import errorHandler from "@/mixins/errorHandler.js";
 import { BarLoader } from "@saeris/vue-spinners";
 import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton.vue";
 import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
-import { WithLoading } from "@/util/componentTypes";
 import { updateMultipleItems } from "@/services/otherItems";
-import { GenericOutcome } from "@/util/commonTypes";
+import { GenericOutcome, OtherItem } from "@/util/commonTypes";
+import Component from "vue-class-component";
 
-interface ComponentState extends WithLoading {
-  itemsToUpdate: { [itemId: string]: number },
-}
-
-export default Vue.extend({
-  name: "VUpdateMultipleItemsForm",
+@Component({
   components: { VSaveButton, VCloseFormButton, BarLoader },
-  mixins: [errorHandler],
-  data(): ComponentState {
-    return {
-      itemsToUpdate: {},
-      loading: false
-    };
-  },
   props: {
     items: {
       type: Array,
@@ -71,49 +58,58 @@ export default Vue.extend({
       type: String,
       required: true
     }
-  },
-  created() {
-    this.initializeItems();
-  },
-  methods: {
-    initializeItems() {
-      for (const item of this.items) {
-        this.itemsToUpdate[item.id] = 0;
-      }
-    },
-    handleUpdate(id, e) {
-      this.itemsToUpdate[id] = parseInt(e.target.value);
-    },
-    async handleSubmit() {
-      const updated = [];
-      for (const [id, amount] of Object.entries(this.itemsToUpdate)) {
-        if (amount !== 0) {
-          updated.push({ id, amount });
-        }
-      }
+  }
+})
+export default class VUpdateMultipleItemsForm extends Vue {
+  public items!: OtherItem[];
+  public updateText!: string;
+  public submitPath!: string;
+  itemsToUpdate: { [id: string]: number } = {};
+  loading = false;
 
-      this.loading = true;
-      const [outcome, updatedIds, updatedItems, message] = await updateMultipleItems(updated, this.submitPath);
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.$emit("updated", { updatedIds, updatedItems });
-          if (message) {
-            this.$toasted.error(message, { duration: 4000 });
-          }
-          this.$emit("close");
-          break;
-        case GenericOutcome.Err:
-          if (message) {
-            this.$toasted.error(message, { duration: 2000 });
-          }
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
+
+  created(): void {
+    this.initializeItems();
+  }
+
+  initializeItems(): void {
+    for (const item of this.items) {
+      if (item.id) {
+        this.itemsToUpdate[item.id] = 0;
       }
     }
   }
-});
+
+  async handleSubmit(): Promise<void> {
+    const updated: { id: string, amount: number }[] = [];
+    for (const [id, amount] of Object.entries(this.itemsToUpdate)) {
+      if (amount !== 0) {
+        updated.push({ id, amount });
+      }
+    }
+
+    this.loading = true;
+    const [outcome, updatedIds, updatedItems, message] = await updateMultipleItems(updated, this.submitPath);
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.$emit("updated", { updatedIds, updatedItems });
+        if (message) {
+          this.$toasted.error(message, { duration: 4000 });
+        }
+        this.$emit("close");
+        break;
+      case GenericOutcome.Err:
+        if (message) {
+          this.$toasted.error(message, { duration: 2000 });
+        }
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+}
+
 </script>
 
 <style scoped>

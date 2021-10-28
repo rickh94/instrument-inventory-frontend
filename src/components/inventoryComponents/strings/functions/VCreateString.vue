@@ -35,7 +35,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 
 import VFormControl from "@/components/UI/VFormControl.vue";
 import VAutocomplete from "@/components/UI/VAutocomplete.vue";
@@ -43,68 +42,63 @@ import { BarLoader } from "@saeris/vue-spinners";
 import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
 import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
 import acOptions from "@/mixins/acOptions";
-import { WithLoading } from "@/util/componentTypes";
 import { createString } from "@/services/stringInventory";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
+import { StringOption } from "@/util/stringTypes";
 
-interface ComponentState extends WithLoading {
+
+@Component({
+  components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader }
+})
+export default class VCreateString extends mixins(acOptions) {
+  loading = false;
   data: {
     type: string,
     size: string,
-    count: string,
-    instrumentString: string,
+    count: number,
+    instrumentString: StringOption,
+  } = {
+    type: "",
+    size: "",
+    count: 0,
+    instrumentString: "A"
   };
-}
 
-export default Vue.extend({
-  name: "VCreateBow",
-  components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader },
-  mixins: [acOptions],
-  data() {
-    return {
-      loading: false,
-      data: {
-        type: "",
-        size: "",
-        count: "0",
-        instrumentString: ""
-      }
-    };
-  },
   async created(): Promise<void> {
     const error = await this.getACOptions();
     if (error) {
       this.$toasted.error(error);
     }
-  },
-  methods: {
-    handleCancel(): void {
-      this.data = { type: "", size: "", count: "", instrumentString: "" };
-      this.$emit("close");
-    },
-    async handleSubmit(): Promise<void> {
-      this.loading = true;
-      // eslint-disable
-      const [outcome, newString, message] = await createString({ string: this.data.instrumentString, ...this.data });
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          if (newString !== null) {
-            this.$emit("updated", { updatedIds: [newString.id], updatedItems: [newString] });
-            this.$toasted.success(message, { duration: 2000 });
-            this.$emit("close");
-          } else {
-            this.$toasted.error("Something went wrong", { duration: 2000 });
-          }
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message);
-          break;
-        default:
+  }
+
+  handleCancel(): void {
+    this.data = { type: "", size: "", count: 0, instrumentString: "A" };
+    this.$emit("close");
+  }
+
+  async handleSubmit(): Promise<void> {
+    this.loading = true;
+    // eslint-disable
+    const [outcome, newString, message] = await createString({ string: this.data.instrumentString, ...this.data });
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        if (newString !== null) {
+          this.$emit("updated", { updatedIds: [newString.id], updatedItems: [newString] });
+          this.$toasted.success(message, { duration: 2000 });
+          this.$emit("close");
+        } else {
           this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
+        }
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message);
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
     }
   }
-});
+}
 </script>
 

@@ -84,7 +84,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.focusOnCreated) {
-      const box = this.$refs.instrumentSearchBox;
+      const box = this.$refs.instrumentSearchBox as Vue & { focus: () => void };
       box.focus();
     }
   },

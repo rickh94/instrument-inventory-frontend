@@ -66,8 +66,15 @@
         </button>
         <button class="bg-purple-600 ml-2 px-3 font-bold text-white py-2 shadow hover:bg-purple-800 hover:shadow-lg rounded inline-flex items-center"
                 type="submit">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-6 w-6 mr-1"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
           Move
         </button>
@@ -78,7 +85,7 @@
 
 <script lang="ts">
 /* eslint-disable no-unused-vars */
-import Vue from "vue";
+import Component, { mixins } from "vue-class-component";
 import { BarLoader } from "@saeris/vue-spinners";
 import { GenericOutcome } from "@/util/commonTypes";
 import VFormControl from "@/components/UI/VFormControl.vue";
@@ -92,116 +99,111 @@ enum AddOutcomes {
   Duplicate = "DUPLICATE"
 }
 
-type ComponentState = {
-  instrumentNumbers: string[],
-  currentNumber: string,
-  loading: boolean,
-  scanner: boolean,
-  flash: boolean,
-  location: string,
-}
 
-// noinspection JSUnusedGlobalSymbols
-export default Vue.extend({
-  name: "Retrieve",
+@Component({
   components: { VAutocomplete, VFormControl, VScanner: () => import("@/components/UI/VScanner.vue"), BarLoader },
-  mixins: [acOptions],
-  data(): ComponentState {
-    return {
-      instrumentNumbers: [],
-      currentNumber: "",
-      scanner: false,
-      loading: false,
-      flash: false,
-      location: ""
-    };
-  },
-  async created() {
+})
+export default class Move extends mixins(acOptions) {
+  instrumentNumbers: string[] = [];
+  currentNumber = "";
+  scanner = false;
+  loading = false;
+  flash = false;
+  location = "";
+
+  async created(): Promise<void> {
     await this.getACOptions();
-  },
-  methods: {
-    async onSubmit(): Promise<void> {
-      if (this.instrumentNumbers.length < 1) {
-        this.$toasted.error("No Instruments to move", { duration: 2000 });
-        return;
-      }
+  }
 
-      this.loading = true;
-      const [outcome, result] = await moveMultiple(this.instrumentNumbers, this.location);
-      this.loading = false;
+  async onSubmit(): Promise<void> {
+    if (this.instrumentNumbers.length < 1) {
+      this.$toasted.error("No Instruments to move", { duration: 2000 });
+      return;
+    }
 
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.handleUpdated(result.instrumentsUpdated);
-          this.handleFailed(result.instrumentsFailed);
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(`Error: ${result}`, { duration: 2000 });
-          console.error(result);
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 1000 });
-      }
-    },
-    handleUpdated(updatedNumbers: string[]): void {
-      if (updatedNumbers.length > 0) {
-        this.$toasted.success(`Successfully moved ${updatedNumbers.join(", ")}`, { duration: 4000 });
-      }
-    },
-    handleFailed(failedNumbers: string[]): void {
-      if (failedNumbers.length > 0) {
-        this.$toasted.success(`Failed to move ${failedNumbers.join(", ")}`, { duration: 4000 });
-      }
-    },
-    onAdd(): void {
-      switch (this.doAdd(this.currentNumber)) {
-        case AddOutcomes.Added:
-          this.currentNumber = "";
-          break;
-        case AddOutcomes.Duplicate:
-          this.currentNumber = "";
-          this.$toasted.info("Instrument already added", { duration: 900 });
-          break;
-        case AddOutcomes.Invalid:
-          this.$toasted.error("Invalid Instrument number", { duration: 1000 });
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 1000 });
-      }
-    },
-    detected(result: { codeResult: { code: string } }): void {
-      switch (this.doAdd(result.codeResult.code)) {
-        case AddOutcomes.Added:
-          this.doFlash();
-          break;
-        case AddOutcomes.Duplicate:
-        case AddOutcomes.Invalid:
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 1000 });
-      }
-    },
-    remove(instrument: string) {
-      this.instrumentNumbers = this.instrumentNumbers.filter(item => item !== instrument);
-    },
-    doFlash(timeout = 300): void {
-      this.flash = true;
-      setTimeout(() => this.flash = false, timeout);
-    },
-    doAdd(number: string): AddOutcomes {
-      if (!number.match(/\w*\d*-\d+/)) {
-        return AddOutcomes.Invalid;
-      }
-      if (this.instrumentNumbers.includes(number)) {
-        return AddOutcomes.Duplicate;
-      }
-      this.instrumentNumbers.push(number);
-      return AddOutcomes.Added;
+    this.loading = true;
+    const [outcome, result] = await moveMultiple(this.instrumentNumbers, this.location);
+    this.loading = false;
+
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.handleUpdated(result.instrumentsUpdated);
+        this.handleFailed(result.instrumentsFailed);
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(`Error: ${result}`, { duration: 2000 });
+        console.error(result);
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 1000 });
     }
   }
-});
+
+  handleUpdated(updatedNumbers: string[]): void {
+    if (updatedNumbers.length > 0) {
+      this.$toasted.success(`Successfully moved ${updatedNumbers.join(", ")}`, { duration: 4000 });
+    }
+  }
+
+  handleFailed(failedNumbers: string[]): void {
+    if (failedNumbers.length > 0) {
+      this.$toasted.success(`Failed to move ${failedNumbers.join(", ")}`, { duration: 4000 });
+    }
+  }
+
+  onAdd(): void {
+    switch (this.doAdd(this.currentNumber)) {
+      case AddOutcomes.Added:
+        this.currentNumber = "";
+        break;
+      case AddOutcomes.Duplicate:
+        this.currentNumber = "";
+        this.$toasted.info("Instrument already added", { duration: 900 });
+        break;
+      case AddOutcomes.Invalid:
+        this.$toasted.error("Invalid Instrument number", { duration: 1000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 1000 });
+    }
+  }
+
+  detected(result: { codeResult: { code: string } }): void {
+    switch (this.doAdd(result.codeResult.code)) {
+      case AddOutcomes.Added:
+        this.doFlash();
+        break;
+      case AddOutcomes.Duplicate:
+      case AddOutcomes.Invalid:
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 1000 });
+    }
+  }
+
+  remove(instrument: string): void {
+    this.instrumentNumbers = this.instrumentNumbers.filter(item => item !== instrument);
+  }
+
+  doFlash(timeout = 300): void {
+    this.flash = true;
+    setTimeout(() => this.flash = false, timeout);
+  }
+
+  doAdd(number: string): AddOutcomes {
+    if (!number.match(/\w*\d*-\d+/)) {
+      return AddOutcomes.Invalid;
+    }
+    if (this.instrumentNumbers.includes(number)) {
+      return AddOutcomes.Duplicate;
+    }
+    this.instrumentNumbers.push(number);
+    return AddOutcomes.Added;
+  }
+}
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style scoped>
 
 .tag-enter-active {

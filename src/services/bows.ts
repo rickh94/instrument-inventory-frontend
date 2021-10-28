@@ -37,14 +37,14 @@ export async function getBows(): Promise<[GenericOutcome, Bow[], string?]> {
 }
 
 export async function updateBows(bowUpdates: AddBow[] | UseBow[], submitPath: string):
-  Promise<[GenericOutcome, string[], Bow[], string[], string?]> {
+  Promise<[GenericOutcome, string[], Bow[], string[], string]> {
   try {
     const { updated, updatedItems, failed } = await API.post("instrument-inventory", submitPath, {
       body: {
         bow_updates: bowUpdates
       }
     });
-    return [GenericOutcome.Ok, updated, updatedItems, failed];
+    return [GenericOutcome.Ok, updated, updatedItems, failed, ""];
   } catch (e) {
     console.error(e);
     if (e.response) {

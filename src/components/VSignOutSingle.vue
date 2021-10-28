@@ -22,7 +22,10 @@
         >
       </v-form-control>
       <v-form-control label="Location" label-for="location">
-        <v-autocomplete id="location" :completion-options="acOptions.locations" v-model="body.location" required></v-autocomplete>
+        <v-autocomplete id="location"
+                        :completion-options="acOptions.locations"
+                        v-model="body.location"
+                        required></v-autocomplete>
       </v-form-control>
       <div class="flex justify-end mt-4 mb-2" v-if="loading">
         <bar-loader class="w-56 mr-2" color="#7c3aed"></bar-loader>
@@ -59,15 +62,11 @@ import VFormControl from "@/components/UI/VFormControl.vue";
 import VScanner from "@/components/UI/VScanner.vue";
 import { mapMutations, mapState } from "vuex";
 import { BarLoader } from "@saeris/vue-spinners";
-import Vue from "vue";
 import acOptions from "@/mixins/acOptions";
 import { AssignBody, GenericOutcome, Instrument } from "@/util/commonTypes";
 import { assignSingle } from "@/services/assign";
-import { CodeResult, WithLoading, WithScanner } from "@/util/componentTypes";
-
-interface ComponentState extends WithLoading, WithScanner {
-  body: AssignBody,
-}
+import { CodeResult } from "@/util/componentTypes";
+import Component, { mixins } from "vue-class-component";
 
 const blankBody: AssignBody = {
   number: "",
@@ -75,10 +74,22 @@ const blankBody: AssignBody = {
   location: "Westminster Presbyterian Church"
 };
 
-export default Vue.extend({
-  name: "v-sign-out-single",
+@Component({
   components: { VAutocomplete, VFormControl, VScanner, BarLoader },
-  mixins: [acOptions],
+  methods: mapMutations(["clearCurrentInstrument", "updateCurrentInstrument"]),
+  computed: mapState(["currentInstrument"])
+})
+export default class VSignOutSingle extends mixins(acOptions) {
+  body = {
+    ...blankBody
+  };
+  scanner = false;
+  loading = false;
+
+  clearCurrentInstrument!: () => void;
+  updateCurrentInstrument!: (Instrument) => void;
+  currentInstrument!: Instrument;
+
   async created(): Promise<void> {
     if (this.currentInstrument) {
       this.body.number = this.currentInstrument.number;
@@ -88,54 +99,47 @@ export default Vue.extend({
     if (error) {
       this.$toasted.error(error, { duration: 2000 });
     }
-  },
-  data(): ComponentState {
-    return {
-      body: {
-        ...blankBody
-      },
-      scanner: false,
-      loading: false
-    };
-  },
-  methods: {
-    ...mapMutations(["clearCurrentInstrument", "updateCurrentInstrument"]),
-    async onSubmit(): Promise<void> {
-      this.loading = true;
-      const [outcome, message, updatedInstrument] = await assignSingle(this.body);
-      this.loading = false;
+  }
 
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.onSuccess(message, updatedInstrument);
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(`Error: ${message}`, { duration: 2000 });
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 1000 });
-      }
-    },
-    onSuccess(message: string, updatedInstrument: Instrument | null): void {
-      if (updatedInstrument === null) {
-        this.$toasted.error("Updated Instrument is null. Something went wrong", { duration: 2000 });
-        return;
-      }
-      this.$toasted.success(message, { duration: 2000 });
-      this.clear();
-      this.updateCurrentInstrument(updatedInstrument);
-    },
-    detected(result: CodeResult): void {
-      if (result.codeResult.code !== this.body.number) {
-        this.body.number = result.codeResult.code;
-        this.scanner = false;
-      }
-      this.onSubmit();
-    },
-    clear(): void {
-      this.body = { ...blankBody };
+  async onSubmit(): Promise<void> {
+    this.loading = true;
+    const [outcome, message, updatedInstrument] = await assignSingle(this.body);
+    this.loading = false;
+
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.onSuccess(message, updatedInstrument);
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(`Error: ${message}`, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 1000 });
     }
-  },
-  computed: mapState(["currentInstrument"])
-});
+  }
+
+  onSuccess(message: string, updatedInstrument: Instrument | null): void {
+    if (updatedInstrument === null) {
+      this.$toasted.error("Updated Instrument is null. Something went wrong", { duration: 2000 });
+      return;
+    }
+    this.$toasted.success(message, { duration: 2000 });
+    this.clear();
+    this.updateCurrentInstrument(updatedInstrument);
+  }
+
+  detected(result: CodeResult): void {
+    if (result.codeResult.code !== this.body.number) {
+      this.body.number = result.codeResult.code;
+      this.scanner = false;
+    }
+    this.onSubmit();
+  }
+
+  clear(): void {
+    this.body = { ...blankBody };
+  }
+
+}
+
 </script>

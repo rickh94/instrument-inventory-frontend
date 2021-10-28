@@ -39,7 +39,7 @@ export async function checkNewNumber(instrumentNumber: string): Promise<[DoesIns
   }
 }
 
-export async function getNextNumber(nextType: string, nextSize: string): Promise<[GenericOutcome, string, string?]> {
+export async function getNextNumber(nextType: string, nextSize: string): Promise<[GenericOutcome, string, string]> {
   try {
     const instruments = await API.post("instrument-inventory", "filter",
       { body: { type: nextType, size: nextSize } }

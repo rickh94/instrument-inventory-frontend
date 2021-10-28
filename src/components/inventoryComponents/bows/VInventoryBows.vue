@@ -15,6 +15,7 @@
       <v-add-button @click="formComponent = 'v-add-bows'" item="Bows" />
     </div>
     <v-modal v-if="formComponent" @close="formComponent = null" width-class="max-w-lg">
+      <!--suppress HtmlUnknownAttribute -->
       <div :is="formComponent" @close="formComponent = null" @updated="handleUpdate" :bows="bows"></div>
     </v-modal>
   </div>
@@ -23,16 +24,17 @@
 <script lang="ts">
 import Vue from "vue";
 
-import VBowsTable from "@/components/inventoryComponents/bows/VBowsTable";
+import VBowsTable from "@/components/inventoryComponents/bows/VBowsTable.vue";
 import computedBows from "@/mixins/computedBows";
 import checkAdmin from "@/mixins/checkAdmin";
 import { PropagateLoader } from "@saeris/vue-spinners";
-import VCreateButton from "@/components/UI/buttons/VCreateButton";
-import VUseButton from "@/components/UI/buttons/VUseButton";
-import VAddButton from "@/components/UI/buttons/VAddButton";
+import VCreateButton from "@/components/UI/buttons/VCreateButton.vue";
+import VUseButton from "@/components/UI/buttons/VUseButton.vue";
+import VAddButton from "@/components/UI/buttons/VAddButton.vue";
 import { WithLoading } from "@/util/componentTypes";
 import { getBows } from "@/services/bows";
 import { GenericOutcome } from "@/util/commonTypes";
+import { Bow } from "@/util/bowTypes";
 
 
 // Webstorm stop removing my components!
@@ -41,7 +43,7 @@ import { GenericOutcome } from "@/util/commonTypes";
 //   VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
 
 interface ComponentState extends WithLoading {
-  bows: { id: string, count: string }[],
+  bows: Bow[],
   formComponent: "v-create-bow" | "v-add-bows" | "v-use-bows" | null
 }
 
@@ -52,9 +54,9 @@ export default Vue.extend({
     VUseButton,
     VCreateButton,
     VModal: () => import("@/components/UI/VModal.vue"),
-    VAddBows: () => import("@/components/inventoryComponents/bows/VAddBows"),
-    VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows"),
-    VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow"),
+    VAddBows: () => import("@/components/inventoryComponents/bows/VAddBows.vue"),
+    VUseBows: () => import("@/components/inventoryComponents/bows/VUseBows.vue"),
+    VCreateBow: () => import("@/components/inventoryComponents/bows/VCreateBow.vue"),
     VBowsTable,
     PropagateLoader
   },
@@ -75,7 +77,11 @@ export default Vue.extend({
         this.bows = bows;
         break;
       case GenericOutcome.Err:
-        this.$toasted.error(message);
+        if (message) {
+          this.$toasted.error(message);
+        } else {
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+        }
         break;
       default:
         this.$toasted.error("Something went wrong", { duration: 2000 });

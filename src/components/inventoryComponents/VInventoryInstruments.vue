@@ -35,7 +35,7 @@
       <div class="flex items-center justify-center lg:hidden mt-1">
         <div class="h-full flex items-center text-gray-600 font-bold mr-2 lg:hidden flex-shrink-0">Sort By:</div>
         <v-select id="sort-by" class="lg:hidden flex-shrink-0" placeholder="Sort By"
-                  :options="sortColumns"
+                  :select-options="sortColumns"
                   v-model="sortBy"></v-select>
       </div>
       <div class="flex items-center justify-center lg:hidden">
@@ -172,7 +172,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { mapMutations, mapState } from "vuex";
 import VTableHeader from "@/components/UI/VTableHeader.vue";
 import VSelect from "@/components/UI/VSelect.vue";
@@ -180,48 +179,51 @@ import Papa from "papaparse";
 import { sortBySize } from "@/mixins/ordering";
 import VInstrumentCard from "@/components/VInstrumentCard.vue";
 import { PropagateLoader } from "@saeris/vue-spinners";
-import { WithLoading } from "@/util/componentTypes";
 import acOptions from "@/mixins/acOptions";
 import { GenericOutcome, Instrument } from "@/util/commonTypes";
 import { getAllInstruments } from "@/services/getInstruments";
+import Component, { mixins } from "vue-class-component";
 
-interface ComponentState extends WithLoading {
-  size: string,
-  type: string,
-  location: string,
-  onlyUnassigned: boolean,
-  showArchived: boolean,
-  sortBy: string,
-  sortDirection: -1 | 1,
-  sortColumns: { value: string, text: string }[],
-}
-
-export default Vue.extend({
-  name: "VInventoryInstruments",
+@Component({
   components: { VInstrumentCard, VSelect, VTableHeader, PropagateLoader },
-  mixins: [acOptions],
-  data(): ComponentState {
-    return {
-      size: "",
-      type: "",
-      location: "",
-      onlyUnassigned: false,
-      showArchived: false,
-      loading: false,
-      sortBy: "number",
-      sortDirection: 1,
-      sortColumns: [
-        { value: "size", text: "Size" },
-        { value: "type", text: "Type" },
-        { value: "number", text: "Number" },
-        { value: "location", text: "Location" },
-        { value: "assignedTo", text: "Assigned To" },
-        { value: "condition", text: "Condition" },
-        { value: "quality", text: "Quality" },
-        { value: "history", text: "History" }
-      ]
-    };
-  },
+  methods: mapMutations(["setAllInstruments", "setCurrentInstrument"]),
+  computed: mapState(["allInstruments"]),
+  filters: {
+    abbreviateHistory(history?: string[]): string {
+      if (!history || history.length < 1) {
+        return "";
+      } else if (history.length > 3) {
+        return history.slice(0, 3).join(", ") + "...";
+      } else {
+        return history.join(", ");
+      }
+    }
+  }
+})
+export default class VInventoryInstruments extends mixins(acOptions) {
+  size = "";
+  type = "";
+  location = "";
+  onlyUnassigned = false;
+  showArchived = false;
+  loading = false;
+  sortBy = "number";
+  sortDirection = 1;
+  sortColumns = [
+    { value: "size", text: "Size" },
+    { value: "type", text: "Type" },
+    { value: "number", text: "Number" },
+    { value: "location", text: "Location" },
+    { value: "assignedTo", text: "Assigned To" },
+    { value: "condition", text: "Condition" },
+    { value: "quality", text: "Quality" },
+    { value: "history", text: "History" }
+  ];
+
+  allInstruments!: Instrument[];
+  setAllInstruments!: (any) => void;
+  setCurrentInstrument!: (Instrument) => void;
+
   async created(): Promise<void> {
     // Load instruments
     this.loading = true;
@@ -247,76 +249,65 @@ export default Vue.extend({
     if (error) {
       this.$toasted.error(error, { duration: 2000 });
     }
-  },
-  methods: {
-    ...mapMutations(["setAllInstruments", "setCurrentInstrument"]),
-    getCsv(): void {
-      const csvData = Papa.unparse(this.displayInstruments, {
-        skipEmptyLines: true,
-        header: true
-      });
-      const csvDownload = document.createElement("a");
-      csvDownload.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csvData));
-      csvDownload.setAttribute("download", "instruments-" + (new Date().toLocaleString()) + ".csv");
+  }
 
-      csvDownload.click();
-    },
-    changeSort(newSortAttribute: string): void {
-      if (this.sortBy === newSortAttribute) {
-        this.sortDirection *= -1;
-      } else {
-        this.sortBy = newSortAttribute;
-        this.sortDirection = 1;
-      }
-    },
-    displayInstrument(instrument: Instrument): boolean {
-      if (this.onlyUnassigned && instrument.assignedTo) {
-        return false;
-      }
-      if (this.size && !instrument.size.startsWith(this.size)) {
-        return false;
-      }
-      if (this.type && !instrument.type.toLowerCase().includes(this.type.toLowerCase())) {
-        return false;
-      }
-      if (this.location && !instrument.location.toLowerCase().includes(this.location.toLowerCase())) {
-        return false;
-      }
-      return this.showArchived || !instrument.archived;
-    },
-    sortInstruments(a: Instrument, b: Instrument): number {
-      if (this.sortBy === "size") {
-        return this.sortDirection * -sortBySize(a, b);
-      }
-      const aSort = a[this.sortBy] || "";
-      const bSort = b[this.sortBy] || "";
-      if (aSort < bSort) {
-        return -this.sortDirection;
-      } else if (aSort > bSort) {
-        return this.sortDirection;
-      }
-      return 0;
-    }
-  },
-  computed: {
-    ...mapState(["allInstruments"]),
-    displayInstruments(): Instrument[] {
-      let tmpInstruments = this.allInstruments.filter(ins => this.displayInstrument(ins));
-      return tmpInstruments.sort(this.sortInstruments);
-    }
-  },
-  filters: {
-    abbreviateHistory(history?: string[]): string {
-      if (!history || history.length < 1) {
-        return "";
-      } else if (history.length > 3) {
-        return history.slice(0, 3).join(", ") + "...";
-      } else {
-        return history.join(", ");
-      }
+  getCsv(): void {
+    const csvData = Papa.unparse(this.displayInstruments, {
+      skipEmptyLines: true,
+      header: true
+    });
+    const csvDownload = document.createElement("a");
+    csvDownload.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csvData));
+    csvDownload.setAttribute("download", "instruments-" + (new Date().toLocaleString()) + ".csv");
+
+    csvDownload.click();
+  }
+
+  changeSort(newSortAttribute: string): void {
+    if (this.sortBy === newSortAttribute) {
+      this.sortDirection *= -1;
+    } else {
+      this.sortBy = newSortAttribute;
+      this.sortDirection = 1;
     }
   }
-});
+
+  displayInstrument(instrument: Instrument): boolean {
+    if (this.onlyUnassigned && instrument.assignedTo) {
+      return false;
+    }
+    if (this.size && !instrument.size.startsWith(this.size)) {
+      return false;
+    }
+    if (this.type && !instrument.type.toLowerCase().includes(this.type.toLowerCase())) {
+      return false;
+    }
+    if (this.location && !instrument.location.toLowerCase().includes(this.location.toLowerCase())) {
+      return false;
+    }
+    return this.showArchived || !instrument.archived;
+  }
+
+  sortInstruments(a: Instrument, b: Instrument): number {
+    if (this.sortBy === "size") {
+      return this.sortDirection * -sortBySize(a, b);
+    }
+    const aSort = a[this.sortBy] || "";
+    const bSort = b[this.sortBy] || "";
+    if (aSort < bSort) {
+      return -this.sortDirection;
+    } else if (aSort > bSort) {
+      return this.sortDirection;
+    }
+    return 0;
+  }
+
+  get displayInstruments(): Instrument[] {
+    let tmpInstruments = this.allInstruments.filter(ins => this.displayInstrument(ins));
+    return tmpInstruments.sort(this.sortInstruments);
+  }
+}
+
 </script>
 
 <style scoped>

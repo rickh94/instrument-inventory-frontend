@@ -72,13 +72,14 @@
         <tbody>
         <tr v-for="item in bassBows" :key="item.id">
           <td class="pr-4">{{ item.size }}</td>
-          <td class="flex justify-end"><input type="number"
-                                              :name="`${item.id}-updates`"
-                                              :id="`${item.id}-updates`"
-                                              class="w-12 border-b border-gray-800"
-                                              min="0"
-                                              v-model="items[item.id]"
-          ></td>
+          <td class="flex justify-end">
+            <input type="number"
+                   :name="`${item.id}-updates`"
+                   :id="`${item.id}-updates`"
+                   class="w-12 border-b border-gray-800"
+                   min="0"
+                   v-model="items[item.id]"
+            ></td>
         </tr>
         </tbody>
       </table>
@@ -94,19 +95,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-import computedBows from "@/mixins/computedBows";
 import { BarLoader } from "@saeris/vue-spinners";
 import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
 import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton.vue";
 import { updateBows } from "@/services/bows";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
+import ComputedBows from "@/mixins/computedBows";
+import { Bow } from "@/util/bowTypes";
 
-export default Vue.extend({
-  name: "VUpdateBowsForm",
+@Component({
   components: { VCloseFormButton, VSaveButton, BarLoader },
-  mixins: [computedBows],
   props: {
     bows: {
       type: Array,
@@ -120,55 +119,56 @@ export default Vue.extend({
       type: String,
       required: true
     }
-  },
-  data() {
-    return {
-      items: {},
-      loading: false
-    };
-  },
-  created() {
-    this.initializeItems();
-  },
-  methods: {
-    async handleSubmit() {
-      const updated = [];
-      for (const [id, amount] of Object.entries(this.items)) {
-        if (amount && amount !== 0) {
-          updated.push({
-            id, amount
-          });
-        }
-      }
-      this.loading = true;
-      const [outcome, updatedIds, updatedItems, failed, message] = await updateBows(updated, this.submitPath);
-      this.loading = false;
+  }
+})
+export default class VUpdateBowsForm extends mixins(ComputedBows) {
+  public bows!: Bow[];
+  public updateText!: string;
+  public submitPath!: string;
+  items: { [id: string]: number } = {};
+  loading = false;
 
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.$emit("updated", { updatedIds, updatedItems });
-          if (failed.length > 0) {
-            this.$toasted.error(`Updates failed: ${failed.join(", ")}`, { duration: 2000 });
-          }
-          this.$emit("close");
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message, { duration: 2000 });
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
-    },
-    initializeItems() {
-      for (const bow of this.bows) {
+  created(): void {
+    this.initializeItems();
+  }
+
+  initializeItems(): void {
+    for (const bow of this.bows) {
+      if (bow.id) {
         this.items[bow.id] = 0;
       }
-    },
-    handleUpdate(id, e) {
-      this.items[id] = parseInt(e.target.value);
     }
   }
-});
+
+  async handleSubmit(): Promise<void> {
+    const updated: { id: string, amount: number }[] = [];
+    for (const [id, amount] of Object.entries(this.items)) {
+      if (amount && amount !== 0) {
+        updated.push({
+          id, amount
+        });
+      }
+    }
+    this.loading = true;
+    const [outcome, updatedIds, updatedItems, failed, message] = await updateBows(updated, this.submitPath);
+    this.loading = false;
+
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.$emit("updated", { updatedIds, updatedItems });
+        if (failed.length > 0) {
+          this.$toasted.error(`Updates failed: ${failed.join(", ")}`, { duration: 2000 });
+        }
+        this.$emit("close");
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+}
 </script>
 
 <style scoped>

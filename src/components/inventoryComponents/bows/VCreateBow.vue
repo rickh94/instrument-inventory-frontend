@@ -28,67 +28,58 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 
-import VFormControl from "@/components/UI/VFormControl";
-import VAutocomplete from "@/components/UI/VAutocomplete";
-import errorHandler from "@/mixins/errorHandler";
+import VFormControl from "@/components/UI/VFormControl.vue";
+import VAutocomplete from "@/components/UI/VAutocomplete.vue";
 import { BarLoader } from "@saeris/vue-spinners";
-import VCancelButton from "@/components/UI/buttons/VCancelButton";
-import VSaveButton from "@/components/UI/buttons/VSaveButton";
+import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
+import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
 import acOptions from "@/mixins/acOptions";
-import { WithLoading } from "@/util/componentTypes";
 import { createBow } from "@/services/bows";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
 
-interface ComponentState extends WithLoading {
-  data: {
-    type: string,
-    size: string,
-    count: string,
-  },
-}
+@Component({
+  components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader }
+})
+export default class VCreateBow extends mixins(acOptions) {
+  loading = false;
+  data = {
+    type: "",
+    size: "",
+    count: ""
+  };
 
-export default Vue.extend({
-  name: "VCreateBow",
-  components: { VSaveButton, VCancelButton, VAutocomplete, VFormControl, BarLoader },
-  mixins: [errorHandler, acOptions],
-  data(): ComponentState {
-    return {
-      loading: false,
-      data: {
-        type: "",
-        size: "",
-        count: ""
-      }
-    };
-  },
-  async created() {
+  async created(): Promise<void> {
     await this.getACOptions();
-  },
-  methods: {
-    handleCancel() {
-      this.data = { type: "", size: "", count: "" };
-      this.$emit("close");
-    },
-    async handleSubmit() {
-      this.loading = true;
-      const [outcome, message, updatedBow] = await createBow(this.data.type, this.data.size, parseInt(this.data.count));
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
+  }
+
+  handleCancel(): void {
+    this.data = { type: "", size: "", count: "" };
+    this.$emit("close");
+  }
+
+  async handleSubmit(): Promise<void> {
+    this.loading = true;
+    const [outcome, message, updatedBow] = await createBow(this.data.type, this.data.size, parseInt(this.data.count));
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        if (updatedBow) {
           this.$emit("updated", { updatedIds: [updatedBow.id], updatedItems: [updatedBow] });
           this.$toasted.success(message, { duration: 2000 });
           this.$emit("close");
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message, { duration: 2000 });
-          break;
-        default:
+        } else {
           this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
+        }
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message, { duration: 2000 });
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
     }
   }
-});
+}
 </script>
 

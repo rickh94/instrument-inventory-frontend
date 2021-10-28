@@ -99,9 +99,9 @@ import VCancelButton from "@/components/UI/buttons/VCancelButton.vue";
 import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
 import VLoadingButtons from "@/components/UI/VLoadingButtons.vue";
 import { WithLoading } from "@/util/componentTypes";
-import Vue from "vue";
 import { moveItem } from "@/services/otherItems";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
 
 interface ComponentState extends WithLoading {
   mode: string,
@@ -112,8 +112,7 @@ interface ComponentState extends WithLoading {
   }
 }
 
-export default Vue.extend({
-  name: "VItemDisplay",
+@Component({
   components: {
     VSaveButton,
     VCancelButton,
@@ -125,20 +124,8 @@ export default Vue.extend({
     VAssignButton,
     VEditButton
   },
-  mixins: [acOptions],
   props: {
     displayItem: {}
-  },
-  data(): ComponentState {
-    return {
-      loading: false,
-      mode: "display",
-      moveData: {
-        fromLocation: "",
-        toLocation: "",
-        count: 0
-      }
-    };
   },
   filters: {
     joinOrNull(value) {
@@ -147,61 +134,80 @@ export default Vue.extend({
       }
       return "";
     }
-  },
-  methods: {
-    edit() {
-    },
-    signOut() {
-    },
-    retrieve() {
-    },
-    async move() {
-      this.mode = "move";
-      const error = await this.getACOptions();
-      if (error) {
-        this.$toasted.error(error, { duration: 2000 });
-      }
-    },
-    async doMove() {
-      const { fromLocation, toLocation, count } = this.moveData;
-      this.loading = true;
-      const [outcome, updatedItem, message] = await moveItem(this.displayItem.id, fromLocation, toLocation, count);
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          if (updatedItem) {
-            this.$emit("updated", {
-              updatedIds: [updatedItem.id],
-              updateItems: [updatedItem],
-              replaceDisplay: true
-            });
-            this.mode = "display";
-          } else {
-            this.$toasted.error("Something went wrong", { duration: 2000 });
-          }
-          break;
-        case GenericOutcome.Err:
-          if (message) {
-            this.$toasted.error(message, { duration: 2000 });
-          } else {
-            this.$toasted.error("Something went wrong", { duration: 2000 });
-          }
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
+  }
+})
+export default class VItemDisplay extends mixins(acOptions) {
+  loading = false;
+  mode: "display" | "move" = "display";
+  moveData = {
+    fromLocation: "",
+    toLocation: "",
+    count: 0
+  };
+  public displayItem!: {
+    id: string,
+    location_counts: {
+      [location: string]: number
     }
-  },
-  computed: {
-    moveFromLocations() {
-      let locations = [];
-      Object.entries(this.displayItem.location_counts).forEach(([k, v]) => {
-        if (v > 0) {
-          locations.push(k);
-        }
-      });
-      return locations;
+  };
+
+  edit(): void {
+  }
+
+  signOut(): void {
+  }
+
+  retrieve(): void {
+  }
+
+  async move(): Promise<void> {
+    this.mode = "move";
+    const error = await this.getACOptions();
+    if (error) {
+      this.$toasted.error(error, { duration: 2000 });
     }
   }
-});
+
+  async doMove(): Promise<void> {
+    const { fromLocation, toLocation, count } = this.moveData;
+    this.loading = true;
+    const [outcome, updatedItem, message] = await moveItem(this.displayItem.id, fromLocation, toLocation, count);
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        if (updatedItem) {
+          this.$emit("updated", {
+            updatedIds: [updatedItem.id],
+            updateItems: [updatedItem],
+            replaceDisplay: true
+          });
+          this.mode = "display";
+        } else {
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+        }
+        break;
+      case GenericOutcome.Err:
+        if (message) {
+          this.$toasted.error(message, { duration: 2000 });
+        } else {
+          this.$toasted.error("Something went wrong", { duration: 2000 });
+        }
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+
+  get moveFromLocations(): string[] {
+    let locations: string[] = [];
+    Object.entries(this.displayItem.location_counts).forEach(([k, v]) => {
+      if (v > 0) {
+        locations.push(k);
+      }
+    });
+    return locations;
+  }
+
+}
+
 </script>

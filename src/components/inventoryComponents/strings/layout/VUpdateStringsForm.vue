@@ -37,26 +37,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-import { API } from "aws-amplify";
 import computedStrings from "@/mixins/computedStrings";
 import VStringsInputTable from "@/components/inventoryComponents/strings/layout/VStringsInputTable.vue";
 import { BarLoader } from "@saeris/vue-spinners";
 import VSaveButton from "@/components/UI/buttons/VSaveButton.vue";
 import VCloseFormButton from "@/components/UI/buttons/VCloseFormButton.vue";
-import { WithLoading } from "@/util/componentTypes";
 import { updateStrings } from "@/services/stringInventory";
 import { GenericOutcome } from "@/util/commonTypes";
+import Component, { mixins } from "vue-class-component";
+import { InstrumentString } from "@/util/stringTypes";
 
-interface ComponentState extends WithLoading {
-  items: Record<string, number>,
-}
 
-export default Vue.extend({
-  name: "VUpdateStringsForm",
-  components: { VCloseFormButton, VSaveButton, VStringsInputTable, BarLoader },
-  mixins: [computedStrings],
+@Component({
   props: {
     strings: {
       type: Array,
@@ -71,53 +63,60 @@ export default Vue.extend({
       required: true
     }
   },
-  data(): ComponentState {
-    return {
-      items: {},
-      loading: false
-    };
-  },
+  components: { VCloseFormButton, VSaveButton, VStringsInputTable, BarLoader },
+})
+export default class VUpdateStringsForm extends mixins(computedStrings) {
+  public strings!: InstrumentString[];
+  public updateText!: string;
+  public submitPath!: string;
+
+  items: {[id: string]: number} = {};
+  loading = false;
+
   created(): void {
     this.initializeItems();
-  },
-  methods: {
-    async handleSubmit() {
-      const updates = [];
-      for (const [id, amount] of Object.entries(this.items)) {
-        if (amount !== 0) {
-          updates.push({
-            id, amount
-          });
-        }
-      }
-      this.loading = true;
-      // eslint-disable
-      const [outcome, updatedIds, updatedItems, message] = await updateStrings(this.submitPath, updates);
-      this.loading = false;
-      switch (outcome) {
-        case GenericOutcome.Ok:
-          this.$emit("updated", { updatedIds, updatedItems });
-          if (message.length > 0) {
-            this.$toasted.error(message);
-          }
-          this.$emit("close");
-          break;
-        case GenericOutcome.Err:
-          this.$toasted.error(message);
-          break;
-        default:
-          this.$toasted.error("Something went wrong", { duration: 2000 });
-      }
-    },
-    initializeItems() {
-      for (const item of this.strings) {
+  }
+
+  initializeItems(): void {
+    for (const item of this.strings) {
+      if (item.id) {
         this.items[item.id] = 0;
       }
-    },
-    handleChange({ id, value }) {
-      this.items[id] = value;
     }
   }
-});
+
+  handleChange({ id, value }: {id: string, value: number}): void {
+    this.items[id] = value;
+  }
+
+  async handleSubmit(): Promise<void> {
+    const updates: { id: string, amount: number }[] = [];
+    for (const [id, amount] of Object.entries(this.items)) {
+      if (amount !== 0) {
+        updates.push({
+          id, amount
+        });
+      }
+    }
+    this.loading = true;
+    const [outcome, updatedIds, updatedItems, message] = await updateStrings(this.submitPath, { string_updates: updates });
+    this.loading = false;
+    switch (outcome) {
+      case GenericOutcome.Ok:
+        this.$emit("updated", { updatedIds, updatedItems });
+        if (message.length > 0) {
+          this.$toasted.error(message);
+        }
+        this.$emit("close");
+        break;
+      case GenericOutcome.Err:
+        this.$toasted.error(message);
+        break;
+      default:
+        this.$toasted.error("Something went wrong", { duration: 2000 });
+    }
+  }
+}
+
 </script>
 
