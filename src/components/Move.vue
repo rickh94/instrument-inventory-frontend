@@ -15,10 +15,8 @@
                  v-model="currentNumber"
                  @keydown.enter.prevent=""
                  @keyup.enter.prevent="onAdd"
+                 ref="numberInputBox"
           >
-          <button class="appearance-none" title="Scan Barcode" @click.prevent="scanner = true">
-            <font-awesome-icon icon="barcode" class="mx-2"></font-awesome-icon>
-          </button>
         </div>
         <button @click.prevent="onAdd"
                 class="appearance-none rounded ml-4 text-white font-bold px-2 py-1 inline-flex items-center"
@@ -33,7 +31,6 @@
           Add
         </button>
       </div>
-      <v-scanner @detected="detected" v-if="scanner" @close="scanner = false"></v-scanner>
       <div class="my-2 max-w-xl mx-auto" v-show="this.instrumentNumbers.length > 0"><h4 class="text-xl font-bold">
         Instruments to Move</h4></div>
       <transition-group name="tag" tag="div" class="flex flex-wrap mx-auto max-w-xl" mode="out-in">
@@ -92,6 +89,7 @@ import VFormControl from "@/components/UI/VFormControl.vue";
 import VAutocomplete from "@/components/UI/VAutocomplete.vue";
 import acOptions from "@/mixins/acOptions";
 import { moveMultiple } from "@/services/move";
+import Vue from "vue";
 
 enum AddOutcomes {
   Added = "ADDED",
@@ -101,6 +99,16 @@ enum AddOutcomes {
 
 
 @Component({
+  props: {
+    initialLocation: {
+      type: String,
+      required: false,
+    },
+    focusOnCreated: {
+      type: Boolean,
+      default: false,
+    }
+  },
   components: { VAutocomplete, VFormControl, VScanner: () => import("@/components/UI/VScanner.vue"), BarLoader },
 })
 export default class Move extends mixins(acOptions) {
@@ -111,8 +119,23 @@ export default class Move extends mixins(acOptions) {
   flash = false;
   location = "";
 
+  initialLocation!: string | never;
+  focusOnCreated!: boolean;
+
   async created(): Promise<void> {
+    if (this.initialLocation) {
+      this.location = this.initialLocation;
+    }
     await this.getACOptions();
+  }
+
+  mounted(): void {
+    if (this.focusOnCreated) {
+      const box = this.$refs.numberInputBox as Vue & { focus: () => void};
+      setTimeout(() => {
+        box.focus();
+      }, 500)
+    }
   }
 
   async onSubmit(): Promise<void> {

@@ -13,7 +13,11 @@
         <amplify-sign-out button-text="Log Out"></amplify-sign-out>
       </div>
       <instrument-display />
-      <v-modal v-if="globalSearchActive" width-class="sm:max-w-lg" @close="closeGlobalSearch">
+      <v-modal
+        v-if="globalSearchActive"
+        width-class="sm:max-w-lg"
+        @close="closeGlobalSearch"
+      >
         <div class="flex justify-between mb-4">
           <h6 class="text-xl font-bold text-gray-900">
             Search for an Instrument
@@ -52,14 +56,22 @@ import VModal from "@/components/UI/VModal.vue";
 import VInstrumentSearchBox from "@/components/VInstrumentSearchBox.vue";
 import VNotFoundModal from "@/components/VNotFoundModal.vue";
 
+enum CommandState {
+  None,
+  AwaitingMode,
+  MoveInstruments,
+}
+
 export default Vue.extend({
   name: "App",
   components: { VNotFoundModal, VInstrumentSearchBox, VModal, InstrumentDisplay, VNav },
-  data() {
+  data(): { globalSearchActive: boolean, showNotFound: boolean, notFoundNumber: string, mode: CommandState, commandData: string } {
     return {
       globalSearchActive: false,
       showNotFound: false,
-      notFoundNumber: ""
+      notFoundNumber: "",
+      mode: CommandState.None,
+      commandData: ""
     };
   },
   created(): void {
@@ -73,15 +85,54 @@ export default Vue.extend({
       } else if (nextAuthState === "signedout") {
         this.logOut();
       }
+
       document.body.addEventListener("keydown", ({ key, target }) => {
-        if (key && target === document.body && key.toString().length === 1) {
-          this.globalSearchActive = true;
+        if (key && target === document.body) {
+          // noinspection JSUnreachableSwitchBranches
+          switch (this.mode) {
+            case CommandState.AwaitingMode:
+              this.setMode(key);
+              break;
+            case CommandState.MoveInstruments:
+              if (key === 'Enter') {
+                this.startBatchMoveWithLocation(this.commandData);
+                this.clearMode();
+                this.$router.push("/batch");
+              } else if (key.toString().length === 1) {
+                this.commandData = this.commandData + key.toString();
+              }
+              break;
+            case CommandState.None:
+              if (key === "`") {
+                this.mode = CommandState.AwaitingMode;
+                // setTimeout(() => this.clearMode(), 2000);
+              } else if (key.toString().length === 1) {
+                this.globalSearchActive = true;
+              }
+              break;
+            default:
+              this.$toasted.error("Invalid input", { duration: 2000 });
+              console.error(key);
+          }
         }
       });
     });
   },
   methods: {
-    ...mapMutations(["logIn", "logOut"]),
+    ...mapMutations(["logIn", "logOut", "startBatchMoveWithLocation"]),
+    setMode(key) {
+      switch (key) {
+        case "2":
+          this.mode = CommandState.MoveInstruments;
+          break;
+        default:
+          this.mode = CommandState.None;
+      }
+    },
+    clearMode() {
+      this.mode = CommandState.None;
+      this.commandData = "";
+    },
     closeGlobalSearch() {
       this.globalSearchActive = false;
     },

@@ -21,7 +21,9 @@ type AppState = {
     locations: string[],
     types: string[],
     sizes: string[],
-  }
+  },
+  nextLocation?: string | null,
+  nextBatchMode?: "move" | "retrieve" | null,
 };
 
 const defaultState: AppState = {
@@ -35,6 +37,8 @@ const defaultState: AppState = {
     types: [],
     sizes: [],
   },
+  nextLocation: null,
+  nextBatchMode: null,
 }
 
 export default new Vuex.Store({
@@ -106,6 +110,14 @@ export default new Vuex.Store({
     setACOptions(state, nextOptions) {
       state.acOptions = nextOptions
     },
+    startBatchMoveWithLocation(state, nextLocation) {
+      state.nextLocation = nextLocation;
+      state.nextBatchMode = "move";
+    },
+    clearBatchMove(state) {
+      state.nextLocation = null;
+      state.nextBatchMode = null;
+    }
   },
   modules: {},
   getters: {

@@ -11,7 +11,7 @@
         </a>
       </div>
       <Retrieve v-if="this.mode === 'retrieve'"></Retrieve>
-      <Move v-else-if="this.mode === 'move'"></Move>
+      <Move v-else-if="this.mode === 'move'" :initial-location="nextLocation" :focus-on-created="focusOnCreated"></Move>
     </div>
   </div>
 </template>
@@ -20,9 +20,11 @@
 /* eslint-disable no-unused-vars */
 import Vue from "vue";
 import { WithLoading } from "@/util/componentTypes";
+import { mapMutations, mapState } from "vuex";
 
 interface ComponentState extends WithLoading {
   mode: "retrieve" | "move",
+  focusOnCreated: boolean,
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -35,10 +37,19 @@ export default Vue.extend({
   data(): ComponentState {
     return {
       loading: false,
-      mode: "retrieve"
+      mode: "retrieve",
+      focusOnCreated: false,
     };
   },
+  created(): void {
+    if (this.nextBatchMode) {
+      this.mode = this.nextBatchMode
+      this.focusOnCreated = true;
+    }
+    setTimeout(() => this.clearBatchMove(), 2000);
+  },
   methods: {
+    ...mapMutations(["clearBatchMove"]),
     toggleMode() {
       if (this.mode === "retrieve") {
         this.mode = "move"
@@ -46,7 +57,8 @@ export default Vue.extend({
         this.mode = "retrieve"
       }
     }
-  }
+  },
+  computed: mapState(["nextLocation", "nextBatchMode"]),
 });
 </script>
 
