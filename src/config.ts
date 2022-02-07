@@ -15,23 +15,6 @@ const dev = {
   }
 };
 
-const demo = {
-  stage: "demo",
-  apiGateway: {
-    REGION: "us-east-1",
-    URL: "https://0sayiu8gd1.execute-api.us-east-1.amazonaws.com/demo/"
-  },
-  cognito: {
-    REGION: "us-east-1",
-    USER_POOL_ID: "us-east-1_mdlcscRdA",
-    APP_CLIENT_ID: "220hvavn2s21c6gcgfg7mvt080",
-    IDENTITY_POOL_ID: "us-east-1:2bc7b531-0d39-4489-ad87-0f7a4ea33eff",
-    DOMAIN: "instrument-demo.rickhenry.dev",
-    SECURE: true
-  }
-};
-
-
 const prod = {
   stage: "prod",
   apiGateway: {
@@ -50,9 +33,7 @@ const prod = {
 
 let config;
 
-if (process.env.VUE_APP_DEMO === "TRUE") {
-  config = demo;
-} else if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
   config = prod;
 } else {
   config = dev;

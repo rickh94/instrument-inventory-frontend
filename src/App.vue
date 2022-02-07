@@ -1,5 +1,5 @@
 <template>
-  <!--  TODO: Create custom sign in component -->
+
   <amplify-auth-container>
     <amplify-authenticator :authConfig="{signInConfig: {isSignUpDisplayed: false}}">
       <div slot="sign-up">Sign Up is not enabled for this app</div>
@@ -94,7 +94,7 @@ export default Vue.extend({
               this.setMode(key);
               break;
             case CommandState.MoveInstruments:
-              if (key === 'Enter') {
+              if (key === "Enter") {
                 this.startBatchMoveWithLocation(this.commandData);
                 this.clearMode();
                 this.$router.push("/batch");
